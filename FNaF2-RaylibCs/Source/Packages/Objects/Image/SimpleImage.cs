@@ -4,11 +4,10 @@ using RaylibArteSonat.Source.Packages.Module;
 using Raylib_cs;
 namespace RaylibArteSonat.Source.Packages.Objects.Image;
 
-public class SimpleImage(ImageResource material, Vector2 position, Color? tint = null) : ObjectTemplate
+public class SimpleImage(ImageResource resource, Vector2 position, Color? tint = null) : ObjectTemplate(position, new Vector2(resource.GetRenderMaterial().Width, resource.GetRenderMaterial().Height))
 {
-  protected ImageResource _material = material;
+  protected ImageResource Resource = resource;
   protected Raylib_cs.Image _image;
-  protected Vector2 _position = position;
   protected Color _tint = tint ?? Color.White;
 
   public new void CallDebuggerInfo(Registry registry)
@@ -31,7 +30,7 @@ public class SimpleImage(ImageResource material, Vector2 position, Color? tint =
   
   public new void Draw(Registry registry)
   {
-    Raylib.DrawTexture(_material.GetRenderMaterial(), (int)_position.X, (int)_position.Y, Color.White);
+    Raylib.DrawTexture(Resource.GetRenderMaterial(), (int)_position.X, (int)_position.Y, Color.White);
     base.Draw(registry);
   }
 }

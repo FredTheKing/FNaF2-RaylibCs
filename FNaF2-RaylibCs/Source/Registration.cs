@@ -1,7 +1,5 @@
-using RaylibArteSonat.Source.Packages.Objects.Timer;
-using static RaylibArteSonat.Source.Registration.Objects;
-
 namespace RaylibArteSonat.Source;
+using RaylibArteSonat.Source.Packages.Objects.Animation;
 using Raylib_cs;
 using Packages.Module;
 using Packages.Objects.Box;
@@ -12,29 +10,49 @@ using System.Numerics;
 
 public static class Registration
 {
-  private static string[] scenes_names = ["Debugger/Testing", "Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight"];
+  private static string[] scenes_names = ["Debugger/Testing", "Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Main", "Game/Loading", "Game/Newspaper"];
   private static string start_scene_name = "Debugger/Testing";
   
   public static class Materials
   {
-    public static FontResource Global_Font;
+    public static FontResource GlobalFont;
+    public static AnimationResource TestingAnimation;
   }
   
   public static class Objects
   {
-    public static SimpleBox testing_box;
+    public static SimpleAnimation TestingAnimation;
   }
   
   public static void MaterialsInitialisation(Registry registry)
   {
-    Materials.Global_Font = registry.RegisterMaterial("GlobalFont", ["*"], new FontResource("Resources/Font/regular.ttf"));
+    Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", ["*"], new FontResource("Resources/Font/consolas.ttf"));
+    Materials.TestingAnimation = registry.RegisterMaterial("TestingAnimation", ["Debugger/Testing"],
+      new AnimationResource([
+        "Resources/TestingAnimation/0.png",
+        "Resources/TestingAnimation/1.png",
+        "Resources/TestingAnimation/2.png",
+        "Resources/TestingAnimation/3.png",
+        "Resources/TestingAnimation/4.png",
+        "Resources/TestingAnimation/5.png",
+        "Resources/TestingAnimation/6.png",
+        "Resources/TestingAnimation/7.png",
+        "Resources/TestingAnimation/8.png",
+        "Resources/TestingAnimation/9.png",
+        "Resources/TestingAnimation/10.png",
+        "Resources/TestingAnimation/11.png",
+        "Resources/TestingAnimation/12.png",
+        "Resources/TestingAnimation/13.png",
+        "Resources/TestingAnimation/14.png",
+        "Resources/TestingAnimation/15.png"
+      ]));
 
     registry.EndMaterialsRegistration();
   }
 
   public static void ObjectsInitialisation(Registry registry)
   {
-    Objects.testing_box = registry.RegisterObject("TestingBoxYooo", ["Debugger/Testing"], [0], new SimpleBox(new Vector2(100, 100), new Vector2(50, 50), new Color(255, 255, 255, 255)));
+    Objects.TestingAnimation = registry.RegisterObject("TestingAnimationYooo", ["Debugger/Testing"], [0], new SimpleAnimation(new Vector2(500, 100), 24, Color.White, AnimationPlayMode.Replacement, Materials.TestingAnimation));
     
     registry.EndObjectsRegistration(start_scene_name);
   }
@@ -51,8 +69,12 @@ public static class Registration
     registry.AssignSceneScript("Menu/Credits", new MenuCredits(registry));
     registry.AssignSceneScript("Menu/CustomNight", new MenuCustomNight(registry));
     
+    registry.AssignSceneScript("Game/Main", new GameMain(registry));
+    registry.AssignSceneScript("Game/Loading", new GameLoading(registry));
+    registry.AssignSceneScript("Game/Newspaper", new GameNewspaper(registry));
+    
     registry.AssignGlobalScript(new GlobalOverlay(registry));
-    registry.AssignGuiScript(new DebuggerWindow(registry));
+    registry.AssignGuiScript(new ImGuiWindow(registry));
     
     registry.SwitchDebugMode();
     

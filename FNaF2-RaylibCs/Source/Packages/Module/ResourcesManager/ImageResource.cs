@@ -6,10 +6,7 @@ public class ImageResource : MaterialTemplate
 {
   private Texture2D _render_material;
 
-  public ImageResource(String filename) : base()
-  {
-    _filename = filename;
-  }
+  public ImageResource(String filename) : base() => _filename = filename;
   public ImageResource(Image image) : base() 
   { 
     _material = image;
@@ -35,13 +32,7 @@ public class ImageResource : MaterialTemplate
     _render_material = Raylib.LoadTexture(_filename);
   }
   
-  public new Image GetMaterial()
-  {
-    return _material;
-  }
+  public new Image GetMaterial() => _material;
   
-  public Texture2D GetRenderMaterial()
-  {
-    return _render_material;
-  }
+  public Texture2D GetRenderMaterial() => _render_material;
 }

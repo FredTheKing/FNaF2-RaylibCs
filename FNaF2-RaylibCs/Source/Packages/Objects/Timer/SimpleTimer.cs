@@ -43,7 +43,7 @@ public class SimpleTimer(double target_time_in_seconds = 1f, bool start_at_activ
     }
   }
   
-  public bool IsEnded() => _target_activate;
+  public bool EndedTrigger() => _target_activate;
   
   public bool IsWorking() => _go;
   

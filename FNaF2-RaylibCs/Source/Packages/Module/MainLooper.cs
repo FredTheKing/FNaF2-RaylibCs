@@ -1,3 +1,5 @@
+using Raylib_cs;
+
 namespace RaylibArteSonat.Source.Packages.Module;
 
 public static class MainLooper
@@ -18,8 +20,13 @@ public static class MainLooper
   
   public static void GlobalDraw(Registry registry)
   {
+    Raylib.BeginDrawing();
+    Raylib.ClearBackground(Color.Black);
+    
     registry.GetSceneManager().GetCurrentScene().Draw(registry);
     if (registry.GetDebugMode()) registry.GetGuiManager().Process();
     if (!registry.GetDebugMode()) registry.GetGuiManager().Draw();
+    
+    Raylib.EndDrawing();
   }
 }

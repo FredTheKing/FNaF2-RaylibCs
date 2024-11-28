@@ -5,7 +5,7 @@ using RaylibArteSonat.Source.Packages.Objects.Image;
 using RaylibArteSonat.Source.Packages.Module;
 namespace RaylibArteSonat.Source.Packages.Objects.Image;
 
-public class HitboxImage(ImageResource material, Vector2 position, Color? color = null): SimpleImage(material, position)
+public class HitboxImage(ImageResource resource, Vector2 position, Color? color = null): SimpleImage(resource, position)
 {
   private RectangleHitbox _hitbox = new RectangleHitbox(position, new Vector2(0, 0), color ?? new Color(255, 0, 0, 123));
 

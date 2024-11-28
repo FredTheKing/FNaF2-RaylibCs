@@ -2,7 +2,7 @@ using System.Numerics;
 using ImGuiNET;
 namespace RaylibArteSonat.Source.Packages.Module;
 
-public class ObjectTemplate : CallDebuggerInfoTemplate
+public abstract class ObjectTemplate : CallDebuggerInfoTemplate
 {
   protected Vector2 _position;
   protected Vector2 _size;

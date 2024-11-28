@@ -63,10 +63,7 @@ public class SceneManager(params String[] scenes_names) : CallDebuggerInfoTempla
   
   public void ChangeScene(String scene_name)
   {
-    if (_current_scene != null)
-    {
-      _current_scene.Unload();
-    }
+    if (_current_scene != null) _current_scene.Unload();
     _current_scene = _scenes[scene_name];
     _changed = true;
     _current_scene.Load();

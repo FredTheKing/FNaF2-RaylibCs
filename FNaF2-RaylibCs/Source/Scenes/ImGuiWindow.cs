@@ -5,7 +5,7 @@ using RaylibArteSonat.Source.Packages.Module;
 using rlImGui_cs;
 namespace RaylibArteSonat.Source.Scenes;
 
-public class DebuggerWindow(Registry registry)
+public class ImGuiWindow(Registry registry)
 {
   public void Process()
   {

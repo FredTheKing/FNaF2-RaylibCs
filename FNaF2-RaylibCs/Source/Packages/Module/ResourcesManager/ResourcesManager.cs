@@ -22,22 +22,14 @@ public class ResourcesManager(params String[] scenes_names) : CallDebuggerInfoTe
     ImGui.Text($" > Resources Count: {_storage.Count}");
   }
   
-  private void CheckSceneKey(String scene_name)
+  private void AddFolderAndStuff(String scene_name, String name, dynamic mat, String resource_directory)
   {
     if (!_storage.ContainsKey(scene_name)) _storage.Add(scene_name, new Dictionary<String, Dictionary<String, dynamic>>());
+    if (!_storage[scene_name].ContainsKey(resource_directory)) _storage[scene_name].Add(resource_directory, new Dictionary<String, dynamic>());
+    _storage[scene_name][resource_directory].Add(name, mat);
   }
 
-  public void AddMaterial(String scene_name, String name, FontResource mat)
-  {
-    CheckSceneKey(scene_name);
-    if (!_storage[scene_name].ContainsKey("Font")) _storage[scene_name].Add("Font", new Dictionary<String, dynamic>());
-    _storage[scene_name]["Font"].Add(name, mat);
-  }
-  
-  public void AddMaterial(String scene_name, String name, ImageResource mat)
-  {
-    CheckSceneKey(scene_name);
-    if (!_storage[scene_name].ContainsKey("Image")) _storage[scene_name].Add("Image", new Dictionary<String, dynamic>());
-    _storage[scene_name]["Image"].Add(name, mat);
-  }
+  public void AddMaterial(String scene_name, String name, FontResource mat) => AddFolderAndStuff(scene_name, name, mat, "Font");
+  public void AddMaterial(String scene_name, String name, ImageResource mat) => AddFolderAndStuff(scene_name, name, mat, "Image");
+  public void AddMaterial(String scene_name, String name, AnimationResource mat) => AddFolderAndStuff(scene_name, name, mat, "Animation");
 }

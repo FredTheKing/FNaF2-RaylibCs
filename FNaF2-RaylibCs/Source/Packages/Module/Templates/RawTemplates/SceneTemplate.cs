@@ -1,6 +1,6 @@
 namespace RaylibArteSonat.Source.Packages.Module;
 
-public class SceneTemplate()
+public abstract class SceneTemplate()
 {
   public void Activation()
   {

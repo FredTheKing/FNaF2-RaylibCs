@@ -1,7 +1,7 @@
 using ImGuiNET;
 namespace RaylibArteSonat.Source.Packages.Module;
 
-public class MaterialTemplate : CallDebuggerInfoTemplate
+public abstract class MaterialTemplate : CallDebuggerInfoTemplate
 {
   protected String _filename;
   protected dynamic _material;
