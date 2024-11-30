@@ -1,12 +1,14 @@
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
-using RaylibArteSonat.Source.Packages.Module;
 using Raylib_cs;
-namespace RaylibArteSonat.Source.Packages.Objects.Image;
 
-public class SimpleImage(ImageResource resource, Vector2 position, Color? tint = null) : ObjectTemplate(position, new Vector2(resource.GetRenderMaterial().Width, resource.GetRenderMaterial().Height))
+namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
+
+public class SimpleImage(Vector2 position, ImageResource resource, Color? tint = null, Vector2? new_size = null) : ObjectTemplate(position, new_size ?? resource.GetSize())
 {
-  protected ImageResource Resource = resource;
   protected Raylib_cs.Image _image;
   protected Color _tint = tint ?? Color.White;
 
@@ -30,7 +32,7 @@ public class SimpleImage(ImageResource resource, Vector2 position, Color? tint =
   
   public new void Draw(Registry registry)
   {
-    Raylib.DrawTexture(Resource.GetRenderMaterial(), (int)_position.X, (int)_position.Y, Color.White);
+    Raylib.DrawTexturePro(resource.GetMaterial(), new Rectangle(Vector2.Zero, resource.GetMaterial().Width, resource.GetMaterial().Height), new Rectangle(_position, _size), Vector2.Zero, 0, _tint);
     base.Draw(registry);
   }
 }

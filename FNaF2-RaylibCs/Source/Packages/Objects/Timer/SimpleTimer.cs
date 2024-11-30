@@ -1,8 +1,9 @@
+using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
 using Raylib_cs;
-using RaylibArteSonat.Source.Packages.Module;
 
-namespace RaylibArteSonat.Source.Packages.Objects.Timer;
+namespace FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 
 public class SimpleTimer(double target_time_in_seconds = 1f, bool start_at_activation = false, bool delete_or_loop_on_end = true, bool reset_target_when_ended = true) : ObjectTemplate
 {

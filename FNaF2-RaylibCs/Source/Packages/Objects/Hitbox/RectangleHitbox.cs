@@ -1,8 +1,9 @@
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module;
 using ImGuiNET;
-using RaylibArteSonat.Source.Packages.Module;
 using Raylib_cs;
-namespace RaylibArteSonat.Source.Packages.Objects.Hitbox;
+
+namespace FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 
 public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawHitbox(position, size, color)
 {
@@ -41,7 +42,7 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawH
     _size = new_size;
   }
 
-  private new void CheckMouseHover()
+  private void CheckMouseHover()
   {
     Vector2 nonref_position = _position;
     _hitbox_click_hover = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(nonref_position, _size));

@@ -1,8 +1,9 @@
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 using Raylib_cs;
-using RaylibArteSonat.Source.Packages.Objects.Hitbox;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module.Templates;
 
 public class HitboxTemplate : ObjectTemplate
 {

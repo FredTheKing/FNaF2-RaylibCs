@@ -1,38 +1,46 @@
+using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using ImGuiNET;
 using Raylib_cs;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 
 public class ImageResource : MaterialTemplate
 {
-  private Texture2D _render_material;
+  private readonly Vector2 _size;
 
-  public ImageResource(String filename) : base() => _filename = filename;
-  public ImageResource(Image image) : base() 
-  { 
-    _material = image;
-    _render_material = Raylib.LoadTextureFromImage(image);
+  public ImageResource(String filename) : base()
+  {
+    _filename = filename;
+    Texture2D _texture = Raylib.LoadTexture(_filename);
+    _size = new Vector2(_texture.Width, _texture.Height);
+    Raylib.UnloadTexture(_texture);
+  }
+
+  public ImageResource(Image image) : base() => _material = Raylib.LoadTextureFromImage(image);
+
+  public ImageResource(Texture2D texture) : base() => _material = texture;
+
+  public override bool IsMaterialLoaded()
+  {
+    if (_material is null) return false;
+    return Raylib.IsTextureReady(_material);
   }
   
-  public ImageResource(Texture2D texture) : base() 
-  { 
-    _render_material = texture;
-    _material = Raylib.LoadImageFromTexture(texture);
-  }
+  public Vector2 GetSize() => _size;
   
   public new void Unload()
   {
-    if (_filename == null) return;
-    Raylib.UnloadImage(_material);
-    Raylib.UnloadTexture(_render_material);
+    if (_material is null) return;
+    Raylib.UnloadTexture(_material);
+    _material = null;
   }
 
-  public new void Load()
+  public new void Load() => _material = Raylib.LoadTexture(_filename);
+  
+  public new void CallDebuggerInfo(Registry registry)
   {
-    _material = Raylib.LoadImage(_filename);
-    _render_material = Raylib.LoadTexture(_filename);
+    ImGui.Text($" > Original Size: {_size.X}, {_size.Y}");
+    ImGui.Text($" > Loaded: {IsMaterialLoaded()}");
   }
-  
-  public new Image GetMaterial() => _material;
-  
-  public Texture2D GetRenderMaterial() => _render_material;
 }

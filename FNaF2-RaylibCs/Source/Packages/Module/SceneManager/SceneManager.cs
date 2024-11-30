@@ -1,7 +1,7 @@
-using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 
 public class SceneManager(params String[] scenes_names) : CallDebuggerInfoTemplate
 { 
@@ -63,8 +63,10 @@ public class SceneManager(params String[] scenes_names) : CallDebuggerInfoTempla
   
   public void ChangeScene(String scene_name)
   {
-    if (_current_scene != null) _current_scene.Unload();
-    _current_scene = _scenes[scene_name];
+    Console.WriteLine("-----------------------------------------");
+    Scene newScene = _scenes[scene_name];
+    if (!(_current_scene is null)) _current_scene.Unload(newScene);
+    _current_scene = newScene;
     _changed = true;
     _current_scene.Load();
     Console.WriteLine("INFO: SCENE: Scene changed successfully");

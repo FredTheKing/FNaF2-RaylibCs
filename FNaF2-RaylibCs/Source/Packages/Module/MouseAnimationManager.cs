@@ -1,7 +1,8 @@
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
 using Raylib_cs;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module;
 
 public class MouseAnimationManager : CallDebuggerInfoTemplate
 {

@@ -1,16 +1,18 @@
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 using ImGuiNET;
 using Raylib_cs;
-using RaylibArteSonat.Source.Packages.Module;
-using RaylibArteSonat.Source.Packages.Objects.Timer;
 
-namespace RaylibArteSonat.Source.Packages.Objects.Animation;
+namespace FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 
 public enum AnimationPlayMode { Replacement, Addition };
 
-public class SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode play_mode, AnimationResource resource) : ObjectTemplate(position, resource.GetSize())
+public class SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode play_mode, AnimationResource resource, SimpleTimer? custom_update_timer = null) : ObjectTemplate(position, resource.GetSize())
 {
-  private SimpleTimer _update_timer = new SimpleTimer(1f / fps, true);
+  private SimpleTimer _update_timer = custom_update_timer ?? new SimpleTimer(1f / fps, true);
   private int _current_frame = 0;
   
   public new void CallDebuggerInfo(Registry registry)
@@ -29,6 +31,8 @@ public class SimpleAnimation(Vector2 position, float fps, Color color, Animation
       ImGui.TreePop();
     }
   }
+  
+  public SimpleTimer GetUpdateTimer() => _update_timer;
   
   public new void Activation(Registry registry)
   {

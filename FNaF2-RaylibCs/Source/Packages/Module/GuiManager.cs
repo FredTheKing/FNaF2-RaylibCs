@@ -1,6 +1,8 @@
+using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module;
 
 public class GuiManager : CallDebuggerInfoTemplate
 {

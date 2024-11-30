@@ -1,6 +1,6 @@
 using Raylib_cs;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module;
 
 public static class MainLooper
 {

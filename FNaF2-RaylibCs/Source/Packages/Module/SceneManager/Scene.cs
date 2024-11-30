@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices.JavaScript;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 
 public class Scene(string name) : CallDebuggerInfoTemplate
 {
@@ -21,10 +21,7 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   
   public void AddObject(Object obj, int z_layer)
   { 
-    if (!_unsorted_dict_objects.ContainsKey(z_layer))
-    {
-      _unsorted_dict_objects.Add(z_layer, new List<object>());
-    }
+    if (!_unsorted_dict_objects.ContainsKey(z_layer)) _unsorted_dict_objects.Add(z_layer, new List<object>());
     _unsorted_dict_objects[z_layer].Add(obj);
   }
 
@@ -44,42 +41,32 @@ public class Scene(string name) : CallDebuggerInfoTemplate
     _unsorted_dict_objects.Clear();
   }
 
-  public void Unload()
-  {
+  public void Unload(Scene? next_scene = null)
+  { 
     foreach (KeyValuePair<string,Dictionary<string,dynamic>> type_pair in _resources_dictionary)
-    {
       foreach (KeyValuePair<string,dynamic> object_pair in type_pair.Value)
-      {
-        object_pair.Value.Unload();
-      }
-    }
-    foreach (dynamic item in _sorted_list_objects)
-    {
+        if (next_scene == null || (!next_scene._resources_dictionary.TryGetValue(type_pair.Key, out var next_scene_type_pair) || !next_scene_type_pair.ContainsKey(object_pair.Key)))
+          object_pair.Value.Unload();
+
+    foreach (dynamic item in _sorted_list_objects) 
       item.Unload();
-    }
   }
   
   public void Load()
   {
     foreach (KeyValuePair<string,Dictionary<string,dynamic>> type_pair in _resources_dictionary)
-    {
       foreach (KeyValuePair<string,dynamic> object_pair in type_pair.Value)
-      {
-        object_pair.Value.Load();
-      }
-    }
+        if (!object_pair.Value.IsMaterialLoaded())
+          object_pair.Value.Load();
+
     foreach (dynamic item in _sorted_list_objects)
-    {
       item.Load();
-    }
   }
   
   public void Activation(Registry registry)
   {
     foreach (dynamic item in _sorted_list_objects)
-    {
       item.Activation(registry);
-    }
     _script_instance.Activation();
     _global_script_instance.Activation();
   }
@@ -87,9 +74,7 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   public void Update(Registry registry)
   {
     foreach (dynamic item in _sorted_list_objects)
-    {
       item.Update(registry);
-    }
     _script_instance.Update();
     _global_script_instance.Update();
   }
@@ -97,9 +82,7 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   public void Draw(Registry registry)
   {
     foreach (dynamic item in _sorted_list_objects)
-    {
       item.Draw(registry);
-    }
     _script_instance.Draw();
     _global_script_instance.Draw();
   }

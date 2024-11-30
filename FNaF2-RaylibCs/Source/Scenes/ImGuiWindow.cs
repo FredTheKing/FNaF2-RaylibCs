@@ -1,18 +1,22 @@
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module;
 using ImGuiNET;
 using Raylib_cs;
-using RaylibArteSonat.Source.Packages.Module;
 using rlImGui_cs;
-namespace RaylibArteSonat.Source.Scenes;
+
+namespace FNaF2_RaylibCs.Source.Scenes;
 
 public class ImGuiWindow(Registry registry)
 {
   public void Process()
   {
     rlImGui.Begin();
+    
+    ImGui.SetWindowSize(new Vector2(400, 768));
+    ImGui.SetWindowPos(new Vector2(Raylib.GetScreenWidth() - 400, 0));
     ImGui.PushStyleVar(ImGuiStyleVar.ScrollbarSize, 0);
 
-    if (ImGui.Begin("Debugger"))
+    if (ImGui.Begin("Debugger", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse))
     {
       ImGui.SeparatorText("Info");
       ImGui.Text("Window size: " + Raylib.GetRenderWidth() + "/" + Raylib.GetRenderHeight());

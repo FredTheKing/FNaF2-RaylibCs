@@ -1,8 +1,9 @@
 using System.Numerics;
-using ImGuiNET;
-using RaylibArteSonat.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using Raylib_cs;
-namespace RaylibArteSonat.Source.Packages.Objects.Hitbox;
+
+namespace FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 
 public class RawHitbox(Vector2 position, Vector2 size, Color color) : ObjectTemplate(position, size)
 {

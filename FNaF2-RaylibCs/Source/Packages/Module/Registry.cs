@@ -1,8 +1,9 @@
+using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
-using Raylib_cs;
 using rlImGui_cs;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module;
 
 public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
 {
@@ -12,9 +13,9 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   private bool _show_fps_non_debug = false;
   
   private readonly ShortcutManager _shortcut_manager = new();
-  private readonly SceneManager _scene_manager = new(scenes_names);
+  private readonly SceneManager.SceneManager _scene_manager = new(scenes_names);
   private readonly GuiManager _gui_manager = new();
-  private readonly ResourcesManager _resources_manager = new(scenes_names);
+  private readonly ResourcesManager.ResourcesManager _resources_manager = new(scenes_names);
   private readonly MouseAnimationManager _mouse_animation_manager = new();
   
   private Dictionary<String, Dictionary<String, Object>> _container = new();
@@ -41,27 +42,21 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
         target_scenes.AddRange(_scene_manager.GetScenes().Keys);
         break;
       }
-      else
-      {
-        target_scenes.Add(scene_name);
-      }
+      target_scenes.Add(scene_name);
     }
     
     foreach (string scene_name in target_scenes)
     {
-      if (!_container.ContainsKey(scene_name))
-      {
+      if (!_container.ContainsKey(scene_name)) 
         _container.Add(scene_name, new Dictionary<String, Object>());
-      }
       
       Console.WriteLine("INFO: REGISTRY: Object '" + name + "' for scene '" + scene_name + "' loaded successfully");
       _container[scene_name].Add(name, obj);
     }
     
-    for(int i = 0; i < target_scenes.Count; i++)
-    {
+    for(int i = 0; i < target_scenes.Count; i++) 
       _scene_manager.LinkObject(obj, target_scenes[i], z_layers[i % z_layers.Length]);
-    }
+    
     return obj;
   }
   
@@ -76,10 +71,7 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
         target_scenes.AddRange(_scene_manager.GetScenes().Keys);
         break;
       }
-      else
-      {
-        target_scenes.Add(scene_name);
-      }
+      target_scenes.Add(scene_name);
     }
     
     foreach (string scene_name in target_scenes)
@@ -127,13 +119,13 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
     rlImGui.Setup(true, true);
   }
   
-  public SceneManager GetSceneManager() => _scene_manager;
+  public SceneManager.SceneManager GetSceneManager() => _scene_manager;
   
   public GuiManager GetGuiManager() => _gui_manager;
 
   public ShortcutManager GetShortcutManager() => _shortcut_manager;
   
-  public ResourcesManager GetResourcesManager() => _resources_manager;
+  public ResourcesManager.ResourcesManager GetResourcesManager() => _resources_manager;
   
   public MouseAnimationManager GetMouseAnimationManager() => _mouse_animation_manager;
   

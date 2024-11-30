@@ -1,16 +1,19 @@
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
 using Raylib_cs;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 
 public class AnimationResource : MaterialTemplate
 {
   private readonly Vector2 _size;
-  protected readonly new List<String> _filename;
-  protected readonly new List<Texture2D> _material = [];
-  
-  public AnimationResource(List<String> filenames) : base()
+  protected new List<string> _filename;
+  protected new List<Texture2D>? _material = [];
+
+  public override bool IsMaterialLoaded() => _material.Count(x => Raylib.IsTextureReady(x)) == _filename.Count;
+
+  public AnimationResource(List<string> filenames) : base()
   {
     _filename = filenames;
     Texture2D _texture = Raylib.LoadTexture(_filename[0]);
@@ -19,7 +22,8 @@ public class AnimationResource : MaterialTemplate
   }
   public AnimationResource(List<Image> images) : base()
   {
-    foreach (Image image in images) _material.Add(Raylib.LoadTextureFromImage(image));
+    foreach (Image image in images) 
+      _material.Add(Raylib.LoadTextureFromImage(image));
     _size = new Vector2(_material[0].Width, _material[0].Height);
   }
   
@@ -31,27 +35,23 @@ public class AnimationResource : MaterialTemplate
   
   public Vector2 GetSize() => _size;
   
-  public new List<String> GetFilename() => _filename;
+  public new List<string> GetFilename() => _filename;
   public new List<Texture2D> GetMaterial() => _material;
   
   public new void Unload()
   {
-    for (int i = 0; i < _filename.Count; i++)
-    {
-      Raylib.UnloadTexture(_material[i]);
-    }
+    foreach (Texture2D material in _material)
+      Raylib.UnloadTexture(material);
     _material.Clear();
   }
 
   public new void Load()
   {
-    for (int i = 0; i < _filename.Count; i++)
-    {
-      _material.Add(Raylib.LoadTexture(_filename[i]));
-    }
+    foreach (string filename in _filename)
+      _material.Add(Raylib.LoadTexture(filename));
   }
 
-  public void CallDebuggerInfo(Registry registry)
+  public new void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Items Count: {_filename.Count | _material.Count}");
     ImGui.Text($" > Original Size: {_size.X}, {_size.Y}");

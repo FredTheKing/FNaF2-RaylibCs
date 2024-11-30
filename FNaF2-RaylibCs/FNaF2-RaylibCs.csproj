@@ -43,10 +43,6 @@
       <Content Include="Resources\TestingAnimation\3.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <None Remove="Resources\icon.png" />
-      <Content Include="Resources\icon.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
       <None Remove="Resources\TestingAnimation\4.png" />
       <Content Include="Resources\TestingAnimation\4.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -93,6 +89,15 @@
       </Content>
       <None Remove="Resources\TestingAnimation\15.png" />
       <Content Include="Resources\TestingAnimation\15.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\TestingAnimation\avatar.jpg" />
+      <None Remove="Resources\TestingAnimation\avatar.png" />
+      <Content Include="Resources\TestingAnimation\avatar.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\icon.png" />
+      <Content Include="Resources\icon.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

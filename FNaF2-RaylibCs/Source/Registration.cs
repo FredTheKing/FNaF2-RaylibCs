@@ -1,58 +1,47 @@
-namespace RaylibArteSonat.Source;
-using RaylibArteSonat.Source.Packages.Objects.Animation;
-using Raylib_cs;
-using Packages.Module;
-using Packages.Objects.Box;
-using Packages.Objects.Text;
-using Packages.Objects.Image;
-using Scenes;
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
+using FNaF2_RaylibCs.Source.Packages.Objects.Animation;
+using FNaF2_RaylibCs.Source.Packages.Objects.Image;
+using FNaF2_RaylibCs.Source.Scenes;
+using FNaF2_RaylibCs.Source.Scenes.Debugger;
+using FNaF2_RaylibCs.Source.Scenes.Game;
+using FNaF2_RaylibCs.Source.Scenes.Menu;
+using Raylib_cs;
+
+namespace FNaF2_RaylibCs.Source;
 
 public static class Registration
 {
-  private static string[] scenes_names = ["Debugger/Testing", "Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Main", "Game/Loading", "Game/Newspaper"];
-  private static string start_scene_name = "Debugger/Testing";
+  private static string[] scenes_names = ["Debugger/TestingOne", "Debugger/TestingTwo", "Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Main", "Game/Loading", "Game/Newspaper"];
+  private static string start_scene_name = "Debugger/TestingOne";
   
-  public static class Materials
+  public struct Materials
   {
     public static FontResource GlobalFont;
     public static AnimationResource TestingAnimation;
+    public static ImageResource TestionImage;
   }
   
-  public static class Objects
+  public struct Objects
   {
     public static SimpleAnimation TestingAnimation;
+    public static SimpleImage TestingImage;
   }
   
   public static void MaterialsInitialisation(Registry registry)
   {
     Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", ["*"], new FontResource("Resources/Font/consolas.ttf"));
-    Materials.TestingAnimation = registry.RegisterMaterial("TestingAnimation", ["Debugger/Testing"],
-      new AnimationResource([
-        "Resources/TestingAnimation/0.png",
-        "Resources/TestingAnimation/1.png",
-        "Resources/TestingAnimation/2.png",
-        "Resources/TestingAnimation/3.png",
-        "Resources/TestingAnimation/4.png",
-        "Resources/TestingAnimation/5.png",
-        "Resources/TestingAnimation/6.png",
-        "Resources/TestingAnimation/7.png",
-        "Resources/TestingAnimation/8.png",
-        "Resources/TestingAnimation/9.png",
-        "Resources/TestingAnimation/10.png",
-        "Resources/TestingAnimation/11.png",
-        "Resources/TestingAnimation/12.png",
-        "Resources/TestingAnimation/13.png",
-        "Resources/TestingAnimation/14.png",
-        "Resources/TestingAnimation/15.png"
-      ]));
-
+    Materials.TestingAnimation = registry.RegisterMaterial("TestingAnimation", ["Debugger/TestingOne", "Debugger/TestingTwo"], new AnimationResource(Loaders.LoadMultipleFilenames("Resources/TestingAnimation", 16)));
+    Materials.TestionImage = registry.RegisterMaterial("TestImage", ["Debugger/TestingOne"], new ImageResource("Resources/TestingAnimation/avatar.png"));
+    
     registry.EndMaterialsRegistration();
   }
 
   public static void ObjectsInitialisation(Registry registry)
   {
-    Objects.TestingAnimation = registry.RegisterObject("TestingAnimationYooo", ["Debugger/Testing"], [0], new SimpleAnimation(new Vector2(500, 100), 24, Color.White, AnimationPlayMode.Replacement, Materials.TestingAnimation));
+    Objects.TestingAnimation = registry.RegisterObject("TestingAnimationYooo", ["Debugger/TestingOne", "Debugger/TestingTwo"], [0], new SimpleAnimation(Vector2.Zero, 24, Color.White, AnimationPlayMode.Replacement, Materials.TestingAnimation));
+    Objects.TestingImage = registry.RegisterObject("TestingImage", ["Debugger/TestingOne"], [-1], new SimpleImage(Vector2.Zero, Materials.TestionImage, Color.White, Materials.TestingAnimation.GetSize()));
     
     registry.EndObjectsRegistration(start_scene_name);
   }
@@ -61,7 +50,8 @@ public static class Registration
   {
     Registry registry = new Registry(scenes_names);
     
-    registry.AssignSceneScript("Debugger/Testing", new DebuggerTesting(registry));
+    registry.AssignSceneScript("Debugger/TestingOne", new DebuggerTestingOne(registry));
+    registry.AssignSceneScript("Debugger/TestingTwo", new DebuggerTestingTwo(registry));
     
     registry.AssignSceneScript("Menu/Main", new MenuMain(registry));
     registry.AssignSceneScript("Menu/Settings", new MenuSettings(registry));

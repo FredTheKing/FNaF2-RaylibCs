@@ -1,6 +1,7 @@
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using Raylib_cs;
 
-namespace RaylibArteSonat.Source.Packages.Module;
+namespace FNaF2_RaylibCs.Source.Packages.Module;
 
 public class ShortcutManager : CallDebuggerInfoTemplate
 {

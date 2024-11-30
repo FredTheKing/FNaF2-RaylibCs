@@ -1,8 +1,10 @@
 using System.Numerics;
+using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
-using RaylibArteSonat.Source.Packages.Module;
 using Raylib_cs;
-namespace RaylibArteSonat.Source.Packages.Objects.Box;
+
+namespace FNaF2_RaylibCs.Source.Packages.Objects.Box;
 
 public class SimpleBox(Vector2 position, Vector2 size, Color color) : ObjectTemplate(position, size)
 {

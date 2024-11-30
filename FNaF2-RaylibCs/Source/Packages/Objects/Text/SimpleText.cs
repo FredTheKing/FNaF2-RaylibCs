@@ -1,9 +1,12 @@
 using System.Numerics;
 using System.Text;
+using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 using ImGuiNET;
 using Raylib_cs;
-using RaylibArteSonat.Source.Packages.Module;
-namespace RaylibArteSonat.Source.Packages.Objects.Text;
+
+namespace FNaF2_RaylibCs.Source.Packages.Objects.Text;
 
 public class SimpleText : ObjectTemplate
 {
