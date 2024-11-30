@@ -14,7 +14,7 @@ public class SimpleText : ObjectTemplate
   {
     _position = position;
     _size = size;
-    _text = Encoding.UTF8.GetBytes(text).ToArray();
+    _text = text;
     _font_size = font_size;
     _color = color;
     _remember_color = color;
@@ -27,7 +27,7 @@ public class SimpleText : ObjectTemplate
   {
     _position = position;
     _size = size;
-    _text = Encoding.UTF8.GetBytes(text).ToArray();
+    _text = text;
     _font_size = font_size;
     _color = color;
     _remember_color = color;
@@ -40,7 +40,7 @@ public class SimpleText : ObjectTemplate
   {
     _position = position;
     _size = size;
-    _text = Encoding.UTF8.GetBytes("").ToArray();
+    _text = "";
     _font_size = font_size;
     _color = color;
     _remember_color = color;
@@ -53,7 +53,7 @@ public class SimpleText : ObjectTemplate
   {
     _position = position;
     _size = size;
-    _text = Encoding.UTF8.GetBytes("").ToArray();
+    _text = "";
     _font_size = font_size;
     _color = color;
     _remember_color = color;
@@ -62,15 +62,16 @@ public class SimpleText : ObjectTemplate
     _align_center_v = align_center_v;
   }
   
-  private byte[] _text;
-  private int _font_size;
-  private float _font_spacing = 1.0f;
-  private Color _color; 
-  private Color _remember_color;
-  private FontResource _font;
-  private Vector2 _offset = new(0, 0);
-  private bool _align_center_h;
-  private bool _align_center_v;
+  private string _text;
+  protected int _font_size;
+  protected float _font_spacing = 1.0f;
+  protected Color _color; 
+  protected Color _remember_color;
+  protected FontResource _font;
+  protected Vector2 _offset = new(0, 0);
+  protected bool _align_center_h;
+  protected bool _align_center_v;
+  protected bool _hide_text = false;
 
   protected string debugger_name = "Text-" + new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 4)
     .Select(s => s[new Random().Next(s.Length)]).ToArray());
@@ -92,24 +93,22 @@ public class SimpleText : ObjectTemplate
   
   protected void DrawText()
   {
-    string converted_text = Encoding.UTF8.GetString(_text);
-    
     Vector2 measured_text = Raylib.MeasureTextEx(_font.GetMaterial(), GetText(), _font_size, _font_spacing);
     float text_pos_x = _align_center_h ? _position.X + _size.X/2 - measured_text.X/2 : _position.X + 10;
     float text_pos_y = _align_center_v ? _position.Y + _size.Y/2 - measured_text.Y/2 : _position.Y + 10;
     
     Vector2 new_position = new Vector2(text_pos_x, text_pos_y);
     
-    Raylib.DrawTextEx(_font.GetMaterial(), converted_text, new_position + _offset, _font_size, _font_spacing, _color);
+    PostDraw(new_position);
   }
+
+  protected virtual void PostDraw(Vector2 new_position) => Raylib.DrawTextEx(_font.GetMaterial(), _text, new_position + _offset, _font_size, _font_spacing, _color);
   
   public void SetCurrentFrameColor(Color color) => _color = color;
   
-  public string GetTextRaw() => BitConverter.ToString(_text).Replace("-", "");
+  public string GetText() => _text;
   
-  public string GetText() => Encoding.UTF8.GetString(_text);
-  
-  public void SetText(string text) => _text = Encoding.UTF8.GetBytes(text);
+  public void SetText(string text) => _text = text;
 
   private void UndoColorChanges()
   {
@@ -119,7 +118,7 @@ public class SimpleText : ObjectTemplate
   
   public new void Draw(Registry registry)
   {
-    DrawText();
+    if (!_hide_text) DrawText();
     DrawDebug(registry);
     base.Draw(registry);
     UndoColorChanges();

@@ -11,6 +11,7 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   private bool _show_hitboxes = true;
   private bool _show_bounds = true;
   private bool _show_fps_non_debug = false;
+  private bool _movable_debugger = false;
   
   private readonly ShortcutManager _shortcut_manager = new();
   private readonly SceneManager.SceneManager _scene_manager = new(scenes_names);
@@ -34,15 +35,21 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   public dynamic RegisterObject(String name, String[] scenes_names, int[] z_layers, dynamic obj)
   {
     List<string> target_scenes = new();
+    bool have_star = scenes_names[0] == "*";
     
+    if (have_star) target_scenes.AddRange(_scene_manager.GetScenes().Keys);
     foreach (string scene_name in scenes_names)
     {
-      if (scene_name == "*")
+      if (scene_name == "*") continue;
+      switch (have_star)
       {
-        target_scenes.AddRange(_scene_manager.GetScenes().Keys);
-        break;
+        case true:
+          target_scenes.Remove(scene_name);
+          break;
+        case false:
+          target_scenes.Add(scene_name);
+          break;
       }
-      target_scenes.Add(scene_name);
     }
     
     foreach (string scene_name in target_scenes)
@@ -63,15 +70,21 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   public dynamic RegisterMaterial(String name, String[] scenes_names, dynamic mat)
   {
     List<string> target_scenes = new();
+    bool have_star = scenes_names[0] == "*";
     
+    if (have_star) target_scenes.AddRange(_scene_manager.GetScenes().Keys);
     foreach (string scene_name in scenes_names)
     {
-      if (scene_name == "*")
+      if (scene_name == "*") continue;
+      switch (have_star)
       {
-        target_scenes.AddRange(_scene_manager.GetScenes().Keys);
-        break;
+        case true:
+          target_scenes.Remove(scene_name);
+          break;
+        case false:
+          target_scenes.Add(scene_name);
+          break;
       }
-      target_scenes.Add(scene_name);
     }
     
     foreach (string scene_name in target_scenes)
@@ -102,6 +115,10 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   public bool GetShowFpsNonDebug() => _show_fps_non_debug;
   
   public bool GetDebugMode() => _debug_mode;
+  
+  public void SetMovableDebugger(bool boolean) => _movable_debugger = boolean;
+  
+  public bool GetMovableDebugger() => _movable_debugger;
 
   public void EndMaterialsRegistration()
   {

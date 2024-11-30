@@ -14,9 +14,11 @@ public class ImGuiWindow(Registry registry)
     
     ImGui.SetWindowSize(new Vector2(400, 768));
     ImGui.SetWindowPos(new Vector2(Raylib.GetScreenWidth() - 400, 0));
+    // i dunno why these dont work ^^^
+    
     ImGui.PushStyleVar(ImGuiStyleVar.ScrollbarSize, 0);
 
-    if (ImGui.Begin("Debugger", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse))
+    if (registry.GetMovableDebugger() ? ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse) : ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize))
     {
       ImGui.SeparatorText("Info");
       ImGui.Text("Window size: " + Raylib.GetRenderWidth() + "/" + Raylib.GetRenderHeight());
@@ -29,21 +31,30 @@ public class ImGuiWindow(Registry registry)
       int index = Array.IndexOf(array, registry.GetSceneManager().GetCurrentScene().GetName());
       ImGui.SetNextItemWidth(174);
       if (ImGui.Combo("##Scene Selector", ref index, array, array.Length)) registry.GetSceneManager().ChangeScene(array[index]);
+      
       ImGui.Text("Show Hitboxes: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
       bool hitboxes = registry.GetShowHitboxes();
       ImGui.Checkbox("##Show Hitboxes", ref hitboxes);
       registry.SetShowHitboxes(hitboxes);
+      
       ImGui.Text("Show Bounds: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
       bool bounds = registry.GetShowBounds();
       ImGui.Checkbox("##Show Bounds", ref bounds);
       registry.SetShowBounds(bounds);
+      
       ImGui.Text("Show Fps Non Debug: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
       bool fps = registry.GetShowFpsNonDebug();
       ImGui.Checkbox("##Show Fps Non Debug", ref fps);
       registry.SetShowFpsNonDebug(fps);
+      
+      ImGui.Text("Movable Debugger: ");
+      ImGui.SameLine(ImGui.GetWindowWidth() - 27);
+      bool movdebugger = registry.GetMovableDebugger();
+      ImGui.Checkbox("##Movable Debugger", ref movdebugger);
+      registry.SetMovableDebugger(movdebugger);
       
       var half_button_size = new Vector2(ImGui.GetWindowWidth() / 2 - 12, 19);
       if (ImGui.Button("Enable all", half_button_size))
@@ -51,6 +62,7 @@ public class ImGuiWindow(Registry registry)
         registry.SetShowHitboxes(true);
         registry.SetShowBounds(true);
         registry.SetShowFpsNonDebug(true);
+        registry.SetMovableDebugger(true);
       }
       ImGui.SameLine();
       if (ImGui.Button("Disable all", half_button_size))
@@ -58,6 +70,7 @@ public class ImGuiWindow(Registry registry)
         registry.SetShowHitboxes(false);
         registry.SetShowBounds(false);
         registry.SetShowFpsNonDebug(false);
+        registry.SetMovableDebugger(false);
       }
       
       //if (ImGui.Button("Open DB", half_button_size))

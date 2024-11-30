@@ -10,7 +10,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 
 public enum AnimationPlayMode { Replacement, Addition };
 
-public class SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode play_mode, AnimationResource resource, SimpleTimer? custom_update_timer = null) : ObjectTemplate(position, resource.GetSize())
+public class SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode play_mode, AnimationResource resource, SimpleTimer? custom_update_timer = null, bool restart_on_scene_change = true) : ObjectTemplate(position, resource.GetSize())
 {
   private SimpleTimer _update_timer = custom_update_timer ?? new SimpleTimer(1f / fps, true);
   private int _current_frame = 0;
@@ -21,7 +21,7 @@ public class SimpleAnimation(Vector2 position, float fps, Color color, Animation
     ImGui.Text($" > Size: {_size.X}, {_size.Y}");
     ImGui.Text($" > Color: {color.R}, {color.G}, {color.B}, {color.A}");
     ImGui.Separator();
-    ImGui.Text($" > Play Mode: {(play_mode == AnimationPlayMode.Replacement ? "Replacement" : "Addition")}");
+    ImGui.Text($" > Play Mode: {play_mode.ToString()}");
     ImGui.Text($" > Current Frame: {_current_frame + 1} / {resource.GetMaterial().Count}");
     _update_timer.CallDebuggerInfo(registry);
 
@@ -36,6 +36,7 @@ public class SimpleAnimation(Vector2 position, float fps, Color color, Animation
   
   public new void Activation(Registry registry)
   {
+    if (restart_on_scene_change) _current_frame = 0;
     _update_timer.Activation(registry);
     base.Activation(registry);
   }

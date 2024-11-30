@@ -13,7 +13,7 @@ namespace FNaF2_RaylibCs.Source;
 
 public static class Registration
 {
-  private static string[] scenes_names = ["Debugger/TestingOne", "Debugger/TestingTwo", "Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Main", "Game/Loading", "Game/Newspaper"];
+  private static string[] scenes_names = ["Debugger/TestingOne", "Debugger/TestingTwo", "Debugger/TestingThree", "Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Main", "Game/Loading", "Game/Newspaper"];
   private static string start_scene_name = "Debugger/TestingOne";
   
   public struct Materials
@@ -31,7 +31,7 @@ public static class Registration
   
   public static void MaterialsInitialisation(Registry registry)
   {
-    Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", ["*"], new FontResource("Resources/Font/consolas.ttf"));
+    Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", ["*", "Debugger/TestingThree"], new FontResource("Resources/Font/consolas.ttf"));
     Materials.TestingAnimation = registry.RegisterMaterial("TestingAnimation", ["Debugger/TestingOne", "Debugger/TestingTwo"], new AnimationResource(Loaders.LoadMultipleFilenames("Resources/TestingAnimation", 16)));
     Materials.TestionImage = registry.RegisterMaterial("TestImage", ["Debugger/TestingOne"], new ImageResource("Resources/TestingAnimation/avatar.png"));
     
@@ -52,6 +52,7 @@ public static class Registration
     
     registry.AssignSceneScript("Debugger/TestingOne", new DebuggerTestingOne(registry));
     registry.AssignSceneScript("Debugger/TestingTwo", new DebuggerTestingTwo(registry));
+    registry.AssignSceneScript("Debugger/TestingThree", new DebuggerTestingThree(registry));
     
     registry.AssignSceneScript("Menu/Main", new MenuMain(registry));
     registry.AssignSceneScript("Menu/Settings", new MenuSettings(registry));

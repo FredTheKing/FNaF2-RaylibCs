@@ -3,7 +3,7 @@ using FNaF2_RaylibCs.Source.Packages.Module;
 using Raylib_cs;
 using rlImGui_cs;
 
-Raylib.SetConfigFlags(ConfigFlags.AlwaysRunWindow | ConfigFlags.VSyncHint);
+Raylib.SetConfigFlags(ConfigFlags.AlwaysRunWindow);
 Raylib.InitWindow(1024, 768, "Five Nights at Freddy's 2 - Raylib Edition");
 Raylib.InitAudioDevice();
 Raylib.SetTargetFPS(-1);
