@@ -96,10 +96,25 @@
       <Content Include="Resources\TestingAnimation\avatar.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <None Remove="Resources\icon.png" />
-      <Content Include="Resources\icon.png">
+      <None Update="Resources\icon.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+      </None>
+      <None Update="Resources\Menu\Background\0.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Resources\Menu\Background\1.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Resources\Menu\Background\2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Resources\Menu\Background\3.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\Menu\Background\" />
     </ItemGroup>
 
 </Project>

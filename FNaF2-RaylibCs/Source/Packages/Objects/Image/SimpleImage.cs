@@ -7,16 +7,18 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
-public class SimpleImage(Vector2 position, ImageResource resource, Color? tint = null, Vector2? new_size = null) : ObjectTemplate(position, new_size ?? resource.GetSize())
+public class SimpleImage : ObjectTemplate
 {
-  protected Raylib_cs.Image _image;
-  protected Color _tint = tint ?? Color.White;
+  public SimpleImage(Vector2 position, ImageResource resource, Color? tint = null, Vector2? new_size = null) : base(position, new_size ?? resource.GetSize()) { this._resource = resource; _tint = tint ?? Color.White; }
+  public SimpleImage(Vector2 position, Vector2 original_size, Color? tint = null, Vector2? new_size = null) : base(position, new_size ?? original_size) { _tint = tint ?? Color.White; }
+
+  protected Color _tint;
+  protected ImageResource _resource = null!;
 
   public new void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Position: {_position.X}, {_position.Y}");
-    ImGui.Text($" > Size: {_image.Width}, {_image.Height}");
-    
+    if (_resource is not null) ImGui.Text($" > Size: {_resource.GetSize().X}, {_resource.GetSize().Y}");
     ImGui.BeginGroup();
     ImGui.Text($" > Color:");
     ImGui.SameLine();
@@ -32,7 +34,8 @@ public class SimpleImage(Vector2 position, ImageResource resource, Color? tint =
   
   public new void Draw(Registry registry)
   {
-    Raylib.DrawTexturePro(resource.GetMaterial(), new Rectangle(Vector2.Zero, resource.GetMaterial().Width, resource.GetMaterial().Height), new Rectangle(_position, _size), Vector2.Zero, 0, _tint);
+    if (_resource is null) return;
+    Raylib.DrawTexturePro(_resource.GetMaterial(), new Rectangle(Vector2.Zero, _resource.GetMaterial().Width, _resource.GetMaterial().Height), new Rectangle(_position, _size), Vector2.Zero, 0, _tint);
     base.Draw(registry);
   }
 }

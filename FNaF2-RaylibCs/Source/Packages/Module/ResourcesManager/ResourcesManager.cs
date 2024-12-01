@@ -32,5 +32,5 @@ public class ResourcesManager(params String[] scenes_names) : CallDebuggerInfoTe
 
   public void AddMaterial(String scene_name, String name, FontResource mat) => AddFolderAndStuff(scene_name, name, mat, "Font");
   public void AddMaterial(String scene_name, String name, ImageResource mat) => AddFolderAndStuff(scene_name, name, mat, "Image");
-  public void AddMaterial(String scene_name, String name, AnimationResource mat) => AddFolderAndStuff(scene_name, name, mat, "Animation");
+  public void AddMaterial(String scene_name, String name, ImageStackResource mat) => AddFolderAndStuff(scene_name, name, mat, "ImageStack");
 }

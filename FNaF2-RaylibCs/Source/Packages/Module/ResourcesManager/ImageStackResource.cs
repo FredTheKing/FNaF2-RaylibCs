@@ -5,7 +5,7 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 
-public class AnimationResource : MaterialTemplate
+public class ImageStackResource : MaterialTemplate
 {
   private readonly Vector2 _size;
   protected new List<string> _filename;
@@ -13,21 +13,21 @@ public class AnimationResource : MaterialTemplate
 
   public override bool IsMaterialLoaded() => _material.Count(x => Raylib.IsTextureReady(x)) == _filename.Count;
 
-  public AnimationResource(List<string> filenames) : base()
+  public ImageStackResource(List<string> filenames) : base()
   {
     _filename = filenames;
     Texture2D _texture = Raylib.LoadTexture(_filename[0]);
     _size = new Vector2(_texture.Width, _texture.Height);
     Raylib.UnloadTexture(_texture);
   }
-  public AnimationResource(List<Image> images) : base()
+  public ImageStackResource(List<Image> images) : base()
   {
     foreach (Image image in images) 
       _material.Add(Raylib.LoadTextureFromImage(image));
     _size = new Vector2(_material[0].Width, _material[0].Height);
   }
   
-  public AnimationResource(List<Texture2D> textures) : base() 
+  public ImageStackResource(List<Texture2D> textures) : base() 
   { 
     _material = textures;
     _size = new Vector2(_material[0].Width, _material[0].Height);

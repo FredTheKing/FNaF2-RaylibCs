@@ -10,7 +10,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 
 public enum AnimationPlayMode { Replacement, Addition };
 
-public class SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode play_mode, AnimationResource resource, SimpleTimer? custom_update_timer = null, bool restart_on_scene_change = true) : ObjectTemplate(position, resource.GetSize())
+public class SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode play_mode, ImageStackResource resource, SimpleTimer? custom_update_timer = null, bool restart_on_scene_change = true) : ObjectTemplate(position, resource.GetSize())
 {
   private SimpleTimer _update_timer = custom_update_timer ?? new SimpleTimer(1f / fps, true);
   private int _current_frame = 0;
