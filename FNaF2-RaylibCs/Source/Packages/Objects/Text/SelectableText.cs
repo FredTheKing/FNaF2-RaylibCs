@@ -17,7 +17,7 @@ public class SelectableText : SimpleText
     align_center_v, align_center_h) => _text = texts;
   
   public void SetTexts(List<string> texts) => _text = texts;
-  public void SetText(List<string> texts) => _text = texts;
+  public void SetText(string text, int index) => _text[index] = text;
   
   public void SetTextIndex(int index) => _text_index = index;
   public void NextText() => _text_index = (_text_index + 1) % _text.Count;

@@ -27,6 +27,7 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
     ImGui.Text($" > Show Hitboxes: {(_show_hitboxes ? 1 : 0)}");
     ImGui.Text($" > Show Bounds: {(_show_bounds ? 1 : 0)}");
     ImGui.Text($" > Show Fps Non Debug: {(_show_fps_non_debug ? 1 : 0)}");
+    ImGui.Text($" > Movable Debugger: {(_movable_debugger ? 1 : 0)}");
     ImGui.Separator();
     ImGui.Text($" > Total Objects: {_container.SelectMany(x => x.Value).Count()}");
     ImGui.Text($" > Total Materials: {GetResourcesManager().GetStorage().SelectMany(x => x.Value).Count()}");

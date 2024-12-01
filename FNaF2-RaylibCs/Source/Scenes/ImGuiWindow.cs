@@ -11,15 +11,15 @@ public class ImGuiWindow(Registry registry)
   public void Process()
   {
     rlImGui.Begin();
-    
-    ImGui.SetWindowSize(new Vector2(400, 768));
-    ImGui.SetWindowPos(new Vector2(Raylib.GetScreenWidth() - 400, 0));
-    // i dunno why these dont work ^^^
-    
     ImGui.PushStyleVar(ImGuiStyleVar.ScrollbarSize, 0);
 
     if (registry.GetMovableDebugger() ? ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse) : ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize))
     {
+      if (!registry.GetMovableDebugger())
+      {
+        ImGui.SetWindowSize(new Vector2(400, 768));
+        ImGui.SetWindowPos(new Vector2(Raylib.GetScreenWidth() - 400, 0)); 
+      }
       ImGui.SeparatorText("Info");
       ImGui.Text("Window size: " + Raylib.GetRenderWidth() + "/" + Raylib.GetRenderHeight());
       ImGui.Text("Cursor pos: " + Raylib.GetMouseX() + "/" + Raylib.GetMouseY());
