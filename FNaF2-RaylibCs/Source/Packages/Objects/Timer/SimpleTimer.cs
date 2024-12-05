@@ -23,7 +23,7 @@ public class SimpleTimer(double target_time_in_seconds = 1f, bool start_at_activ
     .Select(s => s[new Random().Next(s.Length)]).ToArray());
   
 
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     if(ImGui.TreeNode(debugger_name))
     {
@@ -94,7 +94,7 @@ public class SimpleTimer(double target_time_in_seconds = 1f, bool start_at_activ
 
   protected virtual void SetNewTargetTime(Registry registry) { }
   
-  public new void Update(Registry registry)
+  public override void Update(Registry registry)
   {
     _current_time = Raylib.GetTime();
     if (_go) _time = _current_time - _start_time;

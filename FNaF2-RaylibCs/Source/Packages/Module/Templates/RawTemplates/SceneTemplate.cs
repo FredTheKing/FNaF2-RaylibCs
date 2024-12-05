@@ -2,17 +2,17 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
 
 public abstract class SceneTemplate()
 {
-  public void Activation()
+  public virtual void Activation()
   {
     
   }
     
-  public void Update()
+  public virtual void Update()
   {
 
   }
     
-  public void Draw()
+  public virtual void Draw()
   {
     
   }

@@ -7,7 +7,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 
 public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawHitbox(position, size, color)
 {
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     if (ImGui.TreeNode("Hitbox"))
     {
@@ -48,14 +48,14 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawH
     _hitbox_click_hover = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(nonref_position, _size));
   }
   
-  public new void Update(Registry registry)
+  public override void Update(Registry registry)
   {
     CheckMouseHover();
     UpdateClicksDetection();
     base.Update(registry);
   }
 
-  public new void Draw(Registry registry)
+  public override void Draw(Registry registry)
   {
     if(registry.GetDebugMode() & registry.GetShowHitboxes()) Raylib.DrawRectangle((int)_position.X, (int)_position.Y, (int)_size.X, (int)_size.Y, _color);
     base.Draw(registry);

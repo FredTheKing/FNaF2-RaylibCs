@@ -62,14 +62,9 @@ public class RawHitbox(Vector2 position, Vector2 size, Color color) : ObjectTemp
   
   public bool GetMouseReleased(MouseButton button) => _hitbox_click_release[(int)button];
   
-  public new void Update(Registry registry)
+  public override void Update(Registry registry)
   {
     UpdateClicksDetection();
     base.Update(registry);
-  }
-
-  public new void Draw(Registry registry)
-  {
-    base.Draw(registry);
   }
 }

@@ -10,7 +10,7 @@ public class SimpleBox(Vector2 position, Vector2 size, Color color) : ObjectTemp
 {
   protected Color _color = color;
 
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Position: {_position.X}, {_position.Y}");
     ImGui.Text($" > Size: {_size.X}, {_size.Y}");
@@ -28,7 +28,7 @@ public class SimpleBox(Vector2 position, Vector2 size, Color color) : ObjectTemp
     ImGui.EndGroup();
   }
 
-  public new void Draw(Registry registry)
+  public override void Draw(Registry registry)
   {
     Raylib.DrawRectangleV(_position, _size, _color);
     base.Update(registry);

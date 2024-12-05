@@ -15,7 +15,7 @@ public class SimpleImage : ObjectTemplate
   protected Color _tint;
   protected ImageResource _resource = null!;
 
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Position: {_position.X}, {_position.Y}");
     if (_resource is not null) ImGui.Text($" > Size: {_resource.GetSize().X}, {_resource.GetSize().Y}");
@@ -32,7 +32,7 @@ public class SimpleImage : ObjectTemplate
     ImGui.EndGroup();
   }
   
-  public new void Draw(Registry registry)
+  public override void Draw(Registry registry)
   {
     if (_resource is null) return;
     Raylib.DrawTexturePro(_resource.GetMaterial(), new Rectangle(Vector2.Zero, _resource.GetMaterial().Width, _resource.GetMaterial().Height), new Rectangle(_position, _size), Vector2.Zero, 0, _tint);

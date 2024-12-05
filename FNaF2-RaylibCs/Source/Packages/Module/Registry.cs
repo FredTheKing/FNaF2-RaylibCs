@@ -17,11 +17,10 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   private readonly SceneManager.SceneManager _scene_manager = new(scenes_names);
   private readonly GuiManager _gui_manager = new();
   private readonly ResourcesManager.ResourcesManager _resources_manager = new(scenes_names);
-  private readonly MouseAnimationManager _mouse_animation_manager = new();
   
   private Dictionary<String, Dictionary<String, Object>> _container = new();
 
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Debug Mode: {(_debug_mode ? 1 : 0)}");
     ImGui.Text($" > Show Hitboxes: {(_show_hitboxes ? 1 : 0)}");
@@ -32,7 +31,7 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
     ImGui.Text($" > Total Objects: {_container.SelectMany(x => x.Value).Count()}");
     ImGui.Text($" > Total Materials: {GetResourcesManager().GetStorage().SelectMany(x => x.Value).Count()}");
   }
-  
+
   public dynamic RegisterObject(String name, String[] scenes_names, int[] z_layers, dynamic obj)
   {
     List<string> target_scenes = new();
@@ -144,8 +143,6 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   public ShortcutManager GetShortcutManager() => _shortcut_manager;
   
   public ResourcesManager.ResourcesManager GetResourcesManager() => _resources_manager;
-  
-  public MouseAnimationManager GetMouseAnimationManager() => _mouse_animation_manager;
   
   public void AssignSceneScript(string scene_name, dynamic script_instance) => 
     _scene_manager.AssignScriptInstance(scene_name, script_instance);

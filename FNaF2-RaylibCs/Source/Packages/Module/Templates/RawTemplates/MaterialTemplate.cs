@@ -11,8 +11,8 @@ public abstract class MaterialTemplate : CallDebuggerInfoTemplate
     return false;
   }
   
-  public void Unload() { }
-  public void Load() { }
-  public String GetFilename() => _filename;
-  public dynamic GetMaterial() => _material;
+  public virtual void Unload() { }
+  public virtual void Load() { }
+  public virtual String GetFilename() => _filename;
+  public virtual dynamic GetMaterial() => _material;
 }

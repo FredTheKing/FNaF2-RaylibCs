@@ -18,12 +18,12 @@ public class MenuMain(Registry registry) : SceneTemplate
     twitch.SetFrame(index);
   }
   
-  public new void Activation()
+  public override void Activation()
   {
     twitch_timer.Activation(registry);
   }
     
-  public new void Update()
+  public override void Update()
   {
     twitch_timer.Update(registry);
     TwitchAnimatronics();

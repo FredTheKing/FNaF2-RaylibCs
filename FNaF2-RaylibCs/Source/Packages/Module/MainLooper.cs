@@ -8,13 +8,11 @@ public static class MainLooper
   {
     if (!registry.GetSceneManager().IsChanged()) return;
     registry.GetSceneManager().ResetChanged();
-    registry.GetMouseAnimationManager().Activation(registry);
     registry.GetSceneManager().GetCurrentScene().Activation(registry);
   }
   
   public static void GlobalUpdate(Registry registry)
   {
-    registry.GetMouseAnimationManager().Update(registry);
     registry.GetSceneManager().GetCurrentScene().Update(registry);
   }
   

@@ -9,20 +9,20 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 public class HitboxImage(ImageResource resource, Vector2 position, Color? color = null): SimpleImage(position, resource)
 {
   private RectangleHitbox _hitbox = new RectangleHitbox(position, new Vector2(0, 0), color ?? new Color(255, 0, 0, 123));
-
-  public new void CallDebuggerInfo(Registry registry)
+  
+  public override void CallDebuggerInfo(Registry registry)
   {
     base.CallDebuggerInfo(registry);
     _hitbox.CallDebuggerInfo(registry);
   }
   
-  public new void Activation(Registry registry)
+  public override void Activation(Registry registry)
   {
     _hitbox.SetBoundaries(_resource.GetSize());
     base.Activation(registry);
   }
   
-  public new void Draw(Registry registry)
+  public override void Draw(Registry registry)
   {
     base.Draw(registry);
     _hitbox.Draw(registry);

@@ -14,8 +14,8 @@ public class SimpleAnimation(Vector2 position, float fps, Color color, Animation
 {
   private SimpleTimer _update_timer = custom_update_timer ?? new SimpleTimer(1f / fps, true);
   private int _current_frame = 0;
-  
-  public new void CallDebuggerInfo(Registry registry)
+
+  public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Position: {_position.X}, {_position.Y}");
     ImGui.Text($" > Size: {_size.X}, {_size.Y}");
@@ -31,24 +31,24 @@ public class SimpleAnimation(Vector2 position, float fps, Color color, Animation
       ImGui.TreePop();
     }
   }
-  
+
   public SimpleTimer GetUpdateTimer() => _update_timer;
-  
-  public new void Activation(Registry registry)
+
+  public override void Activation(Registry registry)
   {
     if (restart_on_scene_change) _current_frame = 0;
     _update_timer.Activation(registry);
     base.Activation(registry);
   }
-  
-  public new void Update(Registry registry)
+
+  public override void Update(Registry registry)
   {
     _update_timer.Update(registry);
     if (_update_timer.EndedTrigger()) _current_frame = (_current_frame + 1) % (resource.GetMaterial().Count);
     base.Update(registry);
   }
 
-  public new void Draw(Registry registry)
+  public override void Draw(Registry registry)
   {
     if (play_mode == AnimationPlayMode.Addition) 
       for (int i = 0; i < _current_frame; i++) 

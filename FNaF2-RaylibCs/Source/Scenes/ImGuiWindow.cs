@@ -206,11 +206,6 @@ public class ImGuiWindow(Registry registry)
         registry.GetGuiManager().CallDebuggerInfo(registry);
         ImGui.TreePop();
       }
-      if (ImGui.TreeNode("MouseAnimationManager"))
-      {
-        registry.GetMouseAnimationManager().CallDebuggerInfo(registry);
-        ImGui.TreePop();
-      }
     }
 
     ImGui.End();

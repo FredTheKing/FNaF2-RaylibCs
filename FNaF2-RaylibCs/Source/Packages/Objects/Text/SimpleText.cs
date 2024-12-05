@@ -76,7 +76,7 @@ public class SimpleText : ObjectTemplate
   protected string debugger_name = "Text-" + new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 4)
     .Select(s => s[new Random().Next(s.Length)]).ToArray());
   
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     if (ImGui.TreeNode(debugger_name))
     {
@@ -116,7 +116,7 @@ public class SimpleText : ObjectTemplate
     _color = _remember_color;
   }
   
-  public new void Draw(Registry registry)
+  public override void Draw(Registry registry)
   {
     if (!_hide_text) DrawText();
     DrawDebug(registry);
@@ -124,8 +124,8 @@ public class SimpleText : ObjectTemplate
     UndoColorChanges();
   }
 
-  protected internal void DrawDebug(Registry registry)
+  protected void DrawDebug(Registry registry)
   {
-    if(registry.GetShowBounds() & registry.GetDebugMode()) Raylib.DrawRectangleLinesEx(new Rectangle(_position, _size), 1, Color.Lime);
+    if (registry.GetShowBounds() & registry.GetDebugMode()) Raylib.DrawRectangleLinesEx(new Rectangle(_position, _size), 1, Color.Lime);
   }
 }
