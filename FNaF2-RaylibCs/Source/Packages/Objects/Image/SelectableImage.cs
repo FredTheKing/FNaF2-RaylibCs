@@ -13,6 +13,7 @@ public class SelectableImage(Vector2 position, ImageStackResource resource, Colo
   public void PreviousFrame() => _current_frame = (_current_frame - 1 + resource.GetMaterial().Count) % resource.GetMaterial().Count;
   public void NextFrame() => _current_frame = (_current_frame + 1) % resource.GetMaterial().Count;
   public void SetFrame(int frame) => _current_frame = frame % resource.GetMaterial().Count;
+  public int GetFrameIndex() => _current_frame;
   
   public new void Draw(Registry registry) => Raylib.DrawTexturePro(resource.GetMaterial()[_current_frame], new Rectangle(Vector2.Zero, resource.GetMaterial()[_current_frame].Width, resource.GetMaterial()[_current_frame].Height), new Rectangle(_position, _size), Vector2.Zero, 0, _tint);
 }

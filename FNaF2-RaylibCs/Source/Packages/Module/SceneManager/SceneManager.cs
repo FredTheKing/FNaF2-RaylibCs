@@ -71,4 +71,10 @@ public class SceneManager(params String[] scenes_names) : CallDebuggerInfoTempla
     _current_scene.Load();
     Console.WriteLine("INFO: SCENE: Scene changed successfully");
   }
+
+  public void NextScene() =>
+    ChangeScene(_scenes_names[(_scenes_names.ToList().IndexOf(_current_scene.GetName()) + 1) % _scenes_names.Length]);
+  
+  public void PreviousScene() =>
+    ChangeScene(_scenes_names[(_scenes_names.ToList().IndexOf(_current_scene.GetName()) + _scenes_names.Length - 1) % _scenes_names.Length]);
 }

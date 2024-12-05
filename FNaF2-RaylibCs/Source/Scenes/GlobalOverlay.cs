@@ -23,6 +23,8 @@ public class GlobalOverlay(Registry registry)
   {
     #if DEBUG
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F3)) registry.SwitchDebugMode();
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F1)) registry.GetSceneManager().PreviousScene();
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F2)) registry.GetSceneManager().NextScene();
     #endif
 
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F10)) Center();

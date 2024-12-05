@@ -15,15 +15,16 @@ namespace FNaF2_RaylibCs.Source;
 public static class Registration
 {
   private static string[] scenes_names = ["Debugger/TestingOne", "Debugger/TestingTwo", "Debugger/TestingThree", "Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Main", "Game/Loading", "Game/Newspaper"];
-  private static string start_scene_name = "Debugger/TestingOne";
+  private static string start_scene_name = "Menu/Main";
   
   public struct Materials
   {
     public static FontResource GlobalFont;
     public static ImageStackResource TestingImageStack;
     public static ImageResource TestionImage;
-    
+
     public static ImageStackResource MenuBackgroundStackResource;
+    public static ImageStackResource MenuStaticStackResource;
   }
   
   public struct Objects
@@ -32,6 +33,7 @@ public static class Registration
     public static SimpleImage TestingImage;
 
     public static SelectableImage MenuBackground;
+    public static SimpleAnimation MenuStatic;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -41,6 +43,7 @@ public static class Registration
     Materials.TestionImage = registry.RegisterMaterial("TestImage", ["Debugger/TestingOne"], new ImageResource("Resources/TestingAnimation/avatar.png"));
     
     Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackground", ["Menu/Main"], new ImageStackResource(Loaders.LoadMultipleFilenames("Resources/Menu/Background", 4)));
+    Materials.MenuStaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", ["Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight"], new ImageStackResource(Loaders.LoadMultipleFilenames("Resources/Menu/Static", 8)));
     
     registry.EndMaterialsRegistration();
   }
@@ -51,6 +54,8 @@ public static class Registration
     Objects.TestingImage = registry.RegisterObject("TestingImage", ["Debugger/TestingOne"], [-1], new SimpleImage(Vector2.Zero, Materials.TestionImage, Color.White, Materials.TestingImageStack.GetSize()));
     
     Objects.MenuBackground = registry.RegisterObject("MenuBackground", ["Menu/Main"], [0], new SelectableImage(Vector2.Zero, Materials.MenuBackgroundStackResource, Color.White));
+    Objects.MenuStatic = registry.RegisterObject("MenuStatic", ["Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight"], [0], new SimpleAnimation(Vector2.Zero, 24, new Color(255, 255, 255, 100), AnimationPlayMode.Replacement, Materials.MenuStaticStackResource));
+    
     registry.EndObjectsRegistration(start_scene_name);
   }
   

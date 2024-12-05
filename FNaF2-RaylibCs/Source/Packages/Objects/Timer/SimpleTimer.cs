@@ -75,6 +75,8 @@ public class SimpleTimer(double target_time_in_seconds = 1f, bool start_at_activ
   }
 
   public double GetTime() => _time;
+  
+  public double GetTargetTime() => _target_time;
 
   public void KillTimer()
   {
@@ -89,6 +91,8 @@ public class SimpleTimer(double target_time_in_seconds = 1f, bool start_at_activ
     
     base.Activation(registry);
   }
+
+  protected virtual void SetNewTargetTime(Registry registry) { }
   
   public new void Update(Registry registry)
   {
@@ -99,6 +103,7 @@ public class SimpleTimer(double target_time_in_seconds = 1f, bool start_at_activ
     if (_time >= _target_time)
     {
       _target_activate = true;
+      SetNewTargetTime(registry);
       if (_delete_or_loop_on_end)
       {
         if (_reset_target_when_ended)
