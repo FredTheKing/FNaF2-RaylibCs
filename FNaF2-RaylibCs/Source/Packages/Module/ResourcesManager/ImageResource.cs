@@ -29,16 +29,16 @@ public class ImageResource : MaterialTemplate
   
   public Vector2 GetSize() => _size;
   
-  public new void Unload()
+  public override void Unload()
   {
     if (_material is null) return;
     Raylib.UnloadTexture(_material);
     _material = null;
   }
 
-  public new void Load() => _material = Raylib.LoadTexture(_filename);
+  public override void Load() => _material = Raylib.LoadTexture(_filename);
   
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Original Size: {_size.X}, {_size.Y}");
     ImGui.Text($" > Loaded: {IsMaterialLoaded()}");

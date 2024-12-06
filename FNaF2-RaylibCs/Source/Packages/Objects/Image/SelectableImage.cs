@@ -15,5 +15,7 @@ public class SelectableImage(Vector2 position, ImageStackResource resource, Colo
   public void SetFrame(int frame) => _current_frame = frame % resource.GetMaterial().Count;
   public int GetFrameIndex() => _current_frame;
   
+  public void SetColor(Color color) => _tint = color;
+  
   public override void Draw(Registry registry) => Raylib.DrawTexturePro(resource.GetMaterial()[_current_frame], new Rectangle(Vector2.Zero, resource.GetMaterial()[_current_frame].Width, resource.GetMaterial()[_current_frame].Height), new Rectangle(_position, _size), Vector2.Zero, 0, _tint);
 }

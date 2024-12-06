@@ -38,20 +38,20 @@ public class ImageStackResource : MaterialTemplate
   public new List<string> GetFilename() => _filename;
   public new List<Texture2D> GetMaterial() => _material;
   
-  public new void Unload()
+  public override void Unload()
   {
     foreach (Texture2D material in _material)
       Raylib.UnloadTexture(material);
     _material.Clear();
   }
 
-  public new void Load()
+  public override void Load()
   {
     foreach (string filename in _filename)
       _material.Add(Raylib.LoadTexture(filename));
   }
 
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Items Count: {_filename.Count | _material.Count}");
     ImGui.Text($" > Original Size: {_size.X}, {_size.Y}");

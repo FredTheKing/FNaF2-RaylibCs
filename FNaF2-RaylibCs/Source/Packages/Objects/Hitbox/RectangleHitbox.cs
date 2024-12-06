@@ -9,7 +9,7 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawH
 {
   public override void CallDebuggerInfo(Registry registry)
   {
-    if (ImGui.TreeNode("Hitbox"))
+    if (ImGui.TreeNode(debugger_name))
     {
       ImGui.Text($" > Position: {_position.X}, {_position.Y}");
       ImGui.Text($" > Size: {_size.X}, {_size.Y}");
@@ -37,10 +37,10 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawH
     }
   }
   
-  public void SetBoundaries(Vector2 new_size)
-  {
-    _size = new_size;
-  }
+  protected string debugger_name = "Hitbox-" + new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 4)
+    .Select(s => s[new Random().Next(s.Length)]).ToArray());
+  
+  public void SetBoundaries(Vector2 new_size) => _size = new_size;
 
   private void CheckMouseHover()
   {

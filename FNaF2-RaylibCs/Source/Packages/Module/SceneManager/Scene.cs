@@ -12,7 +12,7 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   private dynamic _script_instance;
   private dynamic _global_script_instance;
 
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Name: {_name}");
     ImGui.Text($" > Objects Count: {_sorted_list_objects.Count()}");

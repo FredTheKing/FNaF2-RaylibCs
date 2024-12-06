@@ -10,7 +10,7 @@ public class SceneManager(params String[] scenes_names) : CallDebuggerInfoTempla
   private Scene _current_scene;
   private bool _changed = true;
 
-  public new void CallDebuggerInfo(Registry registry)
+  public override void CallDebuggerInfo(Registry registry)
   {
     if (ImGui.TreeNode($"Current Scene: {_current_scene.GetName()}"))
     {
@@ -43,10 +43,8 @@ public class SceneManager(params String[] scenes_names) : CallDebuggerInfoTempla
 
   public void AssignGlobalScriptInstance(dynamic script_instance)
   {
-    foreach (Scene scene in _scenes.Values)
-    {
+    foreach (Scene scene in _scenes.Values) 
       scene.AssignGlobalScriptInstance(script_instance);
-    }
   }
 
   public void LinkObject(Object obj, String scene_name, int z_layer) => _scenes[scene_name].AddObject(obj, z_layer);
