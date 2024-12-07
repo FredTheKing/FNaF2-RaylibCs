@@ -1,11 +1,11 @@
 using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Scenes;
 
-public class GlobalOverlay(Registry registry) : SceneTemplate
+public class GlobalOverlay : ScriptTemplate
 {
   private void ResizeAndCenter(int width, int height)
   {
@@ -15,7 +15,7 @@ public class GlobalOverlay(Registry registry) : SceneTemplate
   
   private void Center() => Raylib.SetWindowPosition((Raylib.GetMonitorWidth(0) - Raylib.GetScreenWidth()) / 2, (Raylib.GetMonitorHeight(0) - Raylib.GetScreenHeight()) / 2);
     
-  public override void Update()
+  public override void Update(Registry registry)
   {
     #if DEBUG
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F3)) registry.SwitchDebugMode();

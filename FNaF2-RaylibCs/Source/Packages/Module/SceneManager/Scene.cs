@@ -1,4 +1,4 @@
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
@@ -67,23 +67,23 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   {
     foreach (dynamic item in _sorted_list_objects)
       item.Activation(registry);
-    _script_instance.Activation();
-    _global_script_instance.Activation();
+    _script_instance.Activation(registry);
+    _global_script_instance.Activation(registry);
   }
   
   public void Update(Registry registry)
   {
     foreach (dynamic item in _sorted_list_objects)
       item.Update(registry);
-    _script_instance.Update();
-    _global_script_instance.Update();
+    _script_instance.Update(registry);
+    _global_script_instance.Update(registry);
   }
   
   public void Draw(Registry registry)
   {
     foreach (dynamic item in _sorted_list_objects)
       item.Draw(registry);
-    _script_instance.Draw();
-    _global_script_instance.Draw();
+    _script_instance.Draw(registry);
+    _global_script_instance.Draw(registry);
   }
 }

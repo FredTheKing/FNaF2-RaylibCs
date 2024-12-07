@@ -1,4 +1,4 @@
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;

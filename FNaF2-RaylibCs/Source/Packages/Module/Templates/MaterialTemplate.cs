@@ -1,4 +1,4 @@
-namespace FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+namespace FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 
 public abstract class MaterialTemplate : CallDebuggerInfoTemplate
 {

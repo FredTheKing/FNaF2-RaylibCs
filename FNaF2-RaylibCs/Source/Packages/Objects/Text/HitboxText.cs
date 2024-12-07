@@ -16,6 +16,8 @@ public class HitboxText : SimpleText
 
   private void InitHitbox(Vector2 position, Vector2 size) => _hitbox = new RectangleHitbox(position, size, new Color(255, 0, 0, 123));
 
+  public RectangleHitbox GetHitbox() => _hitbox;
+  
   public override void CallDebuggerInfo(Registry registry)
   {
     _hitbox.CallDebuggerInfo(registry);

@@ -6,9 +6,9 @@ using rlImGui_cs;
 
 namespace FNaF2_RaylibCs.Source.Scenes;
 
-public class ImGuiWindow(Registry registry)
+public class ImGuiWindow()
 {
-  public void Process()
+  public void Process(Registry registry)
   {
     rlImGui.Begin();
     ImGui.PushStyleVar(ImGuiStyleVar.ScrollbarSize, 0);
@@ -212,7 +212,7 @@ public class ImGuiWindow(Registry registry)
     rlImGui.End();
   }
 
-  public void Draw()
+  public void Draw(Registry registry)
   {
     if (registry.GetShowFpsNonDebug()) Raylib.DrawFPS(10, 10);
   }

@@ -1,5 +1,6 @@
+using FNaF2_RaylibCs.Source.Packages.Module.Custom;
 using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using ImGuiNET;
 using rlImGui_cs;
 
@@ -17,6 +18,7 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   private readonly SceneManager.SceneManager _scene_manager = new(scenes_names);
   private readonly GuiManager _gui_manager = new();
   private readonly ResourcesManager.ResourcesManager _resources_manager = new(scenes_names);
+  private readonly FnafManager _fnaf_manager = new();
   
   private Dictionary<String, Dictionary<String, Object>> _container = new();
 
@@ -143,6 +145,8 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   public ShortcutManager GetShortcutManager() => _shortcut_manager;
   
   public ResourcesManager.ResourcesManager GetResourcesManager() => _resources_manager;
+  
+  public FnafManager GetFNaFManager() => _fnaf_manager;
   
   public void AssignSceneScript(string scene_name, dynamic script_instance) => 
     _scene_manager.AssignScriptInstance(scene_name, script_instance);

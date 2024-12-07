@@ -2,7 +2,7 @@ using System.Numerics;
 using System.Text;
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.RawTemplates;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using ImGuiNET;
 using Raylib_cs;
 

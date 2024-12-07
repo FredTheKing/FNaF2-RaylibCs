@@ -22,8 +22,8 @@ public static class MainLooper
     Raylib.ClearBackground(Color.Black);
     
     registry.GetSceneManager().GetCurrentScene().Draw(registry);
-    if (registry.GetDebugMode()) registry.GetGuiManager().Process();
-    if (!registry.GetDebugMode()) registry.GetGuiManager().Draw();
+    if (registry.GetDebugMode()) registry.GetGuiManager().Process(registry);
+    if (!registry.GetDebugMode()) registry.GetGuiManager().Draw(registry);
     
     Raylib.EndDrawing();
   }
