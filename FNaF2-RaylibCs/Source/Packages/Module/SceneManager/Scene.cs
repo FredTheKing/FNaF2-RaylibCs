@@ -6,84 +6,84 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 public class Scene(string name) : CallDebuggerInfoTemplate
 {
   private string _name = name;
-  private Dictionary<String, Dictionary<String, dynamic>> _resources_dictionary = new();
-  private Dictionary<int, List<Object>> _unsorted_dict_objects = new();
-  private List<Object> _sorted_list_objects = new();
-  private dynamic _script_instance;
-  private dynamic _global_script_instance;
+  private Dictionary<String, Dictionary<String, dynamic>> _resourcesDictionary = new();
+  private Dictionary<int, List<Object>> _unsortedDictObjects = new();
+  private List<Object> _sortedListObjects = [];
+  private dynamic? _scriptInstance;
+  private dynamic? _globalScriptInstance;
 
   public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Name: {_name}");
-    ImGui.Text($" > Objects Count: {_sorted_list_objects.Count()}");
-    ImGui.Text($" > Materials Count: {_resources_dictionary.SelectMany(x => x.Value).Count()}");
+    ImGui.Text($" > Objects Count: {_sortedListObjects.Count()}");
+    ImGui.Text($" > Materials Count: {_resourcesDictionary.SelectMany(x => x.Value).Count()}");
   }
   
-  public void AddObject(Object obj, int z_layer)
+  public void AddObject(Object obj, int zLayer)
   { 
-    if (!_unsorted_dict_objects.ContainsKey(z_layer)) _unsorted_dict_objects.Add(z_layer, new List<object>());
-    _unsorted_dict_objects[z_layer].Add(obj);
+    if (!_unsortedDictObjects.ContainsKey(zLayer)) _unsortedDictObjects.Add(zLayer, new List<object>());
+    _unsortedDictObjects[zLayer].Add(obj);
   }
 
-  public void AssignResources(Dictionary<String, Dictionary<String, dynamic>> resources_dictionary) => _resources_dictionary = resources_dictionary;
+  public void AssignResources(Dictionary<String, Dictionary<String, dynamic>> resourcesDictionary) => _resourcesDictionary = resourcesDictionary;
 
-  public List<Object> GetObjectsList() => _sorted_list_objects;
+  public List<Object> GetObjectsList() => _sortedListObjects;
 
   public string GetName() => _name;
 
-  public void AssignScriptInstance(dynamic script_instance) => _script_instance = script_instance;
+  public void AssignScriptInstance(dynamic scriptInstance) => _scriptInstance = scriptInstance;
 
-  public void AssignGlobalScriptInstance(dynamic script_instance) => _global_script_instance = script_instance;
+  public void AssignGlobalScriptInstance(dynamic scriptInstance) => _globalScriptInstance = scriptInstance;
 
   public void SortLayers()
   {
-    _sorted_list_objects = _unsorted_dict_objects.OrderBy(x => x.Key).SelectMany(x => x.Value).ToList();
-    _unsorted_dict_objects.Clear();
+    _sortedListObjects = _unsortedDictObjects.OrderBy(x => x.Key).SelectMany(x => x.Value).ToList();
+    _unsortedDictObjects.Clear();
   }
 
-  public void Unload(Scene? next_scene = null)
+  public void Unload(Scene? nextScene = null)
   { 
-    foreach (KeyValuePair<string,Dictionary<string,dynamic>> type_pair in _resources_dictionary)
-      foreach (KeyValuePair<string,dynamic> object_pair in type_pair.Value)
-        if (next_scene == null || (!next_scene._resources_dictionary.TryGetValue(type_pair.Key, out var next_scene_type_pair) || !next_scene_type_pair.ContainsKey(object_pair.Key)))
-          object_pair.Value.Unload();
+    foreach (KeyValuePair<string,Dictionary<string,dynamic>> typePair in _resourcesDictionary)
+      foreach (KeyValuePair<string,dynamic> objectPair in typePair.Value)
+        if (nextScene == null || !nextScene._resourcesDictionary.TryGetValue(typePair.Key, out var nextSceneTypePair) || !nextSceneTypePair.ContainsKey(objectPair.Key))
+          objectPair.Value.Unload();
 
-    foreach (dynamic item in _sorted_list_objects) 
+    foreach (dynamic item in _sortedListObjects) 
       item.Unload();
   }
   
   public void Load()
   {
-    foreach (KeyValuePair<string,Dictionary<string,dynamic>> type_pair in _resources_dictionary)
-      foreach (KeyValuePair<string,dynamic> object_pair in type_pair.Value)
-        if (!object_pair.Value.IsMaterialLoaded())
-          object_pair.Value.Load();
+    foreach (KeyValuePair<string,Dictionary<string,dynamic>> typePair in _resourcesDictionary)
+      foreach (KeyValuePair<string,dynamic> objectPair in typePair.Value)
+        if (!objectPair.Value.IsMaterialLoaded())
+          objectPair.Value.Load();
 
-    foreach (dynamic item in _sorted_list_objects)
+    foreach (dynamic item in _sortedListObjects)
       item.Load();
   }
   
   public void Activation(Registry registry)
   {
-    foreach (dynamic item in _sorted_list_objects)
+    foreach (dynamic item in _sortedListObjects)
       item.Activation(registry);
-    _script_instance.Activation(registry);
-    _global_script_instance.Activation(registry);
+    _scriptInstance!.Activation(registry);
+    _globalScriptInstance!.Activation(registry);
   }
   
   public void Update(Registry registry)
   {
-    foreach (dynamic item in _sorted_list_objects)
+    foreach (dynamic item in _sortedListObjects)
       item.Update(registry);
-    _script_instance.Update(registry);
-    _global_script_instance.Update(registry);
+    _scriptInstance!.Update(registry);
+    _globalScriptInstance!.Update(registry);
   }
   
   public void Draw(Registry registry)
   {
-    foreach (dynamic item in _sorted_list_objects)
+    foreach (dynamic item in _sortedListObjects)
       item.Draw(registry);
-    _script_instance.Draw(registry);
-    _global_script_instance.Draw(registry);
+    _scriptInstance!.Draw(registry);
+    _globalScriptInstance!.Draw(registry);
   }
 }

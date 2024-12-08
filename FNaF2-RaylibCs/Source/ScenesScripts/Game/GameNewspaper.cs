@@ -1,8 +1,4 @@
-using FNaF2_RaylibCs.Source.Packages.Module;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 
-namespace FNaF2_RaylibCs.Source.Scenes.Game;
-public class GameNewspaper : ScriptTemplate
-{
-  
-}
+namespace FNaF2_RaylibCs.Source.ScenesScripts.Game;
+public class GameNewspaper : ScriptTemplate;

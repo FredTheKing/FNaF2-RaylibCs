@@ -4,9 +4,9 @@ using ImGuiNET;
 using Raylib_cs;
 using rlImGui_cs;
 
-namespace FNaF2_RaylibCs.Source.Scenes;
+namespace FNaF2_RaylibCs.Source.ScenesScripts;
 
-public class ImGuiWindow()
+public class ImGuiWindow
 {
   public void Process(Registry registry)
   {
@@ -56,8 +56,8 @@ public class ImGuiWindow()
       ImGui.Checkbox("##Movable Debugger", ref movdebugger);
       registry.SetMovableDebugger(movdebugger);
       
-      var half_button_size = new Vector2(ImGui.GetWindowWidth() / 2 - 12, 19);
-      if (ImGui.Button("Enable all", half_button_size))
+      var halfButtonSize = new Vector2(ImGui.GetWindowWidth() / 2 - 12, 19);
+      if (ImGui.Button("Enable all", halfButtonSize))
       {
         registry.SetShowHitboxes(true);
         registry.SetShowBounds(true);
@@ -65,7 +65,7 @@ public class ImGuiWindow()
         registry.SetMovableDebugger(true);
       }
       ImGui.SameLine();
-      if (ImGui.Button("Disable all", half_button_size))
+      if (ImGui.Button("Disable all", halfButtonSize))
       {
         registry.SetShowHitboxes(false);
         registry.SetShowBounds(false);
@@ -80,18 +80,18 @@ public class ImGuiWindow()
       //  System.Diagnostics.Process.Start("explorer.exe", "/select,\"" + System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RaylibArteSonat.exe") + "\"");
       
       ImGui.SeparatorText("Resources");
-      String current_scene_name = registry.GetSceneManager().GetCurrentScene().GetName();
+      String currentSceneName = registry.GetSceneManager().GetCurrentScene().GetName();
       Dictionary<String, Dictionary<String, Object>> objects = registry.GetContainer();
       Dictionary<String, Dictionary<String, Dictionary<String, Object>>> materials = registry.GetResourcesManager().GetStorage();
       
       // Current scene
       if (ImGui.TreeNode("Current Scene"))
       {
-        if (objects.ContainsKey(current_scene_name))
+        if (objects.ContainsKey(currentSceneName))
         {
           if (ImGui.TreeNode("Objects"))
           {
-            foreach (KeyValuePair<String, dynamic> pair in objects[current_scene_name])
+            foreach (KeyValuePair<String, dynamic> pair in objects[currentSceneName])
             {
               if (ImGui.TreeNode(pair.Key))
               {
@@ -102,11 +102,11 @@ public class ImGuiWindow()
             ImGui.TreePop();
           }
         }
-        if (materials.ContainsKey(current_scene_name))
+        if (materials.ContainsKey(currentSceneName))
         {
           if (ImGui.TreeNode("Materials"))
           {
-            foreach (KeyValuePair<String, Dictionary<String, Object>> pair in materials[current_scene_name])
+            foreach (KeyValuePair<String, Dictionary<String, Object>> pair in materials[currentSceneName])
             {
               if (ImGui.TreeNode(pair.Key))
               {
@@ -131,17 +131,17 @@ public class ImGuiWindow()
       ImGui.Separator();
       
       // Each other scene
-      foreach (String scene_name in array)
+      foreach (String sceneName in array)
       {
-        if (materials.ContainsKey(scene_name) || objects.ContainsKey(scene_name))
+        if (materials.ContainsKey(sceneName) || objects.ContainsKey(sceneName))
         {
-          if (ImGui.TreeNode(scene_name))
+          if (ImGui.TreeNode(sceneName))
           {
-            if (objects.ContainsKey(scene_name))
+            if (objects.ContainsKey(sceneName))
             {
               if (ImGui.TreeNode("Objects"))
               {
-                foreach (KeyValuePair<String, dynamic> obj in objects[scene_name])
+                foreach (KeyValuePair<String, dynamic> obj in objects[sceneName])
                 {
                   if (ImGui.TreeNode(obj.Key))
                   {
@@ -152,11 +152,11 @@ public class ImGuiWindow()
                 ImGui.TreePop();
               }
             }
-            if (materials.ContainsKey(scene_name))
+            if (materials.ContainsKey(sceneName))
             {
               if (ImGui.TreeNode("Materials"))
               {
-                foreach (KeyValuePair<String, Dictionary<String, Object>> type in materials[scene_name])
+                foreach (KeyValuePair<String, Dictionary<String, Object>> type in materials[sceneName])
                 {
                   if (ImGui.TreeNode(type.Key))
                   {

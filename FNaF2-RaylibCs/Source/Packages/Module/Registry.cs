@@ -6,93 +6,93 @@ using rlImGui_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module;
 
-public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
+public class Registry(params String[] scenesNames) : CallDebuggerInfoTemplate
 {
-  private bool _debug_mode = false;
-  private bool _show_hitboxes = true;
-  private bool _show_bounds = true;
-  private bool _show_fps_non_debug = false;
-  private bool _movable_debugger = false;
+  private bool _debugMode;
+  private bool _showHitboxes = true;
+  private bool _showBounds = true;
+  private bool _showFpsNonDebug;
+  private bool _movableDebugger;
   
-  private readonly ShortcutManager _shortcut_manager = new();
-  private readonly SceneManager.SceneManager _scene_manager = new(scenes_names);
-  private readonly GuiManager _gui_manager = new();
-  private readonly ResourcesManager.ResourcesManager _resources_manager = new(scenes_names);
-  private readonly FnafManager _fnaf_manager = new();
+  private readonly ShortcutManager _shortcutManager = new();
+  private readonly SceneManager.SceneManager _sceneManager = new(scenesNames);
+  private readonly GuiManager _guiManager = new();
+  private readonly ResourcesManager.ResourcesManager _resourcesManager = new();
+  private readonly FNaFHost _fnafHost = new();
   
   private Dictionary<String, Dictionary<String, Object>> _container = new();
 
   public override void CallDebuggerInfo(Registry registry)
   {
-    ImGui.Text($" > Debug Mode: {(_debug_mode ? 1 : 0)}");
-    ImGui.Text($" > Show Hitboxes: {(_show_hitboxes ? 1 : 0)}");
-    ImGui.Text($" > Show Bounds: {(_show_bounds ? 1 : 0)}");
-    ImGui.Text($" > Show Fps Non Debug: {(_show_fps_non_debug ? 1 : 0)}");
-    ImGui.Text($" > Movable Debugger: {(_movable_debugger ? 1 : 0)}");
+    ImGui.Text($" > Debug Mode: {(_debugMode ? 1 : 0)}");
+    ImGui.Text($" > Show Hitboxes: {(_showHitboxes ? 1 : 0)}");
+    ImGui.Text($" > Show Bounds: {(_showBounds ? 1 : 0)}");
+    ImGui.Text($" > Show Fps Non Debug: {(_showFpsNonDebug ? 1 : 0)}");
+    ImGui.Text($" > Movable Debugger: {(_movableDebugger ? 1 : 0)}");
     ImGui.Separator();
     ImGui.Text($" > Total Objects: {_container.SelectMany(x => x.Value).Count()}");
     ImGui.Text($" > Total Materials: {GetResourcesManager().GetStorage().SelectMany(x => x.Value).Count()}");
   }
 
-  public dynamic RegisterObject(String name, String[] scenes_names, int[] z_layers, dynamic obj)
+  public dynamic RegisterObject(String name, String[] scenesNames, int[] zLayers, dynamic obj)
   {
-    List<string> target_scenes = new();
-    bool have_star = scenes_names[0] == "*";
+    List<string> targetScenes = new();
+    bool haveStar = scenesNames[0] == "*";
     
-    if (have_star) target_scenes.AddRange(_scene_manager.GetScenes().Keys);
-    foreach (string scene_name in scenes_names)
+    if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
+    foreach (string sceneName in scenesNames)
     {
-      if (scene_name == "*") continue;
-      switch (have_star)
+      if (sceneName == "*") continue;
+      switch (haveStar)
       {
         case true:
-          target_scenes.Remove(scene_name);
+          targetScenes.Remove(sceneName);
           break;
         case false:
-          target_scenes.Add(scene_name);
+          targetScenes.Add(sceneName);
           break;
       }
     }
     
-    foreach (string scene_name in target_scenes)
+    foreach (string sceneName in targetScenes)
     {
-      if (!_container.ContainsKey(scene_name)) 
-        _container.Add(scene_name, new Dictionary<String, Object>());
+      if (!_container.ContainsKey(sceneName)) 
+        _container.Add(sceneName, new Dictionary<String, Object>());
       
-      Console.WriteLine("INFO: REGISTRY: Object '" + name + "' for scene '" + scene_name + "' loaded successfully");
-      _container[scene_name].Add(name, obj);
+      Console.WriteLine("INFO: REGISTRY: Object '" + name + "' for scene '" + sceneName + "' loaded successfully");
+      _container[sceneName].Add(name, obj);
     }
     
-    for(int i = 0; i < target_scenes.Count; i++) 
-      _scene_manager.LinkObject(obj, target_scenes[i], z_layers[i % z_layers.Length]);
+    for(int i = 0; i < targetScenes.Count; i++) 
+      _sceneManager.LinkObject(obj, targetScenes[i], zLayers[i % zLayers.Length]);
     
     return obj;
   }
   
-  public dynamic RegisterMaterial(String name, String[] scenes_names, dynamic mat)
+  public dynamic RegisterMaterial(String name, String[] scenesNames, dynamic mat)
   {
-    List<string> target_scenes = new();
-    bool have_star = scenes_names[0] == "*";
+    List<string> targetScenes = new();
+    bool haveStar = scenesNames[0] == "*";
     
-    if (have_star) target_scenes.AddRange(_scene_manager.GetScenes().Keys);
-    foreach (string scene_name in scenes_names)
+    if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
+    foreach (string sceneName in scenesNames)
     {
-      if (scene_name == "*") continue;
-      switch (have_star)
+      if (sceneName == "*") continue;
+      switch (haveStar)
       {
         case true:
-          target_scenes.Remove(scene_name);
+          targetScenes.Remove(sceneName);
           break;
         case false:
-          target_scenes.Add(scene_name);
+          targetScenes.Add(sceneName);
           break;
       }
     }
     
-    foreach (string scene_name in target_scenes)
+    foreach (string sceneName in targetScenes)
     {
-      _resources_manager.AddMaterial(scene_name, name, mat);
-      Console.WriteLine("INFO: REGISTRY: Material '" + name + "' for scene '" + scene_name + "' loaded successfully");
+      _resourcesManager.AddMaterial(sceneName, name, mat);
+      Console.WriteLine("INFO: REGISTRY: Material '" + name + "' for scene '" + sceneName + "' loaded successfully");
     }
 
     return mat;
@@ -102,58 +102,58 @@ public class Registry(params String[] scenes_names) : CallDebuggerInfoTemplate
   
   public dynamic Get(String name) => _container[name];
 
-  public void SwitchDebugMode() => _debug_mode = !_debug_mode;
+  public void SwitchDebugMode() => _debugMode = !_debugMode;
 
-  public void SetShowHitboxes(bool boolean) => _show_hitboxes = boolean;
+  public void SetShowHitboxes(bool boolean) => _showHitboxes = boolean;
   
-  public bool GetShowHitboxes() => _show_hitboxes;
+  public bool GetShowHitboxes() => _showHitboxes;
   
-  public void SetShowBounds(bool boolean) => _show_bounds = boolean;
+  public void SetShowBounds(bool boolean) => _showBounds = boolean;
   
-  public bool GetShowBounds() => _show_bounds;
+  public bool GetShowBounds() => _showBounds;
   
-  public void SetShowFpsNonDebug(bool boolean) => _show_fps_non_debug = boolean;
+  public void SetShowFpsNonDebug(bool boolean) => _showFpsNonDebug = boolean;
   
-  public bool GetShowFpsNonDebug() => _show_fps_non_debug;
+  public bool GetShowFpsNonDebug() => _showFpsNonDebug;
   
-  public bool GetDebugMode() => _debug_mode;
+  public bool GetDebugMode() => _debugMode;
   
-  public void SetMovableDebugger(bool boolean) => _movable_debugger = boolean;
+  public void SetMovableDebugger(bool boolean) => _movableDebugger = boolean;
   
-  public bool GetMovableDebugger() => _movable_debugger;
+  public bool GetMovableDebugger() => _movableDebugger;
 
   public void EndMaterialsRegistration()
   {
-    foreach (KeyValuePair<String, Scene> scene_pair in GetSceneManager().GetScenes())
+    foreach (KeyValuePair<String, Scene> scenePair in GetSceneManager().GetScenes())
     {
-      if (GetResourcesManager().GetStorage().ContainsKey(scene_pair.Key)) 
-        scene_pair.Value.AssignResources(GetResourcesManager().GetStorage()[scene_pair.Key]);
+      if (GetResourcesManager().GetStorage().ContainsKey(scenePair.Key)) 
+        scenePair.Value.AssignResources(GetResourcesManager().GetStorage()[scenePair.Key]);
     }
   }
   
-  public void EndObjectsRegistration(string start_scene_name)
+  public void EndObjectsRegistration(string startSceneName)
   {
-    _scene_manager.SortObjectsLayers();
-    _scene_manager.ChangeScene(start_scene_name);
+    _sceneManager.SortObjectsLayers();
+    _sceneManager.ChangeScene(startSceneName);
     rlImGui.Setup(true, true);
   }
   
-  public SceneManager.SceneManager GetSceneManager() => _scene_manager;
+  public SceneManager.SceneManager GetSceneManager() => _sceneManager;
   
-  public GuiManager GetGuiManager() => _gui_manager;
+  public GuiManager GetGuiManager() => _guiManager;
 
-  public ShortcutManager GetShortcutManager() => _shortcut_manager;
+  public ShortcutManager GetShortcutManager() => _shortcutManager;
   
-  public ResourcesManager.ResourcesManager GetResourcesManager() => _resources_manager;
+  public ResourcesManager.ResourcesManager GetResourcesManager() => _resourcesManager;
   
-  public FnafManager GetFNaFManager() => _fnaf_manager;
+  public FNaFHost GetFNaF() => _fnafHost;
   
-  public void AssignSceneScript(string scene_name, dynamic script_instance) => 
-    _scene_manager.AssignScriptInstance(scene_name, script_instance);
+  public void AssignSceneScript(string sceneName, dynamic scriptInstance) => 
+    _sceneManager.AssignScriptInstance(sceneName, scriptInstance);
   
-  public void AssignGlobalScript(dynamic script_instance) =>
-    _scene_manager.AssignGlobalScriptInstance(script_instance);
+  public void AssignGlobalScript(dynamic scriptInstance) =>
+    _sceneManager.AssignGlobalScriptInstance(scriptInstance);
   
-  public void AssignGuiScript(dynamic script_instance) =>
-    _gui_manager.AssignGuiScript(script_instance);
+  public void AssignGuiScript(dynamic scriptInstance) =>
+    _guiManager.AssignGuiScript(scriptInstance);
 }

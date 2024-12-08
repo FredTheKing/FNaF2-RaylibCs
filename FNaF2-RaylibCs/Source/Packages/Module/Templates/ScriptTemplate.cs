@@ -1,4 +1,6 @@
-namespace FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
+
+namespace FNaF2_RaylibCs.Source.Packages.Module.Templates;
 
 public abstract class ScriptTemplate : CallDebuggerInfoTemplate
 {

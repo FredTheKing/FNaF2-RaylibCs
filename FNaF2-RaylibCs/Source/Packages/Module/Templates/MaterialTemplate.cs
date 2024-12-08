@@ -1,9 +1,11 @@
-namespace FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
+
+namespace FNaF2_RaylibCs.Source.Packages.Module.Templates;
 
 public abstract class MaterialTemplate : CallDebuggerInfoTemplate
 {
-  protected String? _filename;
-  protected dynamic? _material;
+  protected String? Filename;
+  protected dynamic? Material;
 
   public virtual bool IsMaterialLoaded()
   {
@@ -13,6 +15,6 @@ public abstract class MaterialTemplate : CallDebuggerInfoTemplate
   
   public virtual void Unload() { }
   public virtual void Load() { }
-  public String GetFilename() => _filename;
-  public dynamic GetMaterial() => _material;
+  public String GetFilename() => Filename!;
+  public dynamic GetMaterial() => Material!;
 }

@@ -6,22 +6,22 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Text;
 
 public class SelectableText : SimpleText
 {
-  protected List<string> _text;
-  protected int _text_index = 0;
+  protected List<string> Text;
+  protected int TextIndex;
 
-  SelectableText(Vector2 position, Vector2 size, int font_size, List<string> texts, Color color, bool align_center_v = false,
-    bool align_center_h = false) : base(position, size, font_size, color, align_center_v, align_center_h) => _text = texts;
+  SelectableText(Vector2 position, Vector2 size, int fontSize, List<string> texts, Color color, bool alignCenterV = false,
+    bool alignCenterH = false) : base(position, size, fontSize, color, alignCenterV, alignCenterH) => Text = texts;
 
-  SelectableText(Vector2 position, Vector2 size, int font_size, List<string> texts, Color color, FontResource font,
-    bool align_center_v = false, bool align_center_h = false) : base(position, size, font_size, color, font,
-    align_center_v, align_center_h) => _text = texts;
+  SelectableText(Vector2 position, Vector2 size, int fontSize, List<string> texts, Color color, FontResource font,
+    bool alignCenterV = false, bool alignCenterH = false) : base(position, size, fontSize, color, font,
+    alignCenterV, alignCenterH) => Text = texts;
   
-  public void SetTexts(List<string> texts) => _text = texts;
-  public void SetText(string text, int index) => _text[index] = text;
+  public void SetTexts(List<string> texts) => Text = texts;
+  public void SetText(string text, int index) => Text[index] = text;
   
-  public void SetTextIndex(int index) => _text_index = index;
-  public void NextText() => _text_index = (_text_index + 1) % _text.Count;
-  public void PreviousText() => _text_index = (_text_index - 1 + _text.Count) % _text.Count;
+  public void SetTextIndex(int index) => TextIndex = index;
+  public void NextText() => TextIndex = (TextIndex + 1) % Text.Count;
+  public void PreviousText() => TextIndex = (TextIndex - 1 + Text.Count) % Text.Count;
 
-  protected override void PostDraw(Vector2 new_position) => Raylib.DrawTextEx(_font.GetMaterial(), _text[_text_index], new_position + _offset, _font_size, _font_spacing, _color);
+  protected override void PostDraw(Vector2 newPosition) => Raylib.DrawTextEx(Font.GetMaterial(), Text[TextIndex], newPosition + Offset, FontSize, FontSpacing, Color);
 }

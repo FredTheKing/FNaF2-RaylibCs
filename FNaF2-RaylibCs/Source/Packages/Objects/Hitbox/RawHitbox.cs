@@ -1,47 +1,47 @@
 using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 
 public class RawHitbox(Vector2 position, Vector2 size, Color color) : ObjectTemplate(position, size)
 {
-  protected Color _color = color;
+  protected Color Color = color;
   
   // LMB, RMB, MMB in List
-  protected bool _hitbox_click_hover = false;
-  protected List<bool> _hitbox_click_press = [false, false, false];
-  protected List<bool> _hitbox_click_outside_press = [false, false, false];
-  protected List<bool> _hitbox_click_hold = [false, false, false];
-  protected List<bool> _hitbox_click_release = [false, false, false];
+  protected bool HitboxClickHover = false;
+  protected readonly List<bool> HitboxClickPress = [false, false, false];
+  protected readonly List<bool> HitboxClickOutsidePress = [false, false, false];
+  protected readonly List<bool> HitboxClickHold = [false, false, false];
+  protected readonly List<bool> HitboxClickRelease = [false, false, false];
   
   private void CheckMousePressed()
   {
-    _hitbox_click_press[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & _hitbox_click_hover;
-    _hitbox_click_press[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & _hitbox_click_hover;
-    _hitbox_click_press[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & _hitbox_click_hover;
+    HitboxClickPress[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & HitboxClickHover;
+    HitboxClickPress[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & HitboxClickHover;
+    HitboxClickPress[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & HitboxClickHover;
   }
   
   private void CheckMouseOutsidePressed()
   {
-    _hitbox_click_outside_press[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & !_hitbox_click_hover;
-    _hitbox_click_outside_press[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & !_hitbox_click_hover;
-    _hitbox_click_outside_press[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & !_hitbox_click_hover;
+    HitboxClickOutsidePress[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & !HitboxClickHover;
+    HitboxClickOutsidePress[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & !HitboxClickHover;
+    HitboxClickOutsidePress[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & !HitboxClickHover;
   }
   
   private void CheckMouseHeld()
   {
-    _hitbox_click_hold[0] = Raylib.IsMouseButtonDown(MouseButton.Left) & _hitbox_click_hover;
-    _hitbox_click_hold[1] = Raylib.IsMouseButtonDown(MouseButton.Right) & _hitbox_click_hover;
-    _hitbox_click_hold[2] = Raylib.IsMouseButtonDown(MouseButton.Middle) & _hitbox_click_hover;
+    HitboxClickHold[0] = Raylib.IsMouseButtonDown(MouseButton.Left) & HitboxClickHover;
+    HitboxClickHold[1] = Raylib.IsMouseButtonDown(MouseButton.Right) & HitboxClickHover;
+    HitboxClickHold[2] = Raylib.IsMouseButtonDown(MouseButton.Middle) & HitboxClickHover;
   }
   
   private void CheckMouseReleased()
   {
-    _hitbox_click_release[0] = Raylib.IsMouseButtonReleased(MouseButton.Left) & _hitbox_click_hover;
-    _hitbox_click_release[1] = Raylib.IsMouseButtonReleased(MouseButton.Right) & _hitbox_click_hover;
-    _hitbox_click_release[2] = Raylib.IsMouseButtonReleased(MouseButton.Middle) & _hitbox_click_hover;
+    HitboxClickRelease[0] = Raylib.IsMouseButtonReleased(MouseButton.Left) & HitboxClickHover;
+    HitboxClickRelease[1] = Raylib.IsMouseButtonReleased(MouseButton.Right) & HitboxClickHover;
+    HitboxClickRelease[2] = Raylib.IsMouseButtonReleased(MouseButton.Middle) & HitboxClickHover;
   }
 
   protected void UpdateClicksDetection()
@@ -52,15 +52,15 @@ public class RawHitbox(Vector2 position, Vector2 size, Color color) : ObjectTemp
     CheckMouseReleased();
   }
 
-  public bool GetMouseHover() => _hitbox_click_hover;
+  public bool GetMouseHover() => HitboxClickHover;
   
-  public bool GetMousePressed(MouseButton button) => _hitbox_click_press[(int)button];
+  public bool GetMousePressed(MouseButton button) => HitboxClickPress[(int)button];
   
-  public bool GetMouseOutsidePressed(MouseButton button) => _hitbox_click_outside_press[(int)button];
+  public bool GetMouseOutsidePressed(MouseButton button) => HitboxClickOutsidePress[(int)button];
 
-  public bool GetMouseHold(MouseButton button) => _hitbox_click_hold[(int)button];
+  public bool GetMouseHold(MouseButton button) => HitboxClickHold[(int)button];
   
-  public bool GetMouseReleased(MouseButton button) => _hitbox_click_release[(int)button];
+  public bool GetMouseReleased(MouseButton button) => HitboxClickRelease[(int)button];
   
   public override void Update(Registry registry)
   {

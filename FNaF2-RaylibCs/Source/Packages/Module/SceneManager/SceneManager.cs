@@ -3,76 +3,67 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 
-public class SceneManager(params String[] scenes_names) : CallDebuggerInfoTemplate
+public class SceneManager(params String[] scenesNames) : CallDebuggerInfoTemplate
 { 
-  private Dictionary<String, Scene> _scenes = InitScenes(scenes_names);
-  private String[] _scenes_names = scenes_names;
-  private Scene _current_scene;
+  private Dictionary<String, Scene> _scenes = InitScenes(scenesNames);
+  private String[] _scenesNames = scenesNames;
+  private Scene? _currentScene;
   private bool _changed = true;
 
   public override void CallDebuggerInfo(Registry registry)
   {
-    if (ImGui.TreeNode($"Current Scene: {_current_scene.GetName()}"))
+    if (ImGui.TreeNode($"Current Scene: {_currentScene!.GetName()}"))
     {
-      _current_scene.CallDebuggerInfo(registry);
+      _currentScene.CallDebuggerInfo(registry);
       ImGui.TreePop();
     }
     ImGui.Text($" > Changed Scene: {(_changed ? 1 : 0)}");
     ImGui.Text($" > Scenes Count: {_scenes.Count}");
   }
   
-  private static Dictionary<String, Scene> InitScenes(params String[] scenes_names)
-  {
-    var list = new Dictionary<String, Scene>();
-    foreach (var scene_name in scenes_names)
-    {
-        list.Add(scene_name, new Scene(scene_name));
-    }
-    return list;
-  }
+  private static Dictionary<String, Scene> InitScenes(params String[] scenesNames) =>
+    scenesNames.ToDictionary(sceneName => sceneName, sceneName => new Scene(sceneName));
 
   public void SortObjectsLayers()
   {
-    foreach (Scene scene in _scenes.Values)
-    {
+    foreach (Scene scene in _scenes.Values) 
       scene.SortLayers();
-    }
   }
 
-  public void AssignScriptInstance(string name, dynamic script_instance) => _scenes[name].AssignScriptInstance(script_instance);
+  public void AssignScriptInstance(string name, dynamic scriptInstance) => _scenes[name].AssignScriptInstance(scriptInstance);
 
-  public void AssignGlobalScriptInstance(dynamic script_instance)
+  public void AssignGlobalScriptInstance(dynamic scriptInstance)
   {
     foreach (Scene scene in _scenes.Values) 
-      scene.AssignGlobalScriptInstance(script_instance);
+      scene.AssignGlobalScriptInstance(scriptInstance);
   }
 
-  public void LinkObject(Object obj, String scene_name, int z_layer) => _scenes[scene_name].AddObject(obj, z_layer);
+  public void LinkObject(Object obj, String sceneName, int zLayer) => _scenes[sceneName].AddObject(obj, zLayer);
 
   public Dictionary<String, Scene> GetScenes() => _scenes;
 
-  public String[] GetScenesNamesList() => _scenes_names;
+  public String[] GetScenesNamesList() => _scenesNames;
   
-  public Scene GetCurrentScene() => _current_scene;
+  public Scene GetCurrentScene() => _currentScene!;
   
   public bool IsChanged() => _changed;
 
   public void ResetChanged() => _changed = false;
   
-  public void ChangeScene(String scene_name)
+  public void ChangeScene(String sceneName)
   {
     Console.WriteLine("-----------------------------------------");
-    Scene newScene = _scenes[scene_name];
-    if (!(_current_scene is null)) _current_scene.Unload(newScene);
-    _current_scene = newScene;
+    Scene newScene = _scenes[sceneName];
+    _currentScene?.Unload(newScene);
+    _currentScene = newScene;
     _changed = true;
-    _current_scene.Load();
+    _currentScene.Load();
     Console.WriteLine("INFO: SCENE: Scene changed successfully");
   }
 
   public void NextScene() =>
-    ChangeScene(_scenes_names[(_scenes_names.ToList().IndexOf(_current_scene.GetName()) + 1) % _scenes_names.Length]);
+    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + 1) % _scenesNames.Length]);
   
   public void PreviousScene() =>
-    ChangeScene(_scenes_names[(_scenes_names.ToList().IndexOf(_current_scene.GetName()) + _scenes_names.Length - 1) % _scenes_names.Length]);
+    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + _scenesNames.Length - 1) % _scenesNames.Length]);
 }

@@ -1,6 +1,7 @@
 using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
-using FNaF2_RaylibCs.Source.Packages.Objects.ImageSelector;
+using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 using Raylib_cs;
 
@@ -8,7 +9,7 @@ namespace FNaF2_RaylibCs.Source.ObjectsScripts;
 
 public class WhiteBlinkoScript(SelectableImage obj) : ScriptTemplate
 {
-  private int _stage;
+  private int _stage; //0-stay white, 1-random, 2-go blank, 3-dead
   private SimpleTimer _timer = new(0.084f, true);
 
   public override void Activation(Registry registry)

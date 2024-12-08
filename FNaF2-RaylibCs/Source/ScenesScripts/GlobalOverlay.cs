@@ -1,9 +1,8 @@
-using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
+using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using Raylib_cs;
 
-namespace FNaF2_RaylibCs.Source.Scenes;
+namespace FNaF2_RaylibCs.Source.ScenesScripts;
 
 public class GlobalOverlay : ScriptTemplate
 {
