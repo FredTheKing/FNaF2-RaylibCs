@@ -1,4 +1,4 @@
-namespace FNaF2_RaylibCs.Source.Packages.Module.Custom;
+namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
 public class AnimatronicManager
 {

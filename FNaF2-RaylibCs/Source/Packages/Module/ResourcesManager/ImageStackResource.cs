@@ -1,6 +1,5 @@
 using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using ImGuiNET;
 using Raylib_cs;
 
@@ -9,53 +8,53 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 public class ImageStackResource : MaterialTemplate
 {
   private readonly Vector2 _size;
-  private new List<string>? _filename;
-  private new List<Texture2D>? _material = [];
+  protected new List<string>? Filename;
+  protected new List<Texture2D>? Material = [];
 
-  public override bool IsMaterialLoaded() => _material!.Count(x => Raylib.IsTextureReady(x)) == _filename!.Count;
+  public override bool IsMaterialLoaded() => Material!.Count(x => Raylib.IsTextureReady(x)) == Filename!.Count;
 
   public ImageStackResource(List<string> filenames)
   {
-    _filename = filenames;
-    Texture2D texture = Raylib.LoadTexture(_filename[0]);
+    Filename = filenames;
+    Texture2D texture = Raylib.LoadTexture(Filename[0]);
     _size = new Vector2(texture.Width, texture.Height);
     Raylib.UnloadTexture(texture);
   }
   public ImageStackResource(List<Image> images)
   {
     foreach (Image image in images) 
-      _material!.Add(Raylib.LoadTextureFromImage(image));
-    _size = new Vector2(_material![0].Width, _material[0].Height);
+      Material!.Add(Raylib.LoadTextureFromImage(image));
+    _size = new Vector2(Material![0].Width, Material[0].Height);
   }
   
   public ImageStackResource(List<Texture2D> textures) 
   { 
-    _material = textures;
-    _size = new Vector2(_material[0].Width, _material[0].Height);
+    Material = textures;
+    _size = new Vector2(Material[0].Width, Material[0].Height);
   }
   
   public Vector2 GetSize() => _size;
   
-  public new List<string> GetFilename() => _filename!;
-  public new List<Texture2D> GetMaterial() => _material!;
+  public new List<string> GetFilename() => Filename!;
+  public new List<Texture2D> GetMaterial() => Material!;
   
   public override void Unload()
   {
-    foreach (Texture2D material in _material!)
+    foreach (Texture2D material in Material!)
       Raylib.UnloadTexture(material);
-    _material.Clear();
+    Material.Clear();
   }
 
   public override void Load()
   {
-    foreach (string filename in _filename!)
-      _material!.Add(Raylib.LoadTexture(filename));
+    foreach (string filename in Filename!)
+      Material!.Add(Raylib.LoadTexture(filename));
   }
 
   public override void CallDebuggerInfo(Registry registry)
   {
-    ImGui.Text($" > Items Count: {_filename!.Count | _material!.Count}");
+    ImGui.Text($" > Items Count: {Filename!.Count | Material!.Count}");
     ImGui.Text($" > Original Size: {_size.X}, {_size.Y}");
-    ImGui.Text($" > Loaded: {(_filename != null ? _material.Count + "/" + _filename.Count : _material.Count)}");
+    ImGui.Text($" > Loaded: {(Filename != null ? Material.Count + "/" + Filename.Count : Material.Count)}");
   }
 }

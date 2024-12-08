@@ -1,6 +1,5 @@
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 using Raylib_cs;

@@ -1,9 +1,5 @@
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
-using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 
-namespace FNaF2_RaylibCs.Source.Packages.Module.Custom;
+namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
-public class Animatronic : ScriptTemplate
-{
-  
-}
+public class Animatronic : ScriptTemplate;

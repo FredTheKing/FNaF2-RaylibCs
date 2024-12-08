@@ -2,6 +2,7 @@ using System.Numerics;
 using FNaF2_RaylibCs.Source.ObjectsScripts;
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom;
+using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 using FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;

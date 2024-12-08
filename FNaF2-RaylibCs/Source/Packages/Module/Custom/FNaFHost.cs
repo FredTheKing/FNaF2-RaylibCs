@@ -1,3 +1,4 @@
+using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom;
