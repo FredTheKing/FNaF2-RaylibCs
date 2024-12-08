@@ -8,7 +8,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
 public class HitboxImage(ImageResource resource, Vector2 position, Color? color = null): SimpleImage(position, resource)
 {
-  private RectangleHitbox _hitbox = new RectangleHitbox(position, new Vector2(0, 0), color ?? new Color(255, 0, 0, 123));
+  private RectangleHitbox _hitbox = new(position, new Vector2(0, 0), color ?? new Color(255, 0, 0, 123));
   
   public override void CallDebuggerInfo(Registry registry)
   {

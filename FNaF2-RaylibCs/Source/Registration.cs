@@ -5,7 +5,9 @@ using FNaF2_RaylibCs.Source.Packages.Module.Custom;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 using FNaF2_RaylibCs.Source.Packages.Objects.Animation;
+using FNaF2_RaylibCs.Source.Packages.Objects.Checkbox;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
+using FNaF2_RaylibCs.Source.Packages.Objects.Slider;
 using FNaF2_RaylibCs.Source.Packages.Objects.Text;
 using FNaF2_RaylibCs.Source.ScenesScripts;
 using FNaF2_RaylibCs.Source.ScenesScripts.Menu;
@@ -29,6 +31,8 @@ public static class Registration
   
   public struct Objects
   {
+    public static SimpleSlider? TestingSlider;
+    
     public static SelectableImage? MenuWhiteBlinko;
     
     public static SelectableImage? MenuBackground;
@@ -47,6 +51,12 @@ public static class Registration
     public static HitboxText? ExtrasCredits;
     public static HitboxText? ExtrasBack;
 
+    public static SimpleCheckbox SettingsFullscreen;
+    public static SimpleCheckbox SettingsVsync;
+    public static SimpleSlider SettingsVolume;
+    public static SimpleCheckbox SettingsFunMode;
+    public static SimpleCheckbox SettingsDebugMode;
+
     public static SimpleText? LoadingNightText;
     public static SimpleText? LoadingAmText;
   }
@@ -64,6 +74,8 @@ public static class Registration
 
   public static void ObjectsInitialisation(Registry registry)
   {
+    Objects.TestingSlider = registry.RegisterObject("TestingSlider", ["Debugger/Testing"], [0], new SimpleSlider(new Vector2(100, 100), new Vector2(250, 20), Color.White, 2));
+    
     Objects.MenuWhiteBlinko = registry.RegisterObject("GlobalWhiteBlinko", ["Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Loading"], [9], new SelectableImage(Vector2.Zero, Materials.MenuWhiteBlinkoStackResource!, Color.White));
     Objects.MenuWhiteBlinko.AssignObjectScript(new WhiteBlinkoScript(Objects.MenuWhiteBlinko));
     
