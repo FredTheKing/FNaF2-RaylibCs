@@ -9,14 +9,16 @@ Raylib.InitAudioDevice();
 Raylib.SetTargetFPS(Config.WindowTargetFramerate);
 Raylib.SetWindowMinSize(Config.WindowWidth, Config.WindowHeight);
 Registry registry = new Registry(
-  typeof(Config.ScenesNames)
+  typeof(Config.Scenes)
   .GetFields()
   .Where(x => x.FieldType == typeof(string))
   .Select(x => (string)x.GetValue(null)!)
   .ToList()
 );
 Registration.RegistryInitialisation(registry);
-
+Console.WriteLine(Config.SeparatorLine);
+Console.WriteLine("INFO: REGISTRY: Registry initialised successfully");
+Console.WriteLine(Config.SeparatorLine);
 Registration.MaterialsInitialisation(registry);
 registry.EndMaterialsRegistration();
 Registration.ObjectsInitialisation(registry);

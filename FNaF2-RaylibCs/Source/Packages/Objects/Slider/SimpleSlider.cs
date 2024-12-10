@@ -10,8 +10,9 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Slider;
 
 public class SimpleSlider : ObjectTemplate
 {
-  public SimpleSlider(Vector2 position, Vector2 size, Color color, int lineSize, bool showPercentage = true) : base(position, size)
+  public SimpleSlider(Vector2 position, Vector2 size, Color color, int lineSize, float defaultValue, bool showPercentage = true) : base(position, size)
   {
+    Value = defaultValue;
     Radius = size.Y / 2;
     Color = color;
     LineSize = lineSize;

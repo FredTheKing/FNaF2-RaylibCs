@@ -103,6 +103,8 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
   public dynamic Get(String name) => _container[name];
 
   public void SwitchDebugMode() => _debugMode = !_debugMode;
+  
+  public void SetDebugMode(bool state) => _debugMode = state;
 
   public void SetShowHitboxes(bool boolean) => _showHitboxes = boolean;
   
@@ -129,6 +131,9 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
       if (GetResourcesManager().GetStorage().ContainsKey(scenePair.Key)) 
         scenePair.Value.AssignResources(GetResourcesManager().GetStorage()[scenePair.Key]);
     }
+    Console.WriteLine(Config.SeparatorLine);
+    Console.WriteLine("INFO: REGISTRY: Registry initialised successfully");
+    Console.WriteLine(Config.SeparatorLine);
   }
   
   public void EndObjectsRegistration(string startSceneName)

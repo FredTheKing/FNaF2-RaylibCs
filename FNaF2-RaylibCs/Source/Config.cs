@@ -8,7 +8,7 @@ public struct Config
   public const string WindowTitle = "Five Nights at Freddy's 2 - Raylib Edition";
   public const int WindowTargetFramerate = -1;
   
-  public record ScenesNames
+  public record Scenes
   {
     public const string DebuggerTesting = "Debugger/Testing";
     public const string MenuMain = "Menu/Main";
@@ -21,7 +21,7 @@ public struct Config
     public const string GameNewspaper = "Game/Newspaper";
   }
   
-  public const string StartSceneName = ScenesNames.MenuExtras;
+  public const string StartSceneName = Scenes.MenuSettings;
   public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow;
   public const string SeparatorLine = "---------------------------------------------------------";
 }

@@ -12,7 +12,7 @@ public class ImGuiWindow
   {
     rlImGui.Begin();
     ImGui.PushStyleVar(ImGuiStyleVar.ScrollbarSize, 0);
-
+    
     if (registry.GetMovableDebugger() ? ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse) : ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize))
     {
       if (!registry.GetMovableDebugger())

@@ -31,14 +31,14 @@ public class MenuMain : ScriptTemplate
       {
         case "New Game":
           registry.GetFNaF().GetNightManager().NewGameNight();
-          registry.GetSceneManager().ChangeScene(Config.ScenesNames.GameNewspaper);
+          registry.GetSceneManager().ChangeScene(Config.Scenes.GameNewspaper);
           break;
         case "Continue":
           registry.GetFNaF().GetNightManager().ContinueNight();
-          registry.GetSceneManager().ChangeScene(Config.ScenesNames.GameLoading);
+          registry.GetSceneManager().ChangeScene(Config.Scenes.GameLoading);
           break;
         case "Extras":
-          registry.GetSceneManager().ChangeScene(Config.ScenesNames.MenuExtras);
+          registry.GetSceneManager().ChangeScene(Config.Scenes.MenuExtras);
           break;
       }
   }
