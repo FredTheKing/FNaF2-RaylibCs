@@ -27,7 +27,7 @@ public class SimpleCheckbox(Vector2 position, int size, Color color, bool checke
   public override void Update(Registry registry)
   {
     Hitbox.Update(registry);
-    if (Hitbox.GetMousePressed(MouseButton.Left)) SwitchChecked();
+    if (Hitbox.GetMousePress(MouseButton.Left)) SwitchChecked();
     base.Update(registry);
   }
 

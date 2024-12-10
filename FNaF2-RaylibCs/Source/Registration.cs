@@ -74,7 +74,7 @@ public static class Registration
 
   public static void ObjectsInitialisation(Registry registry)
   {
-    Objects.TestingSlider = registry.RegisterObject("TestingSlider", ["Debugger/Testing"], [0], new SimpleSlider(new Vector2(100, 100), new Vector2(250, 20), Color.White, 2));
+    Objects.TestingSlider = registry.RegisterObject("TestingSlider", ["Debugger/Testing"], [0], new SimpleSlider(new Vector2(100, 100), new Vector2(250, 20), Color.White, 5));
     
     Objects.MenuWhiteBlinko = registry.RegisterObject("GlobalWhiteBlinko", ["Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Loading"], [9], new SelectableImage(Vector2.Zero, Materials.MenuWhiteBlinkoStackResource!, Color.White));
     Objects.MenuWhiteBlinko.AssignObjectScript(new WhiteBlinkoScript(Objects.MenuWhiteBlinko));

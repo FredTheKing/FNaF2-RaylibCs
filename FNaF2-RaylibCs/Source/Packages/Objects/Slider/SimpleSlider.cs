@@ -1,33 +1,71 @@
 using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
-using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 using FNaF2_RaylibCs.Source.Packages.Objects.Text;
+using ImGuiNET;
 using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Slider;
 
-public class SimpleSlider(Vector2 position, Vector2 size, Color color, int lineSize, bool showPercentage = true) : ObjectTemplate(position, size)
+public class SimpleSlider : ObjectTemplate
 {
-  protected float Value = 0f;
-  protected RectangleHitbox Hitbox = new(position, size, new Color(255, 0, 0, 123));
-  protected SimpleText Percentage = new(position + new Vector2(size.X + 4, 0), new Vector2(60, size.Y), 20, "0%", color, true);
+  public SimpleSlider(Vector2 position, Vector2 size, Color color, int lineSize, bool showPercentage = true) : base(position, size)
+  {
+    Radius = size.Y / 2;
+    Color = color;
+    LineSize = lineSize;
+    ShowPercentage = showPercentage;
+    
+    _percentSpace = size.X + size.Y / 4;
+    _leftSide = position.X;
+    _rightSide = position.X + size.X;
+    
+    Hitbox = new RectangleHitbox(position with { X = position.X - Radius }, size with { X = size.X + 2 * Radius }, new Color(255, 0, 0, 123));
+    Percentage = new SimpleText(position + new Vector2(_percentSpace, 0), size with { X = 60 }, 20, "0%", Color, true);
+  }
+  
+  protected float Value;
+  protected float Radius;
+  protected readonly RectangleHitbox Hitbox;
+  protected readonly SimpleText Percentage;
+  protected Color Color;
+  protected readonly int LineSize;
+  protected readonly bool ShowPercentage;
+  
+  private float _leftSide;
+  private float _rightSide;
+  private readonly float _percentSpace;
 
-  private float leftSide = position.X;
-  private float rightSide = position.X + size.X;
+  public override void SetPosition(Vector2 position)
+  {
+    _leftSide = position.X;
+    _rightSide = position.X + Size.X;
+    Hitbox.SetPosition(position with {X = position.X - Radius});
+    Percentage.SetPosition(position + new Vector2(_percentSpace, 0));
+    base.SetPosition(position);
+  }
+
+  public override void CallDebuggerInfo(Registry registry)
+  {
+    ImGui.Text($" > Value: {Value}");
+    Hitbox.CallDebuggerInfo(registry);
+    if (ShowPercentage) Percentage.CallDebuggerInfo(registry);
+  }
 
   public override void Activation(Registry registry)
   {
     Hitbox.Activation(registry);
-    if (showPercentage) Percentage.Activation(registry);
+    if (ShowPercentage) Percentage.Activation(registry);
     base.Activation(registry);
   }
 
   public override void Update(Registry registry)
   {
-    Value = (float)Math.Sin(Raylib.GetTime())/2 + 0.5f;
-    if (showPercentage)
+    if (Hitbox.GetMouseDrag(MouseButton.Left)) 
+      Value = Math.Clamp((Raylib.GetMousePosition().X - _leftSide) / (_rightSide - _leftSide), 0f, 1f);
+
+    if (ShowPercentage)
     {
       Percentage.Update(registry);
       Percentage.SetText((Value * 100).ToString("F0") + "%"); 
@@ -38,11 +76,11 @@ public class SimpleSlider(Vector2 position, Vector2 size, Color color, int lineS
 
   public override void Draw(Registry registry)
   {
-    float middleLine = position.Y + size.Y / 2;
-    Raylib.DrawLineEx(new Vector2(leftSide, middleLine), new Vector2(rightSide, middleLine), lineSize, color);
-    Raylib.DrawCircle((int)(leftSide + (rightSide - leftSide) * Value), (int)middleLine, size.Y / 2, color);
+    float middleLine = Position.Y + Size.Y / 2;
+    Raylib.DrawLineEx(new Vector2(_leftSide, middleLine), new Vector2(_rightSide, middleLine), LineSize, Color);
+    Raylib.DrawCircle((int)(_leftSide + (_rightSide - _leftSide) * Value), (int)middleLine, Radius, Color);
     
-    if (showPercentage) Percentage.Draw(registry);
+    if (ShowPercentage) Percentage.Draw(registry);
     Hitbox.Draw(registry);
     base.Draw(registry);
   }

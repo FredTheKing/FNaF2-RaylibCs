@@ -28,7 +28,7 @@ public class MenuMain : ScriptTemplate
   private void TeleportToScenes(List<HitboxText> hitboxes, Registry registry)
   {
     foreach (HitboxText hitbox in hitboxes)
-      if (hitbox.GetHitbox().GetMousePressed(MouseButton.Left))
+      if (hitbox.GetHitbox().GetMousePress(MouseButton.Left))
         switch (hitbox.GetText())
         {
           case "New Game":

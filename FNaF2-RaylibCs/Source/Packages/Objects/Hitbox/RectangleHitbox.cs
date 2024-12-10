@@ -31,6 +31,7 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawH
       ImGui.Text($" > Mouse Pressed: {(HitboxClickPress[0] ? 1 : 0)}|{(HitboxClickPress[1] ? 1 : 0)}|{(HitboxClickPress[2] ? 1 : 0)}");
       ImGui.Text($" > Mouse Outside Pressed: {(HitboxClickOutsidePress[0] ? 1 : 0)}|{(HitboxClickOutsidePress[1] ? 1 : 0)}|{(HitboxClickOutsidePress[2] ? 1 : 0)}");
       ImGui.Text($" > Mouse Held: {(HitboxClickHold[0] ? 1 : 0)}|{(HitboxClickHold[1] ? 1 : 0)}|{(HitboxClickHold[2] ? 1 : 0)}");
+      ImGui.Text($" > Mouse Dragged: {(HitboxClickDrag[0] ? 1 : 0)}|{(HitboxClickDrag[1] ? 1 : 0)}|{(HitboxClickDrag[2] ? 1 : 0)}");
       ImGui.Text($" > Mouse Released: {(HitboxClickRelease[0] ? 1 : 0)}|{(HitboxClickRelease[1] ? 1 : 0)}|{(HitboxClickRelease[2] ? 1 : 0)}");
       
       ImGui.TreePop();
