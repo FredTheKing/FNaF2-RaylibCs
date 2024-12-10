@@ -47,9 +47,6 @@ public class Scene(string name) : CallDebuggerInfoTemplate
       foreach (KeyValuePair<string,dynamic> objectPair in typePair.Value)
         if (nextScene == null || !nextScene._resourcesDictionary.TryGetValue(typePair.Key, out var nextSceneTypePair) || !nextSceneTypePair.ContainsKey(objectPair.Key))
           objectPair.Value.Unload();
-
-    foreach (dynamic item in _sortedListObjects) 
-      item.Unload();
   }
   
   public void Load()
@@ -58,9 +55,6 @@ public class Scene(string name) : CallDebuggerInfoTemplate
       foreach (KeyValuePair<string,dynamic> objectPair in typePair.Value)
         if (!objectPair.Value.IsMaterialLoaded())
           objectPair.Value.Load();
-
-    foreach (dynamic item in _sortedListObjects)
-      item.Load();
   }
   
   public void Activation(Registry registry)

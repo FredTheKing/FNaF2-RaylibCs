@@ -3,10 +3,10 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 
-public class SceneManager(params String[] scenesNames) : CallDebuggerInfoTemplate
+public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
 { 
   private Dictionary<String, Scene> _scenes = InitScenes(scenesNames);
-  private String[] _scenesNames = scenesNames;
+  private List<string> _scenesNames = scenesNames;
   private Scene? _currentScene;
   private bool _changed = true;
 
@@ -21,7 +21,7 @@ public class SceneManager(params String[] scenesNames) : CallDebuggerInfoTemplat
     ImGui.Text($" > Scenes Count: {_scenes.Count}");
   }
   
-  private static Dictionary<String, Scene> InitScenes(params String[] scenesNames) =>
+  private static Dictionary<String, Scene> InitScenes(List<string> scenesNames) =>
     scenesNames.ToDictionary(sceneName => sceneName, sceneName => new Scene(sceneName));
 
   public void SortObjectsLayers()
@@ -42,7 +42,7 @@ public class SceneManager(params String[] scenesNames) : CallDebuggerInfoTemplat
 
   public Dictionary<String, Scene> GetScenes() => _scenes;
 
-  public String[] GetScenesNamesList() => _scenesNames;
+  public List<string> GetScenesNamesList() => _scenesNames;
   
   public Scene GetCurrentScene() => _currentScene!;
   
@@ -52,7 +52,8 @@ public class SceneManager(params String[] scenesNames) : CallDebuggerInfoTemplat
   
   public void ChangeScene(String sceneName)
   {
-    Console.WriteLine("-----------------------------------------");
+    Console.WriteLine("INFO: SCENE: Changing scene to '" + sceneName + "'...");
+    Console.WriteLine(Config.SeparatorLine);
     Scene newScene = _scenes[sceneName];
     _currentScene?.Unload(newScene);
     _currentScene = newScene;
@@ -62,8 +63,8 @@ public class SceneManager(params String[] scenesNames) : CallDebuggerInfoTemplat
   }
 
   public void NextScene() =>
-    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + 1) % _scenesNames.Length]);
+    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + 1) % _scenesNames.Count]);
   
   public void PreviousScene() =>
-    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + _scenesNames.Length - 1) % _scenesNames.Length]);
+    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + _scenesNames.Count - 1) % _scenesNames.Count]);
 }

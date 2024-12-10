@@ -6,7 +6,7 @@ using rlImGui_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module;
 
-public class Registry(params String[] scenesNames) : CallDebuggerInfoTemplate
+public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
 {
   private bool _debugMode;
   private bool _showHitboxes = true;

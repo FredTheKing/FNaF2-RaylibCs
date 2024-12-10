@@ -51,11 +51,11 @@ public static class Registration
     public static HitboxText? ExtrasCredits;
     public static HitboxText? ExtrasBack;
 
-    public static SimpleCheckbox SettingsFullscreen;
-    public static SimpleCheckbox SettingsVsync;
-    public static SimpleSlider SettingsVolume;
-    public static SimpleCheckbox SettingsFunMode;
-    public static SimpleCheckbox SettingsDebugMode;
+    public static SimpleCheckbox? SettingsFullscreen;
+    public static SimpleCheckbox? SettingsVsync;
+    public static SimpleSlider? SettingsVolume;
+    public static SimpleCheckbox? SettingsFunMode;
+    public static SimpleCheckbox? SettingsDebugMode;
 
     public static SimpleText? LoadingNightText;
     public static SimpleText? LoadingAmText;
@@ -74,7 +74,7 @@ public static class Registration
 
   public static void ObjectsInitialisation(Registry registry)
   {
-    Objects.TestingSlider = registry.RegisterObject("TestingSlider", ["Debugger/Testing"], [0], new SimpleSlider(new Vector2(100, 100), new Vector2(250, 20), Color.White, 5));
+    Objects.TestingSlider = registry.RegisterObject("TestingSlider", ["Debugger/Testing"], [0], new SimpleSlider(new Vector2(100, 100), new Vector2(250, 20), Color.White, 2));
     
     Objects.MenuWhiteBlinko = registry.RegisterObject("GlobalWhiteBlinko", ["Menu/Main", "Menu/Settings", "Menu/Extras", "Menu/Credits", "Menu/CustomNight", "Game/Loading"], [9], new SelectableImage(Vector2.Zero, Materials.MenuWhiteBlinkoStackResource!, Color.White));
     Objects.MenuWhiteBlinko.AssignObjectScript(new WhiteBlinkoScript(Objects.MenuWhiteBlinko));
@@ -90,12 +90,12 @@ public static class Registration
     Objects.MenuExtras = registry.RegisterObject("MenuExtras", ["Menu/Main"], [1], new HitboxText(new Vector2(92, 558), new Vector2(190, 65), 48, "Extras", Color.White, Materials.MenuFont!));
     Objects.MenuContinueNightText = registry.RegisterObject("MenuContinueNightText", ["Menu/Main"], [1], new SimpleText(new Vector2(326, 518), Vector2.Zero, 18, "Night #", Color.Blank, Materials.MenuFont!));
     
-    Objects.ExtrasProjectLinkGithub = registry.RegisterObject("ExtrasProjectLinkGithub", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 50), new Vector2(500, 65), 48, "Project's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.MenuFont!, true));
-    Objects.ExtrasAuthorLinkGithub = registry.RegisterObject("ExtrasAuthorLinkGithub", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 115), new Vector2(500, 65), 48, "Author's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.MenuFont!, true));
-    Objects.ExtrasCustomNight = registry.RegisterObject("ExtrasCustomNight", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 180), new Vector2(500, 65), 48, "Custom Night", Color.White, Materials.MenuFont!, true));
-    Objects.ExtrasSettings = registry.RegisterObject("ExtrasSettings", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 245), new Vector2(500, 65), 48, "Settings", Color.White, Materials.MenuFont!, true));
-    Objects.ExtrasCredits = registry.RegisterObject("ExtrasCredits", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 310), new Vector2(500, 65), 48, "Credits", Color.White, Materials.MenuFont!, true));
-    Objects.ExtrasBack = registry.RegisterObject("ExtrasBack", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 375), new Vector2(500, 65), 48, "Back", Color.White, Materials.MenuFont!, true));
+    Objects.ExtrasProjectLinkGithub = registry.RegisterObject("ExtrasProjectLinkGithub", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 120), new Vector2(500, 65), 48, "Project's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.MenuFont!, true));
+    Objects.ExtrasAuthorLinkGithub = registry.RegisterObject("ExtrasAuthorLinkGithub", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 185), new Vector2(500, 65), 48, "Author's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.MenuFont!, true));
+    Objects.ExtrasCustomNight = registry.RegisterObject("ExtrasCustomNight", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 250), new Vector2(500, 65), 48, "Custom Night", Color.White, Materials.MenuFont!, true));
+    Objects.ExtrasSettings = registry.RegisterObject("ExtrasSettings", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 315), new Vector2(500, 65), 48, "Settings", Color.White, Materials.MenuFont!, true));
+    Objects.ExtrasCredits = registry.RegisterObject("ExtrasCredits", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 380), new Vector2(500, 65), 48, "Credits", Color.White, Materials.MenuFont!, true));
+    Objects.ExtrasBack = registry.RegisterObject("ExtrasBack", ["Menu/Extras"], [1], new HitboxText(new Vector2(92, 445), new Vector2(500, 65), 48, "Back", Color.White, Materials.MenuFont!, true));
     
     Objects.LoadingNightText = registry.RegisterObject("LoadingNightText", ["Game/Loading"], [1], new SimpleText(new Vector2(0, -40), new Vector2(1024, 768), 48, "Night #", Color.White, Materials.MenuFont!, true, true));
     Objects.LoadingAmText = registry.RegisterObject("LoadingAmText", ["Game/Loading"], [1], new SimpleText(new Vector2(0, 40), new Vector2(1024, 768), 48, "12 AM", Color.White, Materials.MenuFont!, true, true));

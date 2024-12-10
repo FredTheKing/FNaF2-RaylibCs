@@ -3,17 +3,24 @@ using FNaF2_RaylibCs.Source.Packages.Module;
 using Raylib_cs;
 using rlImGui_cs;
 
-Raylib.SetConfigFlags(ProjectConfig.ConfigFlags);
-Raylib.InitWindow(1024, 768, "Five Nights at Freddy's 2 - Raylib Edition");
+Raylib.SetConfigFlags(Config.WindowConfigFlags);
+Raylib.InitWindow(Config.WindowWidth, Config.WindowHeight, Config.WindowTitle);
 Raylib.InitAudioDevice();
-Raylib.SetTargetFPS(-1);
-Raylib.SetWindowMinSize(1024, 768);
-Registry registry = new Registry(ProjectConfig.ScenesNames);
+Raylib.SetTargetFPS(Config.WindowTargetFramerate);
+Raylib.SetWindowMinSize(Config.WindowWidth, Config.WindowHeight);
+Registry registry = new Registry(
+  typeof(Config.ScenesNames)
+  .GetFields()
+  .Where(x => x.FieldType == typeof(string))
+  .Select(x => (string)x.GetValue(null)!)
+  .ToList()
+);
 Registration.RegistryInitialisation(registry);
+
 Registration.MaterialsInitialisation(registry);
 registry.EndMaterialsRegistration();
 Registration.ObjectsInitialisation(registry);
-registry.EndObjectsRegistration(ProjectConfig.StartSceneName);
+registry.EndObjectsRegistration(Config.StartSceneName);
 Registration.CustomInitialisation(registry);
 Raylib.SetWindowIcon(Raylib.LoadImage("Resources/icon.png"));
 while (!Raylib.WindowShouldClose())

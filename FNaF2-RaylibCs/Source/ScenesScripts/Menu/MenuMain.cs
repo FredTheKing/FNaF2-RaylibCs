@@ -21,30 +21,27 @@ public class MenuMain : ScriptTemplate
   }
   private void TeleportSetToSelected(List<HitboxText> hitboxes)
   {
-    foreach (HitboxText hitbox in hitboxes)
-      if (hitbox.GetHitbox().GetMouseHover())
-        Registration.Objects.MenuSet!.SetY(hitbox.GetPosition().Y);
+    foreach (var hitbox in hitboxes.Where(hitbox => hitbox.GetHitbox().GetMouseHover()))
+      Registration.Objects.MenuSet!.SetY(hitbox.GetPosition().Y);
   }
   private void TeleportToScenes(List<HitboxText> hitboxes, Registry registry)
   {
-    foreach (HitboxText hitbox in hitboxes)
-      if (hitbox.GetHitbox().GetMousePress(MouseButton.Left))
-        switch (hitbox.GetText())
-        {
-          case "New Game":
-            registry.GetFNaF().GetNightManager().NewGameNight();
-            registry.GetSceneManager().ChangeScene("Game/Newspaper");
-            break;
-          case "Continue":
-            registry.GetFNaF().GetNightManager().ContinueNight();
-            registry.GetSceneManager().ChangeScene("Game/Loading");
-            break;
-          case "Extras":
-            registry.GetSceneManager().ChangeScene("Menu/Extras");
-            break;
-        }
+    foreach (var hitbox in hitboxes.Where(hitbox => hitbox.GetHitbox().GetMousePress(MouseButton.Left)))
+      switch (hitbox.GetText())
+      {
+        case "New Game":
+          registry.GetFNaF().GetNightManager().NewGameNight();
+          registry.GetSceneManager().ChangeScene(Config.ScenesNames.GameNewspaper);
+          break;
+        case "Continue":
+          registry.GetFNaF().GetNightManager().ContinueNight();
+          registry.GetSceneManager().ChangeScene(Config.ScenesNames.GameLoading);
+          break;
+        case "Extras":
+          registry.GetSceneManager().ChangeScene(Config.ScenesNames.MenuExtras);
+          break;
+      }
   }
-
   private void HighlightContinueNightText()
   {
     if (Math.Abs(Registration.Objects.MenuSet!.GetPosition().Y - 493f) < 0) 
@@ -54,7 +51,7 @@ public class MenuMain : ScriptTemplate
   public override void Activation(Registry registry)
   {
     _twitchTimer.Activation(registry);
-    Registration.Objects.MenuSet!.SetY(428f);
+    Registration.Objects.MenuSet!.SetY(Registration.Objects.MenuNewGame!.GetPosition().Y);
     
     int latestNight = registry.GetFNaF().GetNightManager().GetLatestNight();
     Registration.Objects.MenuContinueNightText!.SetText("Night " + (latestNight <= 5 ? latestNight : 5));

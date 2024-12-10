@@ -27,10 +27,10 @@ public class ImGuiWindow
       ImGui.Text("MS: " + Raylib.GetFrameTime());
       ImGui.Text("Scene: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 182);
-      String[] array = registry.GetSceneManager().GetScenesNamesList();
-      int index = Array.IndexOf(array, registry.GetSceneManager().GetCurrentScene().GetName());
+      List<string> array = registry.GetSceneManager().GetScenesNamesList();
+      int index = array.IndexOf(registry.GetSceneManager().GetCurrentScene().GetName());
       ImGui.SetNextItemWidth(174);
-      if (ImGui.Combo("##Scene Selector", ref index, array, array.Length)) registry.GetSceneManager().ChangeScene(array[index]);
+      if (ImGui.Combo("##Scene Selector", ref index, array.ToArray(), array.Count)) registry.GetSceneManager().ChangeScene(array[index]);
       
       ImGui.Text("Show Hitboxes: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
