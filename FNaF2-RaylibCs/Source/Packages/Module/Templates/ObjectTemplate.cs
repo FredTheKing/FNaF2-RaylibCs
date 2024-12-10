@@ -11,9 +11,6 @@ public abstract class ObjectTemplate : ScriptTemplate
   protected ObjectTemplate() { Position = Vector2.Zero; Size = Vector2.Zero; }
   protected ObjectTemplate(Vector2 position, Vector2 size) { Position = position; Size = size; }
   
-  public virtual void Unload() { }
-  public virtual void Load() { }
-  
   public override void Activation(Registry registry) { if (ScriptInstance != null) ScriptInstance.Activation(registry); }
   public override void Update(Registry registry) { if (ScriptInstance != null) ScriptInstance.Update(registry); }
   public override void Draw(Registry registry) { if (ScriptInstance != null) ScriptInstance.Draw(registry); }
