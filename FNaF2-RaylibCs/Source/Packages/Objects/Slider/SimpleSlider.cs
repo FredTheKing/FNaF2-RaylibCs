@@ -37,7 +37,10 @@ public class SimpleSlider : ObjectTemplate
   private float _leftSide;
   private float _rightSide;
   private readonly float _percentSpace;
-
+  
+  public void SetValue(float value) => Value = value;
+  public float GetValue() => Value;
+  
   public override void SetPosition(Vector2 position)
   {
     _leftSide = position.X;

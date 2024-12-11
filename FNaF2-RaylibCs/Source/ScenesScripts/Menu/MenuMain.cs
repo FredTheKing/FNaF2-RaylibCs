@@ -44,7 +44,7 @@ public class MenuMain : ScriptTemplate
   }
   private void HighlightContinueNightText()
   {
-    if (Math.Abs(Registration.Objects.MenuSet!.GetPosition().Y - 493f) < 0) 
+    if (Math.Abs(Registration.Objects.MenuSet!.GetPosition().Y - 493) < 1) 
       Registration.Objects.MenuContinueNightText!.SetCurrentFrameColor(Color.LightGray);
   }
   

@@ -206,6 +206,11 @@ public class ImGuiWindow
         registry.GetGuiManager().CallDebuggerInfo(registry);
         ImGui.TreePop();
       }
+      if (ImGui.TreeNode("FNaF"))
+      {
+        registry.GetFNaF().CallDebuggerInfo(registry);
+        ImGui.TreePop();
+      }
     }
 
     ImGui.End();

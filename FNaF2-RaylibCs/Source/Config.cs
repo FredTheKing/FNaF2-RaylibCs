@@ -4,10 +4,6 @@ namespace FNaF2_RaylibCs.Source;
 
 public struct Config
 {
-  public const int WindowWidth = 1024, WindowHeight = 768;
-  public const string WindowTitle = "Five Nights at Freddy's 2 - Raylib Edition";
-  public const int WindowTargetFramerate = -1;
-  
   public record Scenes
   {
     public const string DebuggerTesting = "Debugger/Testing";
@@ -21,7 +17,13 @@ public struct Config
     public const string GameNewspaper = "Game/Newspaper";
   }
   
+  public const int WindowWidth = 1024, WindowHeight = 768;
+  public const string WindowTitle = "Five Nights at Freddy's 2 - Raylib Edition";
+  public const string ResPath = "Resources/";
+  public const string WindowIconPath = ResPath + "icon.png";
+  public const int WindowTargetFramerate = -1;
+  
   public const string StartSceneName = Scenes.MenuSettings;
   public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow;
-  public const string SeparatorLine = "---------------------------------------------------------";
+  public static readonly string SeparatorLine = new('-', 100);
 }

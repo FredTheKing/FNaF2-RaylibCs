@@ -132,13 +132,15 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
         scenePair.Value.AssignResources(GetResourcesManager().GetStorage()[scenePair.Key]);
     }
     Console.WriteLine(Config.SeparatorLine);
-    Console.WriteLine("INFO: REGISTRY: Registry initialised successfully");
+    Console.WriteLine("INFO: REGISTRY: Materials initialised successfully");
     Console.WriteLine(Config.SeparatorLine);
   }
   
   public void EndObjectsRegistration(string startSceneName)
   {
     _sceneManager.SortObjectsLayers();
+    Console.WriteLine(Config.SeparatorLine);
+    Console.WriteLine("INFO: REGISTRY: Objects initialised successfully");
     _sceneManager.ChangeScene(startSceneName);
     rlImGui.Setup(true, true);
   }

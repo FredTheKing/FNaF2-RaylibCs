@@ -24,7 +24,7 @@ registry.EndMaterialsRegistration();
 Registration.ObjectsInitialisation(registry);
 registry.EndObjectsRegistration(Config.StartSceneName);
 Registration.CustomInitialisation(registry);
-Raylib.SetWindowIcon(Raylib.LoadImage("Resources/icon.png"));
+Raylib.SetWindowIcon(Raylib.LoadImage(Config.WindowIconPath));
 while (!Raylib.WindowShouldClose())
 {
   MainLooper.GlobalActivation(registry);

@@ -21,7 +21,7 @@ public class GlobalOverlay : ScriptTemplate
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F1)) registry.GetSceneManager().PreviousScene();
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F2)) registry.GetSceneManager().NextScene();
     #endif
-
+    
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F10)) Center();
     
     if (registry.GetDebugMode() & Raylib.GetScreenWidth() != 1424) ResizeAndCenter(1424, 768);

@@ -73,13 +73,13 @@ public static class Registration
   
   public static void MaterialsInitialisation(Registry registry)
   {
-    Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", ["*"], new FontResource("Resources/Font/consolas.ttf", 128));
-    Materials.MenuFont = registry.RegisterMaterial("MenuFont", [Config.Scenes.MenuMain, "Menu/Settings", Config.Scenes.MenuExtras, "Menu/Credits", "Menu/CustomNight", "Game/Loading"], new FontResource("Resources/Font/regular.ttf", 128));
+    Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", ["*"], new FontResource(Config.ResPath + "Font/consolas.ttf", 128));
+    Materials.MenuFont = registry.RegisterMaterial("MenuFont", [Config.Scenes.MenuMain, "Menu/Settings", Config.Scenes.MenuExtras, "Menu/Credits", "Menu/CustomNight", "Game/Loading"], new FontResource(Config.ResPath + "Font/regular.ttf", 128));
     
-    Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackground", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames("Resources/Menu/Background", 4)));
-    Materials.MenuStaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight], new ImageStackResource(Loaders.LoadMultipleFilenames("Resources/Menu/Static", 8)));
+    Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackground", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Background", 4)));
+    Materials.MenuStaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Static", 8)));
     
-    Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames("Resources/Menu/WhiteBlinko", 6)));
+    Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/WhiteBlinko", 6)));
   }
 
   public static void ObjectsInitialisation(Registry registry)
