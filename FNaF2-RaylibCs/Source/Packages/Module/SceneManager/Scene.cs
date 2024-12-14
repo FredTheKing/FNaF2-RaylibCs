@@ -8,21 +8,28 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   private string _name = name;
   private Dictionary<String, Dictionary<String, dynamic>> _resourcesDictionary = new();
   private Dictionary<int, List<Object>> _unsortedDictObjects = new();
-  private List<Object> _sortedListObjects = [];
+  private List<dynamic> _sortedListObjects = [];
+  private List<SoundObject> _listSounds = [];
   private dynamic? _scriptInstance;
   private dynamic? _globalScriptInstance;
 
   public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Name: {_name}");
-    ImGui.Text($" > Objects Count: {_sortedListObjects.Count()}");
+    ImGui.Text($" > Objects Count: {_sortedListObjects.Count}");
     ImGui.Text($" > Materials Count: {_resourcesDictionary.SelectMany(x => x.Value).Count()}");
+    ImGui.Text($" > Sounds Count: {_listSounds.Count}");
   }
   
-  public void AddObject(Object obj, int zLayer)
+  public void AddObject(dynamic obj, int zLayer)
   { 
-    if (!_unsortedDictObjects.ContainsKey(zLayer)) _unsortedDictObjects.Add(zLayer, new List<object>());
+    if (!_unsortedDictObjects.ContainsKey(zLayer)) _unsortedDictObjects.Add(zLayer, new List<dynamic>());
     _unsortedDictObjects[zLayer].Add(obj);
+  }
+  
+  public void AddSound(dynamic snd)
+  { 
+    _listSounds.Add(snd);
   }
 
   public void AssignResources(Dictionary<String, Dictionary<String, dynamic>> resourcesDictionary) => _resourcesDictionary = resourcesDictionary;
@@ -57,10 +64,22 @@ public class Scene(string name) : CallDebuggerInfoTemplate
           objectPair.Value.Load();
   }
   
+  public void Deactivation(Registry registry)
+  {
+    foreach (dynamic item in _sortedListObjects)
+      item.Deactivation(registry);
+    foreach (SoundObject sound in _listSounds)
+      sound.Deactivation(registry);
+    _scriptInstance!.Deactivation(registry);
+    _globalScriptInstance!.Deactivation(registry);
+  }
+  
   public void Activation(Registry registry)
   {
     foreach (dynamic item in _sortedListObjects)
       item.Activation(registry);
+    foreach (SoundObject sound in _listSounds)
+      sound.Activation(registry);
     _scriptInstance!.Activation(registry);
     _globalScriptInstance!.Activation(registry);
   }
@@ -69,6 +88,8 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   {
     foreach (dynamic item in _sortedListObjects)
       item.Update(registry);
+    foreach (SoundObject sound in _listSounds)
+      sound.Update(registry);
     _scriptInstance!.Update(registry);
     _globalScriptInstance!.Update(registry);
   }

@@ -4,6 +4,11 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.Templates;
 
 public abstract class ScriptTemplate : CallDebuggerInfoTemplate
 {
+  public virtual void Deactivation(Registry registry)
+  {
+    
+  }
+  
   public virtual void Activation(Registry registry)
   {
     

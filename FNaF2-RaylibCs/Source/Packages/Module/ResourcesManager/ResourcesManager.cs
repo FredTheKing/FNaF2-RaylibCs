@@ -33,4 +33,5 @@ public class ResourcesManager : CallDebuggerInfoTemplate
   public void AddMaterial(String sceneName, String name, FontResource mat) => AddFolderAndStuff(sceneName, name, mat, "Font");
   public void AddMaterial(String sceneName, String name, ImageResource mat) => AddFolderAndStuff(sceneName, name, mat, "Image");
   public void AddMaterial(String sceneName, String name, ImageStackResource mat) => AddFolderAndStuff(sceneName, name, mat, "ImageStack");
+  public void AddMaterial(String sceneName, String name, SoundResource mat) => AddFolderAndStuff(sceneName, name, mat, "Sound");
 }

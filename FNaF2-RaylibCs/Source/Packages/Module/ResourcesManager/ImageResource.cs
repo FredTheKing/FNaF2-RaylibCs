@@ -9,7 +9,7 @@ public class ImageResource : MaterialTemplate
 {
   private readonly Vector2 _size;
 
-  public ImageResource(String filename)
+  public ImageResource(string filename)
   {
     Filename = filename;
     Texture2D texture = Raylib.LoadTexture(Filename);

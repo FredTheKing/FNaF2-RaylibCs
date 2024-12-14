@@ -21,9 +21,18 @@ Console.WriteLine("INFO: REGISTRY: Registry initialised successfully");
 Console.WriteLine(Config.SeparatorLine);
 Registration.MaterialsInitialisation(registry);
 registry.EndMaterialsRegistration();
-Registration.ObjectsInitialisation(registry);
-registry.EndObjectsRegistration(Config.StartSceneName);
+Registration.SoundsInitialisation(registry);
+Console.WriteLine(Config.SeparatorLine);
+Console.WriteLine("INFO: REGISTRY: Sounds initialised successfully");
+Console.WriteLine("INFO: REGISTRY: Starting customs initialisation...");
+Console.WriteLine(Config.SeparatorLine);
 Registration.CustomInitialisation(registry);
+Console.WriteLine(Config.SeparatorLine);
+Console.WriteLine("INFO: REGISTRY: Customs initialised successfully");
+Console.WriteLine("INFO: REGISTRY: Starting objects initialisation...");
+Console.WriteLine(Config.SeparatorLine);
+Registration.ObjectsInitialisation(registry);
+registry.EndObjectsRegistration(registry, Config.StartSceneName);
 Raylib.SetWindowIcon(Raylib.LoadImage(Config.WindowIconPath));
 while (!Raylib.WindowShouldClose())
 {

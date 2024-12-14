@@ -1,4 +1,5 @@
 using FNaF2_RaylibCs.Source.Packages.Module.Custom;
+using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using ImGuiNET;
@@ -20,7 +21,8 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
   private readonly ResourcesManager.ResourcesManager _resourcesManager = new();
   private readonly FNaFHost _fnafHost = new();
   
-  private Dictionary<String, Dictionary<String, Object>> _container = new();
+  private Dictionary<String, Dictionary<String, Object>> _objects = new();
+  private Dictionary<String, Dictionary<String, SoundObject>> _sounds = new();
 
   public override void CallDebuggerInfo(Registry registry)
   {
@@ -30,77 +32,99 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
     ImGui.Text($" > Show Fps Non Debug: {(_showFpsNonDebug ? 1 : 0)}");
     ImGui.Text($" > Movable Debugger: {(_movableDebugger ? 1 : 0)}");
     ImGui.Separator();
-    ImGui.Text($" > Total Objects: {_container.SelectMany(x => x.Value).Count()}");
+    ImGui.Text($" > Total Objects: {_objects.SelectMany(x => x.Value).Count()}");
     ImGui.Text($" > Total Materials: {GetResourcesManager().GetStorage().SelectMany(x => x.Value).Count()}");
   }
 
-  public dynamic RegisterObject(String name, String[] scenesNames, int[] zLayers, dynamic obj)
+  public dynamic RegisterObject(string name, string[] scenesNames, int[] zLayers, dynamic obj)
   {
     List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == "*";
+    bool haveStar = scenesNames[0] == Config.AllScenesShortcut;
     
     if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
     foreach (string sceneName in scenesNames)
     {
-      if (sceneName == "*") continue;
-      switch (haveStar)
-      {
-        case true:
-          targetScenes.Remove(sceneName);
-          break;
-        case false:
-          targetScenes.Add(sceneName);
-          break;
-      }
+      if (sceneName == Config.AllScenesShortcut) continue;
+      
+      if (haveStar) targetScenes.Remove(sceneName);
+      else targetScenes.Add(sceneName);
     }
     
     foreach (string sceneName in targetScenes)
     {
-      if (!_container.ContainsKey(sceneName)) 
-        _container.Add(sceneName, new Dictionary<String, Object>());
+      if (!_objects.ContainsKey(sceneName)) 
+        _objects.Add(sceneName, new Dictionary<String, dynamic>());
       
-      Console.WriteLine("INFO: REGISTRY: Object '" + name + "' for scene '" + sceneName + "' loaded successfully");
-      _container[sceneName].Add(name, obj);
+      _objects[sceneName].Add(name, obj);
     }
     
-    for(int i = 0; i < targetScenes.Count; i++) 
+    for(int i = 0; i < targetScenes.Count; i++)
+    {
       _sceneManager.LinkObject(obj, targetScenes[i], zLayers[i % zLayers.Length]);
+      Console.WriteLine("INFO: REGISTRY: Object '" + name + "' for scene '" + targetScenes[i] + "' instantiated!");
+    }
     
     return obj;
   }
   
-  public dynamic RegisterMaterial(String name, String[] scenesNames, dynamic mat)
+  public dynamic RegisterMaterial(string name, string[] scenesNames, dynamic mat)
   {
     List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == "*";
+    bool haveStar = scenesNames[0] == Config.AllScenesShortcut;
     
     if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
     foreach (string sceneName in scenesNames)
     {
-      if (sceneName == "*") continue;
-      switch (haveStar)
-      {
-        case true:
-          targetScenes.Remove(sceneName);
-          break;
-        case false:
-          targetScenes.Add(sceneName);
-          break;
-      }
+      if (sceneName == Config.AllScenesShortcut) continue;
+      
+      if (haveStar) targetScenes.Remove(sceneName);
+      else targetScenes.Add(sceneName);
     }
     
     foreach (string sceneName in targetScenes)
     {
       _resourcesManager.AddMaterial(sceneName, name, mat);
-      Console.WriteLine("INFO: REGISTRY: Material '" + name + "' for scene '" + sceneName + "' loaded successfully");
+      Console.WriteLine("INFO: REGISTRY: Material '" + name + "' for scene '" + sceneName + "' instantiated!");
     }
 
     return mat;
   }
-
-  public Dictionary<String, Dictionary<String, Object>> GetContainer() => _container; 
   
-  public dynamic Get(String name) => _container[name];
+  public dynamic RegisterSound(String name, string[] scenesNames, SoundObject snd)
+  {
+    List<string> targetScenes = new();
+    bool haveStar = scenesNames[0] == Config.AllScenesShortcut;
+    
+    if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
+    foreach (string sceneName in scenesNames)
+    {
+      if (sceneName == Config.AllScenesShortcut) continue;
+      
+      if (haveStar) targetScenes.Remove(sceneName);
+      else targetScenes.Add(sceneName);
+    }
+    
+    foreach (string sceneName in targetScenes)
+    {
+      if (!_sounds.ContainsKey(sceneName)) 
+        _sounds.Add(sceneName, new Dictionary<String, SoundObject>());
+      
+      _sounds[sceneName].Add(name, snd);
+    }
+    
+    foreach (var sceneName in targetScenes)
+    {
+      _sceneManager.LinkSound(snd, sceneName);
+      Console.WriteLine("INFO: REGISTRY: Sound '" + name + "' for scene '" + sceneName + "' instantiated!");
+    }
+
+    return snd;
+  }
+
+  public Dictionary<String, Dictionary<String, dynamic>> GetObjects() => _objects; 
+  public Dictionary<String, Dictionary<String, SoundObject>> GetSounds() => _sounds; 
+  
+  public dynamic Get(String name) => _objects[name];
 
   public void SwitchDebugMode() => _debugMode = !_debugMode;
   
@@ -133,15 +157,17 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
     }
     Console.WriteLine(Config.SeparatorLine);
     Console.WriteLine("INFO: REGISTRY: Materials initialised successfully");
+    Console.WriteLine("INFO: REGISTRY: Starting sounds initialisation...");
     Console.WriteLine(Config.SeparatorLine);
   }
   
-  public void EndObjectsRegistration(string startSceneName)
+  public void EndObjectsRegistration(Registry registry, string startSceneName)
   {
     _sceneManager.SortObjectsLayers();
     Console.WriteLine(Config.SeparatorLine);
     Console.WriteLine("INFO: REGISTRY: Objects initialised successfully");
-    _sceneManager.ChangeScene(startSceneName);
+    Console.WriteLine("INFO: REGISTRY: All initialisations are complete!");
+    _sceneManager.ChangeScene(registry, startSceneName);
     rlImGui.Setup(true, true);
   }
   

@@ -9,6 +9,7 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
   private List<string> _scenesNames = scenesNames;
   private Scene? _currentScene;
   private bool _changed = true;
+  private float _masterVolume = .75f;
 
   public override void CallDebuggerInfo(Registry registry)
   {
@@ -38,20 +39,27 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
       scene.AssignGlobalScriptInstance(scriptInstance);
   }
 
-  public void LinkObject(Object obj, String sceneName, int zLayer) => _scenes[sceneName].AddObject(obj, zLayer);
+  public void LinkObject(dynamic obj, string sceneName, int zLayer) => _scenes[sceneName].AddObject(obj, zLayer);
+  
+  public void LinkSound(SoundObject snd, string sceneName) => _scenes[sceneName].AddSound(snd);
 
   public Dictionary<String, Scene> GetScenes() => _scenes;
 
   public List<string> GetScenesNamesList() => _scenesNames;
   
   public Scene GetCurrentScene() => _currentScene!;
+
+  public void SetMasterVolume(float newVolume) => _masterVolume = newVolume;
+  
+  public float GetMasterVolume() => _masterVolume;
   
   public bool IsChanged() => _changed;
 
   public void ResetChanged() => _changed = false;
   
-  public void ChangeScene(String sceneName)
+  public void ChangeScene(Registry registry, String sceneName)
   {
+    _currentScene?.Deactivation(registry);
     Console.WriteLine("INFO: SCENE: Changing scene to '" + sceneName + "'...");
     Console.WriteLine(Config.SeparatorLine);
     Scene newScene = _scenes[sceneName];
@@ -62,9 +70,9 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
     Console.WriteLine("INFO: SCENE: Scene changed successfully");
   }
 
-  public void NextScene() =>
-    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + 1) % _scenesNames.Count]);
+  public void NextScene(Registry registry) =>
+    ChangeScene(registry, _scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + 1) % _scenesNames.Count]);
   
-  public void PreviousScene() =>
-    ChangeScene(_scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + _scenesNames.Count - 1) % _scenesNames.Count]);
+  public void PreviousScene(Registry registry) =>
+    ChangeScene(registry, _scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + _scenesNames.Count - 1) % _scenesNames.Count]);
 }
