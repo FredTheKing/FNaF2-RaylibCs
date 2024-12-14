@@ -40,6 +40,8 @@ while (!Raylib.WindowShouldClose())
   MainLooper.GlobalUpdate(registry);
   MainLooper.GlobalDraw(registry);
 }
+Console.WriteLine(Config.SeparatorLine);
+Console.WriteLine("INFO: REGISTRY: Closing game. Have a nice day!");
 registry.GetSceneManager().GetCurrentScene().Unload();
 Raylib.CloseWindow();
 Raylib.CloseAudioDevice();

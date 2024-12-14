@@ -13,11 +13,13 @@ internal enum Sequence
   WhatsNext
 }
 
-public class SoundObject(SoundResource sndRes, bool activationStart, bool isLooped) : ScriptTemplate
+public class SoundObject(SoundResource sndRes, bool activationStart = false, bool isLooped = false, bool allowedStacking = false) : ScriptTemplate
 {
   private Sequence _state = Sequence.Stopped;
   private bool _paused;
-  private float _volume;
+  private float _volume = 1f;
+
+  private bool _volumeUpdateToDo = true;
   
   public void Play()
   {
@@ -27,23 +29,38 @@ public class SoundObject(SoundResource sndRes, bool activationStart, bool isLoop
   public void Resume() => _paused = false;
   public void Pause() => _paused = true;
   public void Stop() => _state = Sequence.Stopped;
-  public bool IsPlaying() => Raylib.IsSoundPlaying(sndRes.GetMaterial());
+  public bool IsPlaying() => Raylib.IsSoundPlaying(sndRes.GetMaterial()) ?? false;
   
   private void RestartNewAudio()
   {
-    StopCurrentAudio();
+    if (!allowedStacking) StopCurrentAudio();
     Raylib.PlaySound(sndRes.GetMaterial());
   }
 
   private void StopCurrentAudio() => Raylib.StopSound(sndRes.GetMaterial());
+
+  private void SetVolume(float newValue)
+  {
+    _volume = Math.Clamp(newValue, 0f, 1f);
+    _volumeUpdateToDo = true;
+  }
+  public float GetVolume() => _volume;
   
+  private void UpdateVolume(Registry registry) => Raylib.SetSoundVolume(sndRes.GetMaterial(), _volume * registry.GetSceneManager().GetMasterVolume());
   
   public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > State: {_state.ToString()}");
-    if (_state == Sequence.Playing) ImGui.Text($" > Actually Playing: {(IsPlaying() ? 1 : 0)}");
+    if (_state is Sequence.Playing or Sequence.Looped) ImGui.Text($" > Actually Playing: {(IsPlaying() ? 1 : 0)}");
+    if (_state == Sequence.Stopped) ImGui.Text($" > Is Looped: {(isLooped ? 1 : 0)}");
     ImGui.Text($" > Paused: {(_paused ? 1 : 0)}");
     ImGui.Text($" > Volume: {_volume}");
+  }
+
+  public override void Deactivation(Registry registry)
+  {
+    Stop();
+    StopCurrentAudio();
   }
 
   public override void Activation(Registry registry)
@@ -53,7 +70,7 @@ public class SoundObject(SoundResource sndRes, bool activationStart, bool isLoop
 
   public override void Update(Registry registry)
   {
-    Raylib.SetSoundVolume(sndRes.GetMaterial(), _volume * registry.GetSceneManager().GetMasterVolume());
+    if (_volumeUpdateToDo) UpdateVolume(registry);
     
     if (_state is Sequence.Playing or Sequence.Looped)
     {
@@ -66,15 +83,13 @@ public class SoundObject(SoundResource sndRes, bool activationStart, bool isLoop
       case Sequence.Stopped:
         StopCurrentAudio();
         break;
-      case Sequence.Playing when !IsPlaying() && !_paused:
+      case Sequence.Playing or Sequence.Looped when !IsPlaying() && !_paused:
         _state = Sequence.WhatsNext;
         break;
     }
 
-    if (_state == Sequence.WhatsNext)
-    {
-      if (isLooped) RestartNewAudio();
-      else _state = Sequence.Stopped;
-    }
+    if (_state != Sequence.WhatsNext) return;
+    _state = isLooped ? Sequence.Looped : Sequence.Stopped;
+    if (isLooped) RestartNewAudio();
   }
 }

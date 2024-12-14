@@ -9,7 +9,7 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
   private List<string> _scenesNames = scenesNames;
   private Scene? _currentScene;
   private bool _changed = true;
-  private float _masterVolume = .75f;
+  private float _masterVolume = 1f;
 
   public override void CallDebuggerInfo(Registry registry)
   {

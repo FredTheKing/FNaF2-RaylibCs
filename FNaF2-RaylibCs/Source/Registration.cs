@@ -93,7 +93,7 @@ public static class Registration
   
   public static void SoundsInitialisation(Registry registry)
   {
-    Sounds.TestSound = registry.RegisterSound("TestSound", [Config.Scenes.DebuggerTesting], new SoundObject(Materials.TestSound!, true, false));
+    Sounds.TestSound = registry.RegisterSound("TestSound", [Config.Scenes.DebuggerTesting], new SoundObject(Materials.TestSound!, true, true));
   }
 
   public static void ObjectsInitialisation(Registry registry)
