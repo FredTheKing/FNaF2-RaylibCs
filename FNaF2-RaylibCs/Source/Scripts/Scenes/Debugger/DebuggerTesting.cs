@@ -13,9 +13,9 @@ public class DebuggerTesting : ScriptTemplate
 
   public override void Update(Registry registry)
   {
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.G)) Registration.Sounds.TestSound!.Play();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.S)) Registration.Sounds.TestSound!.Stop();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.P)) Registration.Sounds.TestSound!.Pause();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.R)) Registration.Sounds.TestSound!.Resume();
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.G)) Registration.Sounds.MenuMusic!.Play();
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.S)) Registration.Sounds.MenuMusic!.Stop();
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.P)) Registration.Sounds.MenuMusic!.Pause();
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.R)) Registration.Sounds.MenuMusic!.Resume();
   }
 }

@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Resources\Sound\" />
       <Folder Include="Source\Scripts\" />
     </ItemGroup>
 

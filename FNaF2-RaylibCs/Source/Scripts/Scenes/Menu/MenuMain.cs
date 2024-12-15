@@ -8,6 +8,7 @@ namespace FNaF2_RaylibCs.Source.Scripts.Scenes.Menu;
 public class MenuMain : ScriptTemplate
 {
   private RandomTimer _twitchTimer = new(.07f, .144f, true);
+  private float _prevSetY;
 
   private void TwitchAnimatronics(Registry registry)
   {
@@ -22,7 +23,13 @@ public class MenuMain : ScriptTemplate
   private void TeleportSetToSelected(List<HitboxText> hitboxes)
   {
     foreach (var hitbox in hitboxes.Where(hitbox => hitbox.GetHitbox().GetMouseHover()))
-      Registration.Objects.MenuSet!.SetY(hitbox.GetPosition().Y);
+    {
+      float newY = hitbox.GetPosition().Y;
+      if (Math.Abs(newY - _prevSetY) > 1)
+        Registration.Sounds.SetSound!.Play();
+      Registration.Objects.MenuSet!.SetY(newY);
+      _prevSetY = newY;
+    }
   }
   private void TeleportToScenes(List<HitboxText> hitboxes, Registry registry)
   {
@@ -51,7 +58,10 @@ public class MenuMain : ScriptTemplate
   public override void Activation(Registry registry)
   {
     _twitchTimer.Activation(registry);
-    Registration.Objects.MenuSet!.SetY(Registration.Objects.MenuNewGame!.GetPosition().Y);
+    
+    float initialY = Registration.Objects.MenuNewGame!.GetPosition().Y;
+    Registration.Objects.MenuSet!.SetY(initialY);
+    _prevSetY = initialY;
     
     int latestNight = registry.GetFNaF().GetNightManager().GetLatestNight();
     Registration.Objects.MenuContinueNightText!.SetText("Night " + (latestNight <= 5 ? latestNight : 5));

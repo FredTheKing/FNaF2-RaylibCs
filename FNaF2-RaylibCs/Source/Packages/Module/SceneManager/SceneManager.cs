@@ -59,7 +59,7 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
   
   public void ChangeScene(Registry registry, String sceneName)
   {
-    _currentScene?.Deactivation(registry);
+    _currentScene?.Deactivation(registry, sceneName);
     Console.WriteLine("INFO: SCENE: Changing scene to '" + sceneName + "'...");
     Console.WriteLine(Config.SeparatorLine);
     Scene newScene = _scenes[sceneName];

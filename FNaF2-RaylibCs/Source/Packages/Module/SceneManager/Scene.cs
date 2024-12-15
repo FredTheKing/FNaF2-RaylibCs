@@ -35,6 +35,8 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   public void AssignResources(Dictionary<String, Dictionary<String, dynamic>> resourcesDictionary) => _resourcesDictionary = resourcesDictionary;
 
   public List<Object> GetObjectsList() => _sortedListObjects;
+  
+  public List<SoundObject> GetSoundsList() => _listSounds;
 
   public string GetName() => _name;
 
@@ -64,14 +66,14 @@ public class Scene(string name) : CallDebuggerInfoTemplate
           objectPair.Value.Load();
   }
   
-  public void Deactivation(Registry registry)
+  public void Deactivation(Registry registry, string nextSceneName)
   {
     foreach (dynamic item in _sortedListObjects)
-      item.Deactivation(registry);
+      item.Deactivation(registry, nextSceneName);
     foreach (SoundObject sound in _listSounds)
-      sound.Deactivation(registry);
-    _scriptInstance!.Deactivation(registry);
-    _globalScriptInstance!.Deactivation(registry);
+      sound.Deactivation(registry, nextSceneName);
+    _scriptInstance!.Deactivation(registry, nextSceneName);
+    _globalScriptInstance!.Deactivation(registry, nextSceneName);
   }
   
   public void Activation(Registry registry)

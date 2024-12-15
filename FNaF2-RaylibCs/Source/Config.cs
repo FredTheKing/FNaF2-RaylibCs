@@ -23,7 +23,7 @@ public struct Config
   public const string WindowIconPath = ResPath + "icon.png";
   public const int WindowTargetFramerate = -1;
   
-  public const string StartSceneName = Scenes.DebuggerTesting;
+  public const string StartSceneName = Scenes.MenuMain;
   public const string AllScenesShortcut = "*";
   public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign
   public static readonly string SeparatorLine = new('-', 100);

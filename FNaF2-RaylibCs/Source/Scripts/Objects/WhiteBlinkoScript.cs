@@ -10,12 +10,13 @@ public class WhiteBlinkoScript(SelectableImage obj) : ScriptTemplate
 {
   private int _stage; //0-stay white, 1-random, 2-go blank, 3-dead
   private SimpleTimer _timer = new(0.084f, true);
-  private SimpleTimer _changing_whito = new(0.006f);
+  private SimpleTimer _changingWhito = new(0.006f);
 
   public override void Activation(Registry registry)
   {
+    Registration.Sounds.SetSound!.Play();
     _timer.Activation(registry);
-    _changing_whito.Activation(registry);
+    _changingWhito.Activation(registry);
     _stage = 0;
     obj.SetColor(Color.White);
     obj.SetFrame(0);
@@ -29,13 +30,13 @@ public class WhiteBlinkoScript(SelectableImage obj) : ScriptTemplate
     {
       case 1:
       {
-        _changing_whito.ContinuousStartTimer();
-        _changing_whito.Update(registry);
-        if (_changing_whito.EndedTrigger()) obj.SetFrame(new Random().Next(1, 5));
+        _changingWhito.ContinuousStartTimer();
+        _changingWhito.Update(registry);
+        if (_changingWhito.EndedTrigger()) obj.SetFrame(new Random().Next(1, 5));
         break;
       }
       case 2:
-        _changing_whito.StopAndResetTimer();
+        _changingWhito.StopAndResetTimer();
         obj.SetColor(Color.Blank);
         _timer.StopAndResetTimer();
         _stage = 3;

@@ -6,11 +6,20 @@ using Raylib_cs;
 namespace FNaF2_RaylibCs.Source.Scripts.Scenes.Menu;
 public class MenuExtras : ScriptTemplate
 {
+  private float _prevSetY;
+
   private void TeleportSetToSelected(List<HitboxText> hitboxes)
   {
     foreach (var hitbox in hitboxes.Where(hitbox => hitbox.GetHitbox().GetMouseHover()))
-      Registration.Objects.MenuSet!.SetY(hitbox.GetPosition().Y);
+    {
+      float newY = hitbox.GetPosition().Y;
+      if (Math.Abs(newY - _prevSetY) > 1)
+        Registration.Sounds.SetSound!.Play();
+      Registration.Objects.MenuSet!.SetY(newY);
+      _prevSetY = newY;
+    }
   }
+
   private void TeleportToScenes(List<HitboxText> hitboxes, Registry registry)
   {
     foreach (var hitbox in hitboxes.Where(hitbox => hitbox.GetHitbox().GetMousePress(MouseButton.Left)))
@@ -31,8 +40,12 @@ public class MenuExtras : ScriptTemplate
       }
   }
 
-  public override void Activation(Registry registry) => 
-    Registration.Objects.MenuSet!.SetY(Registration.Objects.ExtrasProjectLinkGithub!.GetPosition().Y);
+  public override void Activation(Registry registry)
+  {
+    float initialY = Registration.Objects.ExtrasProjectLinkGithub!.GetPosition().Y;
+    Registration.Objects.MenuSet!.SetY(initialY);
+    _prevSetY = initialY;
+  }
 
   public override void Update(Registry registry)
   {

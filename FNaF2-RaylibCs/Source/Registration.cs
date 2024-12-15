@@ -21,7 +21,8 @@ public static class Registration
 {
   public struct Materials
   {
-    public static SoundResource? TestSound;
+    public static SoundResource? MenuMusicResource;
+    public static SoundResource? SetSoundResource;
     
     public static FontResource? GlobalFont;
     public static FontResource? MenuFont;
@@ -33,7 +34,8 @@ public static class Registration
 
   public struct Sounds
   {
-    public static SoundObject? TestSound;
+    public static SoundObject? MenuMusic;
+    public static SoundObject? SetSound;
   }
   
   public struct Objects
@@ -80,12 +82,13 @@ public static class Registration
   
   public static void MaterialsInitialisation(Registry registry)
   {
-    Materials.TestSound = registry.RegisterMaterial("TestSound", [Config.Scenes.DebuggerTesting], new SoundResource(Config.ResPath + "Sound/test.mp3"));
+    Materials.MenuMusicResource = registry.RegisterMaterial("MenuMusicResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameNewspaper], new SoundResource(Config.ResPath + "Sound/MenuMusic.wav"));
+    Materials.SetSoundResource = registry.RegisterMaterial("SetSoundResource", [Config.AllScenesShortcut], new SoundResource(Config.ResPath + "Sound/Set.wav"));
     
     Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", [Config.AllScenesShortcut], new FontResource(Config.ResPath + "Font/consolas.ttf", 128));
-    Materials.MenuFont = registry.RegisterMaterial("MenuFont", [Config.Scenes.MenuMain, "Menu/Settings", Config.Scenes.MenuExtras, "Menu/Credits", "Menu/CustomNight", "Game/Loading"], new FontResource(Config.ResPath + "Font/regular.ttf", 128));
+    Materials.MenuFont = registry.RegisterMaterial("MenuFont", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new FontResource(Config.ResPath + "Font/regular.ttf", 128));
     
-    Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackground", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Background", 4)));
+    Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackgroundStackResource", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Background", 4)));
     Materials.MenuStaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Static", 8)));
     
     Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/WhiteBlinko", 6)));
@@ -93,7 +96,8 @@ public static class Registration
   
   public static void SoundsInitialisation(Registry registry)
   {
-    Sounds.TestSound = registry.RegisterSound("TestSound", [Config.Scenes.DebuggerTesting], new SoundObject(Materials.TestSound!, true, true));
+    Sounds.MenuMusic = registry.RegisterSound("MenuMusic", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameNewspaper], new SoundObject(Materials.MenuMusicResource!, true, true, true));
+    Sounds.SetSound = registry.RegisterSound("SetSound", [Config.AllScenesShortcut], new SoundObject(Materials.SetSoundResource!, false, false, true, true));
   }
 
   public static void ObjectsInitialisation(Registry registry)

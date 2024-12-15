@@ -13,11 +13,11 @@ internal enum Sequence
   WhatsNext
 }
 
-public class SoundObject(SoundResource sndRes, bool activationStart = false, bool isLooped = false, bool allowedStacking = false) : ScriptTemplate
+public class SoundObject(SoundResource sndRes, bool activationStart = false, bool isLooped = false, bool multiScenable = false, bool allowedStacking = false, float defaultVolume = 1f) : ScriptTemplate
 {
   private Sequence _state = Sequence.Stopped;
   private bool _paused;
-  private float _volume = 1f;
+  private float _volume = defaultVolume;
 
   private bool _volumeUpdateToDo = true;
   
@@ -57,15 +57,16 @@ public class SoundObject(SoundResource sndRes, bool activationStart = false, boo
     ImGui.Text($" > Volume: {_volume}");
   }
 
-  public override void Deactivation(Registry registry)
+  public override void Deactivation(Registry registry, string nextSceneName)
   {
+    if (multiScenable && registry.GetSceneManager().GetScenes()[nextSceneName].GetSoundsList().Contains(this)) return;
     Stop();
     StopCurrentAudio();
   }
 
   public override void Activation(Registry registry)
   {
-    if (activationStart) Play();
+    if (activationStart && !IsPlaying()) Play();
   }
 
   public override void Update(Registry registry)
