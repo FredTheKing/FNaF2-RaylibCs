@@ -8,6 +8,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 public class ImageResource : MaterialTemplate
 {
   private readonly Vector2 _size;
+  private TextureFilter _filter = TextureFilter.Point;
 
   public ImageResource(string filename)
   {
@@ -27,6 +28,8 @@ public class ImageResource : MaterialTemplate
     return Raylib.IsTextureReady(Material);
   }
   
+  public void SetFilter(TextureFilter filter) => _filter = filter;
+  
   public Vector2 GetSize() => _size;
   
   public override void Unload()
@@ -36,7 +39,12 @@ public class ImageResource : MaterialTemplate
     Material = null;
   }
 
-  public override void Load() => Material = Raylib.LoadTexture(Filename);
+  public override void Load()
+  {
+    Texture2D newTexture = Raylib.LoadTexture(Filename);
+    Raylib.SetTextureFilter(newTexture, _filter);
+    Material = newTexture;
+  }
   
   public override void CallDebuggerInfo(Registry registry)
   {

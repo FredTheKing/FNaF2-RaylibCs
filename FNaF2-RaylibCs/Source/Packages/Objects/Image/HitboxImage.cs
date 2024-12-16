@@ -18,7 +18,7 @@ public class HitboxImage(ImageResource resource, Vector2 position, Color? color 
   
   public override void Activation(Registry registry)
   {
-    _hitbox.SetBoundaries(Resource.GetSize());
+    _hitbox.SetBoundaries(Resource!.GetSize());
     base.Activation(registry);
   }
   

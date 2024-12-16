@@ -23,9 +23,10 @@ public class ImGuiWindow
       }
       ImGui.SeparatorText("Info");
       ImGui.Text("Window size: " + Raylib.GetRenderWidth() + "/" + Raylib.GetRenderHeight());
-      ImGui.Text("Cursor pos: " + Raylib.GetMouseX() + "/" + Raylib.GetMouseY());
       ImGui.Text("FPS: " + Raylib.GetFPS());
       ImGui.Text("MS: " + Raylib.GetFrameTime());
+      ImGui.Text("Vsync: " + registry.GetSceneManager().GetVsync());
+      ImGui.Text("Volume: " + Math.Round(registry.GetSceneManager().GetMasterVolume() * 100) + "%%");
       ImGui.Text("Scene: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 182);
       List<string> array = registry.GetSceneManager().GetScenesNamesList();
@@ -74,13 +75,13 @@ public class ImGuiWindow
         registry.SetMovableDebugger(false);
       }
       
-      ImGui.SeparatorText("Resources");
       String currentSceneName = registry.GetSceneManager().GetCurrentScene().GetName();
       Dictionary<String, Dictionary<String, Object>> objects = registry.GetObjects();
       Dictionary<String, Dictionary<String, SoundObject>> sounds = registry.GetSounds();
       Dictionary<String, Dictionary<String, Dictionary<String, Object>>> materials = registry.GetResourcesManager().GetStorage();
       
       // Current scene
+      ImGui.SeparatorText("Resources");
       if (ImGui.TreeNode("Current Scene"))
       {
         if (objects.ContainsKey(currentSceneName))
@@ -139,9 +140,8 @@ public class ImGuiWindow
         ImGui.TreePop();
       } 
       
-      ImGui.Separator();
-      
       // Each other scene
+      ImGui.Separator();
       foreach (String sceneName in array)
       {
         if (materials.ContainsKey(sceneName) || objects.ContainsKey(sceneName) || sounds.ContainsKey(sceneName))

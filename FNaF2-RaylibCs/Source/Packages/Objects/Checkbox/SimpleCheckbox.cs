@@ -40,6 +40,8 @@ public class SimpleCheckbox(Vector2 position, int size, Color color, bool checke
     Hitbox.Draw(registry);
     base.Draw(registry);
   }
+
+  public RectangleHitbox GetHitbox() => Hitbox;
   
   public bool GetChecked() => Checked;
   

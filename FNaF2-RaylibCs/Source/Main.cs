@@ -6,7 +6,6 @@ using rlImGui_cs;
 Raylib.SetConfigFlags(Config.WindowConfigFlags);
 Raylib.InitWindow(Config.WindowWidth, Config.WindowHeight, Config.WindowTitle);
 Raylib.InitAudioDevice();
-Raylib.SetTargetFPS(Config.WindowTargetFramerate);
 Raylib.SetWindowMinSize(Config.WindowWidth, Config.WindowHeight);
 Registry registry = new Registry(
   typeof(Config.Scenes)
@@ -34,6 +33,7 @@ Console.WriteLine(Config.SeparatorLine);
 Registration.ObjectsInitialisation(registry);
 registry.EndObjectsRegistration(registry, Config.StartSceneName);
 Raylib.SetWindowIcon(Raylib.LoadImage(Config.WindowIconPath));
+Raylib.SetTargetFPS(registry.GetSceneManager().GetVsync() ? Raylib.GetMonitorRefreshRate(Raylib.GetCurrentMonitor()) : Config.WindowTargetFramerate);
 while (!Raylib.WindowShouldClose())
 {
   MainLooper.GlobalActivation(registry);

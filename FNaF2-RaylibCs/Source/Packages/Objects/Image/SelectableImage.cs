@@ -5,7 +5,7 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
-public class SelectableImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null) : SimpleImage(position, resource.GetSize(), tint, newSize)
+public class SelectableImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null, float rotation = 0) : SimpleImage(position, resource.GetSize(), tint, newSize, rotation)
 {
   private int _currentFrame;
   
@@ -16,5 +16,5 @@ public class SelectableImage(Vector2 position, ImageStackResource resource, Colo
   
   public void SetColor(Color color) => Tint = color;
   
-  public override void Draw(Registry registry) => Raylib.DrawTexturePro(resource.GetMaterial()[_currentFrame], new Rectangle(Vector2.Zero, resource.GetMaterial()[_currentFrame].Width, resource.GetMaterial()[_currentFrame].Height), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
+  public override void Draw(Registry registry) => Raylib.DrawTexturePro(resource.GetMaterial()[_currentFrame], new Rectangle(Vector2.Zero, resource.GetMaterial()[_currentFrame].Width, resource.GetMaterial()[_currentFrame].Height), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint);
 }

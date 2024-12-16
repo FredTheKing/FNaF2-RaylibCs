@@ -8,8 +8,8 @@ public class MenuSettings : ScriptTemplate
 {
   public override void Activation(Registry registry)
   {
-    Registration.Objects.SettingsFullscreenCheckbox!.SetChecked(registry.GetFNaF().FullscreenMode);
-    Registration.Objects.SettingsVsyncCheckbox!.SetChecked(registry.GetFNaF().VsyncMode);
+    Registration.Objects.SettingsFullscreenCheckbox!.SetChecked(registry.GetSceneManager().GetFullscreen());
+    Registration.Objects.SettingsVsyncCheckbox!.SetChecked(registry.GetSceneManager().GetVsync());
     Registration.Objects.SettingsVolumeSlider!.SetValue(registry.GetSceneManager().GetMasterVolume());
     Registration.Objects.SettingsFunModeCheckbox!.SetChecked(registry.GetFNaF().FunMode);
     Registration.Objects.SettingsDebugModeCheckbox!.SetChecked(registry.GetDebugMode());
@@ -17,27 +17,31 @@ public class MenuSettings : ScriptTemplate
 
   private void FullscreenFunc(Registry registry)
   {
-    if (registry.GetFNaF().FullscreenMode && !Raylib.IsWindowFullscreen()) Raylib.ToggleFullscreen();
-    else if (!registry.GetFNaF().FullscreenMode && Raylib.IsWindowFullscreen()) Raylib.ToggleFullscreen();
+    if (registry.GetSceneManager().GetFullscreen() && !Raylib.IsWindowFullscreen()) Raylib.ToggleFullscreen();
+    else if (!registry.GetSceneManager().GetFullscreen() && Raylib.IsWindowFullscreen()) Raylib.ToggleFullscreen();
   }
 
   private void VsyncFunc(Registry registry)
   {
-    Raylib.SetTargetFPS(registry.GetFNaF().VsyncMode ? Raylib.GetMonitorRefreshRate(Raylib.GetCurrentMonitor()) : 0);
+    Raylib.SetTargetFPS(registry.GetSceneManager().GetVsync() ? Raylib.GetMonitorRefreshRate(Raylib.GetCurrentMonitor()) : Config.WindowTargetFramerate);
   }
 
   public override void Update(Registry registry)
   {
-    bool previousVsync = registry.GetFNaF().VsyncMode;
+    bool previousVsync = registry.GetSceneManager().GetVsync();
+    
+    if (Registration.Objects.SettingsVsyncCheckbox!.GetHitbox().GetMouseHover())
+      Registration.Objects.SettingsFpsShowText!.SetCurrentFrameColor(Color.Gray);
     
     registry.SetDebugMode(Registration.Objects.SettingsDebugModeCheckbox!.GetChecked());
-    registry.GetFNaF().FullscreenMode = Registration.Objects.SettingsFullscreenCheckbox!.GetChecked();
-    registry.GetFNaF().VsyncMode = Registration.Objects.SettingsVsyncCheckbox!.GetChecked();
+    registry.GetSceneManager().SetFullscreen(Registration.Objects.SettingsFullscreenCheckbox!.GetChecked());
+    registry.GetSceneManager().SetVsync(Registration.Objects.SettingsVsyncCheckbox.GetChecked());
     registry.GetSceneManager().SetMasterVolume(Registration.Objects.SettingsVolumeSlider!.GetValue());
     registry.GetFNaF().FunMode = Registration.Objects.SettingsFunModeCheckbox!.GetChecked();
     
     FullscreenFunc(registry);
+    Registration.Objects.SettingsFpsShowText!.SetText("FPS: " + Raylib.GetFPS());
     
-    if (previousVsync != registry.GetFNaF().VsyncMode) VsyncFunc(registry);
+    if (previousVsync != registry.GetSceneManager().GetVsync()) VsyncFunc(registry);
   }
 }

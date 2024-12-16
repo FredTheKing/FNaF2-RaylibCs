@@ -9,18 +9,21 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
 public class SimpleImage : ObjectTemplate
 {
-  public SimpleImage(Vector2 position, ImageResource resource, Color? tint = null, Vector2? newSize = null) : base(position, newSize ?? resource.GetSize()) { this.Resource = resource; Tint = tint ?? Color.White; }
-  public SimpleImage(Vector2 position, Vector2 originalSize, Color? tint = null, Vector2? newSize = null) : base(position, newSize ?? originalSize) { Tint = tint ?? Color.White; }
+  public SimpleImage(Vector2 position, ImageResource resource, Color? tint = null, Vector2? newSize = null, float rotation = 0) : base(position, newSize ?? resource.GetSize()) { this.Resource = resource; Tint = tint ?? Color.White; Rotation = rotation; }
+  public SimpleImage(Vector2 position, Vector2 originalSize, Color? tint = null, Vector2? newSize = null, float rotation = 0) : base(position, newSize ?? originalSize) { Tint = tint ?? Color.White; Rotation = rotation; }
 
   protected Color Tint;
   protected ImageResource? Resource;
+  protected float Rotation;
 
   public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Position: {Position.X}, {Position.Y}");
-    if (Resource is not null) ImGui.Text($" > Size: {Resource.GetSize().X}, {Resource.GetSize().Y}");
+    ImGui.Text($" > Size: {Size.X}, {Size.Y}");
+    if (Resource is not null) ImGui.Text($" > Resource Size: {Resource.GetSize().X}, {Resource.GetSize().Y}");
+    ImGui.Text($" > Rotation: {Rotation}");
     ImGui.BeginGroup();
-    ImGui.Text($" > Color:");
+    ImGui.Text(" > Color:");
     ImGui.SameLine();
     ImGui.TextColored(new Vector4(255, 0, 0, 255), Tint.R.ToString());
     ImGui.SameLine();
@@ -32,10 +35,13 @@ public class SimpleImage : ObjectTemplate
     ImGui.EndGroup();
   }
   
+  public void SetRotation(float rotation) => Rotation = rotation;
+  public float GetRotation() => Rotation;
+  
   public override void Draw(Registry registry)
   {
     if (Resource is null) return;
-    Raylib.DrawTexturePro(Resource.GetMaterial(), new Rectangle(Vector2.Zero, Resource.GetMaterial().Width, Resource.GetMaterial().Height), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
+    Raylib.DrawTexturePro(Resource.GetMaterial(), new Rectangle(Vector2.Zero, Resource.GetMaterial().Width, Resource.GetMaterial().Height), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint);
     base.Draw(registry);
   }
 }

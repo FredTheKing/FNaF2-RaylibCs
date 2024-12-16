@@ -10,6 +10,7 @@ public class ImageStackResource : MaterialTemplate
   private readonly Vector2 _size;
   protected new List<string>? Filename;
   protected new List<Texture2D>? Material = [];
+  private TextureFilter _filter = TextureFilter.Point;
 
   public override bool IsMaterialLoaded() => Material!.Count(x => Raylib.IsTextureReady(x)) == Filename!.Count;
 
@@ -35,6 +36,8 @@ public class ImageStackResource : MaterialTemplate
   
   public Vector2 GetSize() => _size;
   
+  public void SetFilter(TextureFilter filter) => _filter = filter;
+  
   public new List<string> GetFilename() => Filename!;
   public new List<Texture2D> GetMaterial() => Material!;
   
@@ -48,7 +51,11 @@ public class ImageStackResource : MaterialTemplate
   public override void Load()
   {
     foreach (string filename in Filename!)
-      Material!.Add(Raylib.LoadTexture(filename));
+    {
+      Texture2D newTexture = Raylib.LoadTexture(filename);
+      Raylib.SetTextureFilter(newTexture, _filter);
+      Material!.Add(newTexture);
+    }
   }
 
   public override void CallDebuggerInfo(Registry registry)

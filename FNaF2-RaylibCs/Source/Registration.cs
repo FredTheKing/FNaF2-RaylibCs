@@ -30,6 +30,8 @@ public static class Registration
     public static ImageStackResource? MenuBackgroundStackResource;
     public static ImageStackResource? MenuStaticStackResource;
     public static ImageStackResource? MenuWhiteBlinkoStackResource;
+
+    public static ImageResource? GameNewspaperYooo;
   }
 
   public struct Sounds
@@ -64,6 +66,7 @@ public static class Registration
     public static SimpleText? SettingsFullscreenText;
     public static SimpleCheckbox? SettingsFullscreenCheckbox;
     public static SimpleText? SettingsVsyncText;
+    public static SimpleText? SettingsFpsShowText;
     public static SimpleCheckbox? SettingsVsyncCheckbox;
     public static SimpleText? SettingsVolumeText;
     public static SimpleSlider? SettingsVolumeSlider;
@@ -78,6 +81,8 @@ public static class Registration
 
     public static SimpleText? LoadingNightText;
     public static SimpleText? LoadingAmText;
+
+    public static SimpleImage? GameNewspapers;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -90,6 +95,9 @@ public static class Registration
     
     Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackgroundStackResource", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Background", 4)));
     Materials.MenuStaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Static", 8)));
+    
+    Materials.GameNewspaperYooo = registry.RegisterMaterial("GameNewspaperYooo", [Config.Scenes.GameNewspaper], new ImageResource(Config.ResPath + "Game/Newspaper.png"));
+    Materials.GameNewspaperYooo.SetFilter(TextureFilter.Bilinear);
     
     Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/WhiteBlinko", 6)));
   }
@@ -131,6 +139,7 @@ public static class Registration
     Objects.SettingsFullscreenCheckbox = registry.RegisterObject("SettingsFullscreenCheckbox", [Config.Scenes.MenuSettings], [1], new SimpleCheckbox(new Vector2(832, 182), 50, Color.White));
 
     Objects.SettingsVsyncText = registry.RegisterObject("SettingsVsyncText", [Config.Scenes.MenuSettings], [1], new SimpleText(new Vector2(112, 255), new Vector2(500, 65), 48, "Vsync", Color.White, Materials.MenuFont!, true));
+    Objects.SettingsFpsShowText = registry.RegisterObject("SettingsFpsShowText", [Config.Scenes.MenuSettings], [1], new SimpleText(new Vector2(670, 255), new Vector2(160, 65), 24, "FPS: ", Color.Blank, Materials.MenuFont!, true));
     Objects.SettingsVsyncCheckbox = registry.RegisterObject("SettingsVsyncCheckbox", [Config.Scenes.MenuSettings], [1], new SimpleCheckbox(new Vector2(832, 262), 50, Color.White));
 
     Objects.SettingsVolumeText = registry.RegisterObject("SettingsVolumeText", [Config.Scenes.MenuSettings], [1], new SimpleText(new Vector2(112, 335), new Vector2(500, 65), 48, "Volume", Color.White, Materials.MenuFont!, true));
@@ -148,6 +157,8 @@ public static class Registration
     
     Objects.LoadingNightText = registry.RegisterObject("LoadingNightText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, -40), new Vector2(1024, 768), 48, "Night #", Color.White, Materials.MenuFont!, true, true));
     Objects.LoadingAmText = registry.RegisterObject("LoadingAmText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, 40), new Vector2(1024, 768), 48, "12 AM", Color.White, Materials.MenuFont!, true, true));
+    
+    Objects.GameNewspapers = registry.RegisterObject("GameNewspapers", [Config.Scenes.GameNewspaper], [0], new SimpleImage(Vector2.Zero, Materials.GameNewspaperYooo!, Color.White));
   }
   
   

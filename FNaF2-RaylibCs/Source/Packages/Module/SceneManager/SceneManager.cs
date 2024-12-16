@@ -9,7 +9,9 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
   private List<string> _scenesNames = scenesNames;
   private Scene? _currentScene;
   private bool _changed = true;
-  private float _masterVolume = 1f;
+  private float _masterVolume = Config.DefaultMasterVolume;
+  private bool _fullscreen = Config.FullscreenMode;
+  private bool _vsync = Config.VsyncMode;
 
   public override void CallDebuggerInfo(Registry registry)
   {
@@ -20,6 +22,10 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
     }
     ImGui.Text($" > Changed Scene: {(_changed ? 1 : 0)}");
     ImGui.Text($" > Scenes Count: {_scenes.Count}");
+    ImGui.Separator();
+    ImGui.Text($" > Fullscreen: {_fullscreen}");
+    ImGui.Text($" > Vsync: {_vsync}");
+    ImGui.Text($" > Master Volume: {_masterVolume}");
   }
   
   private static Dictionary<String, Scene> InitScenes(List<string> scenesNames) =>
@@ -52,6 +58,14 @@ public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
   public void SetMasterVolume(float newVolume) => _masterVolume = newVolume;
   
   public float GetMasterVolume() => _masterVolume;
+  
+  public void SetFullscreen(bool newValue) => _fullscreen = newValue;
+  
+  public bool GetFullscreen() => _fullscreen;
+  
+  public void SetVsync(bool newValue) => _vsync = newValue;
+  
+  public bool GetVsync() => _vsync;
   
   public bool IsChanged() => _changed;
 
