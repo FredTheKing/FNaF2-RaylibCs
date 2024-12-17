@@ -30,7 +30,7 @@ public class GameNewspaper : ScriptTemplate
 
     customSizeW += 15f * Raylib.GetFrameTime();
 
-    if (_timer.EndedTrigger())
+    if (_timer.TargetTrigger())
       registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameLoading);
   }
 }

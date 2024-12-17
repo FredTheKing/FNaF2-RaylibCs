@@ -17,7 +17,7 @@ public class GameLoading : ScriptTemplate
   {
     _timer.Update(registry);
 
-    if (_timer.EndedTrigger())
+    if (_timer.TargetTrigger())
       registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameMain);
   }
 }

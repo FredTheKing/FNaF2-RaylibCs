@@ -25,8 +25,9 @@ public struct Config
   public const int WindowTargetFramerate = -1;
   public const bool FullscreenMode = false, VsyncMode = false;
   public const float DefaultMasterVolume = 1f;
-  
-  public const string StartSceneName = Scenes.MenuSettings;
+
+  public const int MaxAnimatronicsDifficulty = 20;
+  public const string StartSceneName = Scenes.MenuCredits;
   public const string AllScenesShortcut = "*";
   public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign
   public static readonly string SeparatorLine = new('-', 100);

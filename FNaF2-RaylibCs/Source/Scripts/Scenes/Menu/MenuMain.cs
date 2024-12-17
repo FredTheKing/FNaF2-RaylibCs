@@ -15,7 +15,7 @@ public class MenuMain : ScriptTemplate
     _twitchTimer.Update(registry);
     var twitch = Registration.Objects.MenuBackground!;
     
-    if (!_twitchTimer.EndedTrigger()) return;
+    if (!_twitchTimer.TargetTrigger()) return;
     double randomValue = new Random().NextDouble();
     var index = randomValue switch { < 0.85 => 0, < 0.9 => 1, < 0.95 => 2, _ => 3 };
     twitch.SetFrame(index);

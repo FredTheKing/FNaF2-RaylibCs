@@ -32,7 +32,7 @@ public class WhiteBlinkoScript(SelectableImage obj) : ScriptTemplate
       {
         _changingWhito.ContinuousStartTimer();
         _changingWhito.Update(registry);
-        if (_changingWhito.EndedTrigger()) obj.SetFrame(new Random().Next(1, 5));
+        if (_changingWhito.TargetTrigger()) obj.SetFrame(new Random().Next(1, 5));
         break;
       }
       case 2:
@@ -43,7 +43,7 @@ public class WhiteBlinkoScript(SelectableImage obj) : ScriptTemplate
         break;
     }
 
-    if (!_timer.EndedTrigger() || _stage >= 3) return;
+    if (!_timer.TargetTrigger() || _stage >= 3) return;
     _stage++;
   }
 }

@@ -44,7 +44,7 @@ public class SimpleAnimation(Vector2 position, float fps, Color color, Animation
   public override void Update(Registry registry)
   {
     _updateTimer.Update(registry);
-    if (_updateTimer.EndedTrigger()) _currentFrame = (_currentFrame + 1) % (resource.GetMaterial().Count);
+    if (_updateTimer.TargetTrigger()) _currentFrame = (_currentFrame + 1) % (resource.GetMaterial().Count);
     base.Update(registry);
   }
 

@@ -1,5 +1,6 @@
 using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.Custom;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
@@ -30,6 +31,10 @@ public static class Registration
     public static ImageStackResource? MenuBackgroundStackResource;
     public static ImageStackResource? MenuStaticStackResource;
     public static ImageStackResource? MenuWhiteBlinkoStackResource;
+    
+    public static ImageResource? CreditsRaylibResource;
+    public static ImageResource? CreditsMyResource;
+    public static ImageResource? CreditsScottResource;
 
     public static ImageResource? GameNewspaperYooo;
   }
@@ -76,6 +81,12 @@ public static class Registration
     public static SimpleCheckbox? SettingsDebugModeCheckbox;
     
     public static SimpleText? CreditsTitle;
+    public static SimpleImage? CreditsRaylibLogo;
+    public static SimpleText? CreditsRaylibText;
+    public static SimpleImage? CreditsMyLogo;
+    public static SimpleText? CreditsMyText;
+    public static SimpleImage? CreditsScottLogo;
+    public static SimpleText? CreditsScottText;
     
     public static SimpleText? CustomNightTitle;
 
@@ -95,6 +106,10 @@ public static class Registration
     
     Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackgroundStackResource", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Background", 4)));
     Materials.MenuStaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Static", 8)));
+    
+    Materials.CreditsRaylibResource = registry.RegisterMaterial("CreditsRaylibResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Raylib.png"));
+    Materials.CreditsMyResource = registry.RegisterMaterial("CreditsMyResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Me.png"));
+    Materials.CreditsScottResource = registry.RegisterMaterial("CreditsScottResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Scott.png"));
     
     Materials.GameNewspaperYooo = registry.RegisterMaterial("GameNewspaperYooo", [Config.Scenes.GameNewspaper], new ImageResource(Config.ResPath + "Game/Newspaper.png"));
     Materials.GameNewspaperYooo.SetFilter(TextureFilter.Bilinear);
@@ -152,6 +167,12 @@ public static class Registration
     Objects.SettingsDebugModeCheckbox = registry.RegisterObject("SettingsDebugModeCheckbox", [Config.Scenes.MenuSettings], [1], new SimpleCheckbox(new Vector2(832, 582), 50, Color.White));
     
     Objects.CreditsTitle = registry.RegisterObject("CreditsTitle", [Config.Scenes.MenuCredits], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Credits", Color.White, Materials.MenuFont!, true, true));
+    Objects.CreditsRaylibLogo = registry.RegisterObject("CreditsRaylibLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 - 275, 352), Materials.CreditsRaylibResource!, Color.White, new Vector2(150, 150)));
+    Objects.CreditsRaylibText = registry.RegisterObject("CreditsRaylibText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsRaylibLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Powered\n\nwith:", Color.White, Materials.MenuFont!, false, true));
+    Objects.CreditsScottLogo = registry.RegisterObject("CreditsScottLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 - 70, 352), Materials.CreditsScottResource!, Color.White, new Vector2(150, 150)));
+    Objects.CreditsScottText = registry.RegisterObject("CreditsScottText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsScottLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Original\n\nDev:", Color.White, Materials.MenuFont!, false, true));
+    Objects.CreditsMyLogo = registry.RegisterObject("CreditsMyLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 + 125, 352), Materials.CreditsMyResource!, Color.White, new Vector2(150, 150)));
+    Objects.CreditsMyText = registry.RegisterObject("CreditsMyText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsMyLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Remake\n\nDev:", Color.White, Materials.MenuFont!, false, true));
     
     Objects.CustomNightTitle = registry.RegisterObject("CustomNightTitle", [Config.Scenes.MenuCustomNight], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Custom Night", Color.White, Materials.MenuFont!, true, true));
     
@@ -165,7 +186,12 @@ public static class Registration
 
   public static void CustomInitialisation(Registry registry)
   {
-    registry.GetFNaF().GetAnimatronicManager().AddAnimatronic(new Animatronic());
+    Scene gameScene = registry.GetSceneManager().GetScenes()[Config.Scenes.GameMain];
+    
+    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, "Test Animatronic", 3f, [
+        new MovementOpportunity(Location.Cam01, Location.Cam02, .4f),
+        new MovementOpportunity(Location.Cam01, Location.Cam03, .6f)
+    ]));
   }
   
   public static void RegistryInitialisation(Registry registry)

@@ -6,6 +6,6 @@ public class AnimatronicManager : CallDebuggerInfoTemplate
 {
   private List<Animatronic> _animatronics = [];
   
-  public void AddAnimatronic(Animatronic animatronic) => _animatronics.Add(animatronic);
+  public void Add(Animatronic animatronic) => _animatronics.Add(animatronic);
   public List<Animatronic> GetAnimatronics() => _animatronics;
 }

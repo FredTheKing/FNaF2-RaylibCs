@@ -5,7 +5,7 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 
-public class SimpleTimer(double targetTimeInSeconds = 1f, bool startAtActivation = false, bool deleteOrLoopOnEnd = true, bool resetTargetWhenEnded = true) : ObjectTemplate
+public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart = false, bool deleteOrLoopOnEnd = true, bool resetTargetWhenEnded = true) : ObjectTemplate
 {
   protected double Time;
   protected double CurrentTime;
@@ -15,7 +15,7 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool startAtActivation
   protected bool Dead;
   protected bool TargetActivate;
   
-  protected bool StartAtActivation = startAtActivation;
+  protected bool ActivationStart = activationStart;
   protected bool DeleteOrLoopOnEnd = deleteOrLoopOnEnd;
   protected bool ResetTargetWhenEnded = resetTargetWhenEnded;
   
@@ -36,7 +36,7 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool startAtActivation
       ImGui.Text($" > Target Time: {TargetTime}");
       ImGui.Text($" > Triggered: {(TargetActivate ? 1 : 0)}");
       ImGui.Separator();
-      ImGui.Text($" > Start on Activation: {(StartAtActivation ? 1 : 0)}");
+      ImGui.Text($" > Start on Activation: {(ActivationStart ? 1 : 0)}");
       ImGui.Text($" > Todo on end: {(DeleteOrLoopOnEnd ? "Loop" : "Delete")}");
       if (DeleteOrLoopOnEnd) ImGui.Text($" > Auto reset on end: {(ResetTargetWhenEnded ? 1 : 0)}");
 
@@ -44,7 +44,7 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool startAtActivation
     }
   }
   
-  public bool EndedTrigger() => TargetActivate;
+  public bool TargetTrigger() => TargetActivate;
   
   public bool IsWorking() => Go;
   
@@ -86,7 +86,7 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool startAtActivation
 
   public new void Activation(Registry registry)
   {
-    if (!StartAtActivation) return;
+    if (!ActivationStart) return;
     StartTimer();
     
     base.Activation(registry);
