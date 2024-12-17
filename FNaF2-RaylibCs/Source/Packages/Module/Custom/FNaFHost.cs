@@ -19,7 +19,11 @@ public class FNaFHost : ScriptTemplate
     ImGui.Text($" > Fun Mode: {(FunMode ? 1 : 0)}");
     ImGui.Separator();
     _nightManager.CallDebuggerInfo(registry);
-    _animatronicManager.CallDebuggerInfo(registry);
+    if (ImGui.TreeNode("AnimatronicManager"))
+    {
+      _animatronicManager.CallDebuggerInfo(registry);
+      ImGui.TreePop();
+    }
   }
 
   public override void Deactivation(Registry registry, string nextSceneName)

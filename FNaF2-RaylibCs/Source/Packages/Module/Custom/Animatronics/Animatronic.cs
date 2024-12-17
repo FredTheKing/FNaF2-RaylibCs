@@ -1,6 +1,7 @@
 using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
+using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
@@ -25,6 +26,15 @@ public class Animatronic : ScriptTemplate
   public List<MovementOpportunity> Movements;
   public int Difficulty = 19;
   public Location CurrentLocation;
+
+  public override void CallDebuggerInfo(Registry registry)
+  {
+    ImGui.Text($" > Name: {Name}");
+    ImGui.Text($" > Difficulty: {Difficulty}");
+    ImGui.Text($" > Start Location: {_startLocation}");
+    ImGui.Text($" > Current Location: {CurrentLocation}");
+    ImGui.Text($" > Movements: {Movements.Count}");
+  }
 
   public override void Deactivation(Registry registry, string nextSceneName) => 
     OnlyGameScene(() => { _timer.StopAndResetTimer(); }, registry);
