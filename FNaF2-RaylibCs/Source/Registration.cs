@@ -41,6 +41,8 @@ public static class Registration
 
     public static ImageResource? GameNewspaperYooo;
     public static ImageStackResource? GameOfficeResource;
+    public static ImageStackResource? GameLeftLightResource;
+    public static ImageStackResource? GameRightLightResource;
   }
 
   public struct Sounds
@@ -100,7 +102,9 @@ public static class Registration
 
     public static SimpleImage? GameNewspapers;
     public static SelectableImage? GameOffice;
-    public static SimpleBox? GameCentralScroller;
+    public static DebugBox? GameCentralScroller;
+    public static SelectableHitboxImage? GameLeftLightSwitch;
+    public static SelectableHitboxImage? GameRightLightSwitch;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -124,6 +128,8 @@ public static class Registration
     Materials.GameNewspaperYooo.SetFilter(TextureFilter.Bilinear);
     
     Materials.GameOfficeResource = registry.RegisterMaterial("GameOfficeResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office", 5)));
+    Materials.GameLeftLightResource = registry.RegisterMaterial("GameLeftLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2)));
+    Materials.GameRightLightResource = registry.RegisterMaterial("GameRightLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2, 2)));
     
     Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/WhiteBlinko", 6)));
   }
@@ -189,12 +195,14 @@ public static class Registration
     
     Objects.LoadingNightText = registry.RegisterObject("LoadingNightText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, -40), new Vector2(1024, 768), 48, "Night #", Color.White, Materials.MenuFont!, true, true));
     Objects.LoadingAmText = registry.RegisterObject("LoadingAmText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, 40), new Vector2(1024, 768), 48, "12 AM", Color.White, Materials.MenuFont!, true, true));
-    Objects.LoadingClockThingo = registry.RegisterObject("LoadingClockThingo", [Config.Scenes.GameLoading], [1], new SimpleImage(new Vector2(Config.WindowWidth-Materials.LoadingClockResource.GetSize().X-20, Config.WindowHeight-Materials.LoadingClockResource.GetSize().Y-20), Materials.LoadingClockResource, Color.Blank));
+    Objects.LoadingClockThingo = registry.RegisterObject("LoadingClockThingo", [Config.Scenes.GameLoading], [1], new SimpleImage(new Vector2(Config.WindowWidth-Materials.LoadingClockResource!.GetSize().X-20, Config.WindowHeight-Materials.LoadingClockResource.GetSize().Y-20), Materials.LoadingClockResource, Color.Blank));
     
     Objects.GameNewspapers = registry.RegisterObject("GameNewspapers", [Config.Scenes.GameNewspaper], [0], new SimpleImage(Vector2.Zero, Materials.GameNewspaperYooo!, Color.White));
     
     Objects.GameOffice = registry.RegisterObject("GameOffice", [Config.Scenes.GameMain], [0], new SelectableImage(Vector2.Zero, Materials.GameOfficeResource!, Color.White));
-    Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [99], new SimpleBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
+    Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [99], new DebugBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
+    Objects.GameLeftLightSwitch = registry.RegisterObject("GameLeftLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameLeftLightResource!));
+    Objects.GameRightLightSwitch = registry.RegisterObject("GameRightLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameRightLightResource!));
   }
   
   

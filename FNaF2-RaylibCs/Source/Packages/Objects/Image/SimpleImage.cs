@@ -45,6 +45,12 @@ public class SimpleImage : ObjectTemplate
   {
     if (Resource is null) return;
     Raylib.DrawTexturePro(Resource.GetMaterial(), new Rectangle(Vector2.Zero, Resource.GetMaterial().Width, Resource.GetMaterial().Height), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint);
+    DrawDebug(registry);
     base.Draw(registry);
+  }
+  
+  protected void DrawDebug(Registry registry)
+  {
+    if (registry.GetShowBounds() & registry.GetDebugMode()) Raylib.DrawRectangleLinesEx(new Rectangle(Position, Size), 1, Color.Magenta);
   }
 }
