@@ -27,4 +27,11 @@ public class GlobalOverlay : ScriptTemplate
     if (registry.GetDebugMode() & Raylib.GetScreenWidth() != 1424) ResizeAndCenter(1424, 768);
     else if (!registry.GetDebugMode() & Raylib.GetScreenWidth() != 1024) ResizeAndCenter(1024, 768);
   }
+
+  public override void Draw(Registry registry)
+  {
+    #if DEBUG
+    Raylib.DrawRectangle(Config.WindowWidth, 0, 400, Config.WindowHeight, Color.Black);
+    #endif
+  }
 }

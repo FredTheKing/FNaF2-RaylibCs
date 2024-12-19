@@ -38,6 +38,9 @@ public class SimpleImage : ObjectTemplate
   public void SetRotation(float rotation) => Rotation = rotation;
   public float GetRotation() => Rotation;
   
+  public void SetTint(Color color) => Tint = color;
+  public Color GetTint() => Tint;
+  
   public override void Draw(Registry registry)
   {
     if (Resource is null) return;

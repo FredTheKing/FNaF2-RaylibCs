@@ -16,7 +16,7 @@
 
     <ItemGroup>
       <Content Include="Resources\**">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 

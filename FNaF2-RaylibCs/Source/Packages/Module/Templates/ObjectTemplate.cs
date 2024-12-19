@@ -19,6 +19,8 @@ public abstract class ObjectTemplate : ScriptTemplate
   
   public virtual void SetPosition(Vector2 position) => Position = position;
   
+  public virtual void AddPosition(Vector2 position) => Position += position;
+  
   public virtual void SetX(float x) => Position.X = x;
   
   public virtual void SetY(float y) => Position.Y = y;

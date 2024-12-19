@@ -9,6 +9,8 @@ namespace FNaF2_RaylibCs.Source.Scripts.Scenes;
 
 public class ImGuiWindow
 {
+  private const int DebuggerWidth = 400;
+  
   public void Process(Registry registry)
   {
     rlImGui.Begin();
@@ -18,8 +20,8 @@ public class ImGuiWindow
     {
       if (!registry.GetMovableDebugger())
       {
-        ImGui.SetWindowSize(new Vector2(400, 768));
-        ImGui.SetWindowPos(new Vector2(Raylib.GetScreenWidth() - 400, 0)); 
+        ImGui.SetWindowSize(new Vector2(DebuggerWidth, 768));
+        ImGui.SetWindowPos(new Vector2(Raylib.GetScreenWidth() - DebuggerWidth, 0)); 
       }
       ImGui.SeparatorText("Info");
       ImGui.Text("Window size: " + Raylib.GetRenderWidth() + "/" + Raylib.GetRenderHeight());

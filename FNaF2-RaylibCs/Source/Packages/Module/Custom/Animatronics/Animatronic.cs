@@ -29,11 +29,15 @@ public class Animatronic : ScriptTemplate
 
   public override void CallDebuggerInfo(Registry registry)
   {
-    ImGui.Text($" > Name: {Name}");
-    ImGui.Text($" > Difficulty: {Difficulty}");
-    ImGui.Text($" > Start Location: {_startLocation}");
-    ImGui.Text($" > Current Location: {CurrentLocation}");
-    ImGui.Text($" > Movements: {Movements.Count}");
+    if (ImGui.TreeNode(Name))
+    {
+      ImGui.Text($" > Difficulty: {Difficulty}");
+      ImGui.Text($" > Start Location: {_startLocation}");
+      OnlyGameScene(() => { ImGui.Text($" > Current Location: {CurrentLocation}"); }, registry);
+      ImGui.Text($" > Movements: {Movements.Count}");
+      OnlyGameScene(() => { ImGui.Text($" > Current Movements: {Movements.Count(x => x.From == CurrentLocation)}"); }, registry);
+      ImGui.TreePop();
+    }
   }
 
   public override void Deactivation(Registry registry, string nextSceneName) => 

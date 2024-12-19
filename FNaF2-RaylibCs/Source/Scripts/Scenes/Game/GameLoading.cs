@@ -1,6 +1,7 @@
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
+using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Scripts.Scenes.Game;
 public class GameLoading : ScriptTemplate
@@ -11,13 +12,15 @@ public class GameLoading : ScriptTemplate
   {
     _timer.Activation(registry);
     Registration.Objects.LoadingNightText!.SetText("Night " + registry.GetFNaF().GetNightManager().GetUpcomingNight());
+    Registration.Objects.LoadingClockThingo!.SetTint(Color.Blank);
   }
 
   public override void Update(Registry registry)
   {
     _timer.Update(registry);
 
-    if (_timer.TargetTrigger())
-      registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameMain);
+    if (!_timer.TargetTrigger()) return;
+    Registration.Objects.LoadingClockThingo!.SetTint(Color.White);
+    registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameMain);
   }
 }

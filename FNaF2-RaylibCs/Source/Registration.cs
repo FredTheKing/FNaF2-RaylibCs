@@ -5,6 +5,7 @@ using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 using FNaF2_RaylibCs.Source.Packages.Objects.Animation;
+using FNaF2_RaylibCs.Source.Packages.Objects.Box;
 using FNaF2_RaylibCs.Source.Packages.Objects.Checkbox;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using FNaF2_RaylibCs.Source.Packages.Objects.Slider;
@@ -20,7 +21,7 @@ namespace FNaF2_RaylibCs.Source;
 
 public static class Registration
 {
-  public struct Materials
+  private struct Materials
   {
     public static SoundResource? MenuMusicResource;
     public static SoundResource? SetSoundResource;
@@ -36,7 +37,10 @@ public static class Registration
     public static ImageResource? CreditsMyResource;
     public static ImageResource? CreditsScottResource;
 
+    public static ImageResource? LoadingClockResource;
+
     public static ImageResource? GameNewspaperYooo;
+    public static ImageStackResource? GameOfficeResource;
   }
 
   public struct Sounds
@@ -92,8 +96,11 @@ public static class Registration
 
     public static SimpleText? LoadingNightText;
     public static SimpleText? LoadingAmText;
+    public static SimpleImage? LoadingClockThingo;
 
     public static SimpleImage? GameNewspapers;
+    public static SelectableImage? GameOffice;
+    public static SimpleBox? GameCentralScroller;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -111,8 +118,12 @@ public static class Registration
     Materials.CreditsMyResource = registry.RegisterMaterial("CreditsMyResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Me.png"));
     Materials.CreditsScottResource = registry.RegisterMaterial("CreditsScottResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Scott.png"));
     
-    Materials.GameNewspaperYooo = registry.RegisterMaterial("GameNewspaperYooo", [Config.Scenes.GameNewspaper], new ImageResource(Config.ResPath + "Game/Newspaper.png"));
+    Materials.LoadingClockResource = registry.RegisterMaterial("LoadingClockResource", [Config.Scenes.GameLoading], new ImageResource(Config.ResPath + "Game/Etc/Clock.png"));
+    
+    Materials.GameNewspaperYooo = registry.RegisterMaterial("GameNewspaperYooo", [Config.Scenes.GameNewspaper], new ImageResource(Config.ResPath + "Game/Etc/Newspaper.png"));
     Materials.GameNewspaperYooo.SetFilter(TextureFilter.Bilinear);
+    
+    Materials.GameOfficeResource = registry.RegisterMaterial("GameOfficeResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office", 5)));
     
     Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/WhiteBlinko", 6)));
   }
@@ -178,8 +189,12 @@ public static class Registration
     
     Objects.LoadingNightText = registry.RegisterObject("LoadingNightText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, -40), new Vector2(1024, 768), 48, "Night #", Color.White, Materials.MenuFont!, true, true));
     Objects.LoadingAmText = registry.RegisterObject("LoadingAmText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, 40), new Vector2(1024, 768), 48, "12 AM", Color.White, Materials.MenuFont!, true, true));
+    Objects.LoadingClockThingo = registry.RegisterObject("LoadingClockThingo", [Config.Scenes.GameLoading], [1], new SimpleImage(new Vector2(Config.WindowWidth-Materials.LoadingClockResource.GetSize().X-20, Config.WindowHeight-Materials.LoadingClockResource.GetSize().Y-20), Materials.LoadingClockResource, Color.Blank));
     
     Objects.GameNewspapers = registry.RegisterObject("GameNewspapers", [Config.Scenes.GameNewspaper], [0], new SimpleImage(Vector2.Zero, Materials.GameNewspaperYooo!, Color.White));
+    
+    Objects.GameOffice = registry.RegisterObject("GameOffice", [Config.Scenes.GameMain], [0], new SelectableImage(Vector2.Zero, Materials.GameOfficeResource!, Color.White));
+    Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [99], new SimpleBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
   }
   
   
