@@ -11,7 +11,13 @@ public class SelectableHitboxImage(Vector2 position, ImageStackResource resource
   protected RectangleHitbox Hitbox = new(position, resource.GetSize(), new Color(255, 0, 0, 101));
 
   public RectangleHitbox GetHitbox() => Hitbox;
-  
+
+  public override void CallDebuggerInfo(Registry registry)
+  {
+    base.CallDebuggerInfo(registry);
+    Hitbox.CallDebuggerInfo(registry);
+  }
+
   public override void SetPosition(Vector2 position)
   {
     Hitbox.SetPosition(position);

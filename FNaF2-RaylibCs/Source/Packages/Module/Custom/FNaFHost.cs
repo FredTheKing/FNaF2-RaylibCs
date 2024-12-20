@@ -28,25 +28,21 @@ public class FNaFHost : ScriptTemplate
 
   public override void Deactivation(Registry registry, string nextSceneName)
   {
-    foreach (Animatronic animatronic in _animatronicManager.GetAnimatronics()) 
-      animatronic.Deactivation(registry, nextSceneName);
+    _animatronicManager.Deactivation(registry, nextSceneName);
   }
 
   public override void Activation(Registry registry)
   {
-    foreach (Animatronic animatronic in _animatronicManager.GetAnimatronics()) 
-      animatronic.Activation(registry);
+    _animatronicManager.Activation(registry);
   }
 
   public override void Update(Registry registry)
   {
-    foreach (Animatronic animatronic in _animatronicManager.GetAnimatronics()) 
-      animatronic.Update(registry);
+    _animatronicManager.Update(registry);
   }
 
   public override void Draw(Registry registry)
   {
-    foreach (Animatronic animatronic in _animatronicManager.GetAnimatronics()) 
-      animatronic.Draw(registry);
+    _animatronicManager.Draw(registry);
   }
 }

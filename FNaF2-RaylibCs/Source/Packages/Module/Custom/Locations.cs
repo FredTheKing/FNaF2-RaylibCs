@@ -14,6 +14,7 @@ public enum Location
   Cam10,
   Cam11,
   Cam12,
+  GoldenFreddyRoom,
   OfficeFrontFar,
   OfficeFrontClose,
   OfficeLeft,

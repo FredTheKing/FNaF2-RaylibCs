@@ -41,6 +41,7 @@ public static class Registration
 
     public static ImageResource? GameNewspaperYooo;
     public static ImageStackResource? GameOfficeResource;
+    public static ImageStackResource? GameOfficeTableResource;
     public static ImageStackResource? GameLeftLightResource;
     public static ImageStackResource? GameRightLightResource;
   }
@@ -102,6 +103,7 @@ public static class Registration
 
     public static SimpleImage? GameNewspapers;
     public static SelectableImage? GameOffice;
+    public static SimpleAnimation? GameOfficeTable;
     public static DebugBox? GameCentralScroller;
     public static SelectableHitboxImage? GameLeftLightSwitch;
     public static SelectableHitboxImage? GameRightLightSwitch;
@@ -128,6 +130,7 @@ public static class Registration
     Materials.GameNewspaperYooo.SetFilter(TextureFilter.Bilinear);
     
     Materials.GameOfficeResource = registry.RegisterMaterial("GameOfficeResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office", 5)));
+    Materials.GameOfficeTableResource = registry.RegisterMaterial("GameOfficeTableResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/Table", 4)));
     Materials.GameLeftLightResource = registry.RegisterMaterial("GameLeftLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2)));
     Materials.GameRightLightResource = registry.RegisterMaterial("GameRightLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2, 2)));
     
@@ -200,6 +203,7 @@ public static class Registration
     Objects.GameNewspapers = registry.RegisterObject("GameNewspapers", [Config.Scenes.GameNewspaper], [0], new SimpleImage(Vector2.Zero, Materials.GameNewspaperYooo!, Color.White));
     
     Objects.GameOffice = registry.RegisterObject("GameOffice", [Config.Scenes.GameMain], [0], new SelectableImage(Vector2.Zero, Materials.GameOfficeResource!, Color.White));
+    Objects.GameOfficeTable = registry.RegisterObject("GameOfficeTable", [Config.Scenes.GameMain], [0], new SimpleAnimation(Vector2.Zero, 18, Color.White, AnimationPlayMode.Replacement, Materials.GameOfficeTableResource!));
     Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [99], new DebugBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
     Objects.GameLeftLightSwitch = registry.RegisterObject("GameLeftLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameLeftLightResource!));
     Objects.GameRightLightSwitch = registry.RegisterObject("GameRightLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameRightLightResource!));
@@ -210,10 +214,10 @@ public static class Registration
   public static void CustomInitialisation(Registry registry)
   {
     Scene gameScene = registry.GetSceneManager().GetScenes()[Config.Scenes.GameMain];
-    
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, "Test Animatronic", 3f, [
-        new MovementOpportunity(Location.Cam01, Location.Cam02, .4f),
-        new MovementOpportunity(Location.Cam01, Location.Cam03, .6f)
+
+    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.TestAnimatronic, 3f, [
+      new MovementOpportunity(Location.Cam01, Location.Cam02, .4f),
+      new MovementOpportunity(Location.Cam01, Location.Cam03, .6f)
     ]));
   }
   

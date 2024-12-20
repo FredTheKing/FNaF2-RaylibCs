@@ -4,7 +4,7 @@ namespace FNaF2_RaylibCs.Source;
 
 public struct Config
 {
-  public record Scenes
+  public struct Scenes
   {
     public const string DebuggerTesting = "Debugger/Testing";
     public const string MenuMain = "Menu/Main";
@@ -15,6 +15,21 @@ public struct Config
     public const string GameMain = "Game/Main";
     public const string GameLoading = "Game/Loading";
     public const string GameNewspaper = "Game/Newspaper";
+  }
+  
+  public struct AnimatronicsNames
+  {
+    public const string NoOne = "UNKNOWN_ANIMATRONIC";
+    public const string TestAnimatronic = "Test Animatronic";
+    public const string ToyBonnie = "Toy Bonnie";
+    public const string ToyFreddy = "Toy Freddy";
+    public const string ToyChica = "Toy Chica";
+    public const string Mangle = "Mangle";
+    public const string WitheredBonnie = "Withered Bonnie";
+    public const string WitheredFreddy = "Withered Freddy";
+    public const string WitheredChica = "Withered Chica";
+    public const string WitheredFoxy = "Withered Foxy";
+    public const string BalloonBoy = "Balloon Boy";
   }
   
   public const int WindowWidth = 1024, WindowHeight = 768;
