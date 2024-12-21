@@ -9,7 +9,7 @@ public enum OfficeDirection
   Left,
   Right,
   FrontFar,
-  FrontNear,
+  FrontClose,
   Inside
 }
 
@@ -24,6 +24,15 @@ public class AnimatronicManager : ScriptTemplate
 
   public override void CallDebuggerInfo(Registry registry)
   {
+    if (ImGui.TreeNode("Directions Filled"))
+    {
+      ImGui.Text($" > Left: {(_leftAnimatronic != null ? _leftAnimatronic.Name : "-")}");
+      ImGui.Text($" > Right: {(_rightAnimatronic != null ? _rightAnimatronic.Name : "-")}");
+      ImGui.Text($" > Front Far: {(_frontFarAnimatronic != null ? _frontFarAnimatronic.Name : "-")}");
+      ImGui.Text($" > Front Close: {(_frontNearAnimatronic != null ? _frontNearAnimatronic.Name : "-")}");
+      ImGui.Text($" > Inside: {(_insideAnimatronic != null ? _insideAnimatronic.Name : "-")}");
+      ImGui.TreePop();
+    }
     if (ImGui.TreeNode("Animatronics"))
     {
       foreach (Animatronic animatronic in _animatronics) 
@@ -39,7 +48,7 @@ public class AnimatronicManager : ScriptTemplate
       OfficeDirection.Left => _leftAnimatronic,
       OfficeDirection.Right => _rightAnimatronic,
       OfficeDirection.FrontFar => _frontFarAnimatronic,
-      OfficeDirection.FrontNear => _frontNearAnimatronic,
+      OfficeDirection.FrontClose => _frontNearAnimatronic,
       OfficeDirection.Inside => _insideAnimatronic,
       _ => null
     };
@@ -62,11 +71,12 @@ public class AnimatronicManager : ScriptTemplate
     foreach (Animatronic animatronic in _animatronics)
     {
       animatronic.Update(registry);
-      _leftAnimatronic = animatronic.CurrentLocation == Location.OfficeLeft ? animatronic : null;
-      _rightAnimatronic = animatronic.CurrentLocation == Location.OfficeRight ? animatronic : null;
-      _frontFarAnimatronic = animatronic.CurrentLocation == Location.OfficeFrontFar ? animatronic : null;
-      _frontNearAnimatronic = animatronic.CurrentLocation == Location.OfficeFrontClose ? animatronic : null;
-      _insideAnimatronic = animatronic.CurrentLocation == Location.OfficeInside ? animatronic : null;
+      
+      _leftAnimatronic = _leftAnimatronic?.CurrentLocation == Location.OfficeLeft ? _leftAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeLeft);
+      _rightAnimatronic = _rightAnimatronic?.CurrentLocation == Location.OfficeRight ? _rightAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeRight);
+      _frontFarAnimatronic = _frontFarAnimatronic?.CurrentLocation == Location.OfficeFrontFar ? _frontFarAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeFrontFar);
+      _frontNearAnimatronic = _frontNearAnimatronic?.CurrentLocation == Location.OfficeFrontClose ? _frontNearAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeFrontClose);
+      _insideAnimatronic = _insideAnimatronic?.CurrentLocation == Location.OfficeInside ? _insideAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeInside);
     }
   }
 

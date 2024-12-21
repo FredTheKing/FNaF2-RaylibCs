@@ -5,9 +5,16 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
+public enum AnimatronicType
+{
+  AutoBlackouter,
+  LightHater,
+  TriggerWaiter
+}
+
 public class Animatronic : ScriptTemplate
 {
-  public Animatronic(Scene gameScenePointer, string name, float targetTime, List<MovementOpportunity> movements)
+  public Animatronic(Scene gameScenePointer, string name, float targetTime, AnimatronicType type, List<MovementOpportunity> movements)
   {
     _gameScenePointer = gameScenePointer;
     _startLocation = movements[0].From;
@@ -15,23 +22,38 @@ public class Animatronic : ScriptTemplate
     
     Name = name;
     Movements = movements;
+    Type = type;
     CurrentLocation = _startLocation;
   }
   
   private Scene _gameScenePointer;
   private Location _startLocation;
   private SimpleTimer _timer;
+  private float _droppedChance = -1f;
+  private List<float> _chances = [];
   
   public string Name;
   public List<MovementOpportunity> Movements;
-  public int Difficulty = 19;
+  public AnimatronicType Type;
+  public int Difficulty = 15;
   public Location CurrentLocation;
+  public bool GrantMovement;
 
   public override void CallDebuggerInfo(Registry registry)
   {
     if (ImGui.TreeNode(Name))
     {
+      ImGui.Text($" > Last Dropped: {_droppedChance}");
+      ImGui.Text($" > Last Chances:");
+      foreach (float chance in _chances)
+      {
+        ImGui.SameLine();
+        ImGui.Text($">{chance}");
+      }
+      ImGui.Separator();
       ImGui.Text($" > Difficulty: {Difficulty}");
+      ImGui.Text($" > Type: {Type}");
+      ImGui.Text($" > Time to Try: {_timer.GetTimeLeft()}");
       ImGui.Text($" > Start Location: {_startLocation}");
       OnlyGameScene(() => { ImGui.Text($" > Current Location: {CurrentLocation}"); }, registry);
       ImGui.Text($" > Movements: {Movements.Count}");
@@ -54,8 +76,16 @@ public class Animatronic : ScriptTemplate
     OnlyGameScene(() =>
     {
       _timer.Update(registry);
-      if (!_timer.TargetTrigger()) return;
-      if (SuccessfulMovement()) Move();
+      switch (Type)
+      {
+        case AnimatronicType.AutoBlackouter or AnimatronicType.LightHater:
+          if (!_timer.TargetTrigger()) return;
+          if (SuccessfulMovement()) Move();
+          break;
+        case AnimatronicType.TriggerWaiter:
+          if (GrantMovement) Move();
+          break;
+      }
     }, registry);
   
   public override void Draw(Registry registry) => 
@@ -70,14 +100,15 @@ public class Animatronic : ScriptTemplate
 
   private void Move()
   {
+    GrantMovement = false;
     List<MovementOpportunity> targetMovements = Movements.Where(x => x.From == CurrentLocation).ToList();
-    float droppedChance = (float)new Random().NextDouble();
-    List<float> chances = [ 0f ];
-    chances.AddRange(targetMovements.Select(m => chances.Last() + m.Chance));
+    _droppedChance = (float)new Random().NextDouble();
+    _chances = [ 0f ];
+    _chances.AddRange(targetMovements.Select(m => _chances.Last() + m.Chance));
 
     for (int i = 0; i < targetMovements.Count; i++)
     {
-      if (!(droppedChance >= chances[i]) || !(droppedChance < chances[i + 1])) continue;
+      if (!(_droppedChance >= _chances[i]) || !(_droppedChance < _chances[i + 1])) continue;
       CurrentLocation = targetMovements[i].To;
       break;
     }

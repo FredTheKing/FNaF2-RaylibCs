@@ -20,16 +20,18 @@ public struct Config
   public struct AnimatronicsNames
   {
     public const string NoOne = "UNKNOWN_ANIMATRONIC";
-    public const string TestAnimatronic = "Test Animatronic";
-    public const string ToyBonnie = "Toy Bonnie";
-    public const string ToyFreddy = "Toy Freddy";
-    public const string ToyChica = "Toy Chica";
-    public const string Mangle = "Mangle";
-    public const string WitheredBonnie = "Withered Bonnie";
-    public const string WitheredFreddy = "Withered Freddy";
-    public const string WitheredChica = "Withered Chica";
-    public const string WitheredFoxy = "Withered Foxy";
-    public const string BalloonBoy = "Balloon Boy";
+    public const string ToyBonnie = "T Bonnie";
+    public const string ToyFreddy = "T Freddy";
+    public const string ToyChica = "T Chica";
+    public const string Mangle = "Mango";
+    public const string BalloonBoy = "BB";
+    public const string Marionette = "Marionette";
+    public const string WitheredBonnie = "W Bonnie";
+    public const string WitheredFreddy = "W Freddy";
+    public const string WitheredChica = "W Chica";
+    public const string WitheredFoxy = "W Foxy";
+    public const string GoldenFreddy = "G Freddy";
+    public const string Endo = "Endo";
   }
   
   public const int WindowWidth = 1024, WindowHeight = 768;

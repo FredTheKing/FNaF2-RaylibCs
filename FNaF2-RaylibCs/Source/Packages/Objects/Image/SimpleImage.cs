@@ -40,7 +40,7 @@ public class SimpleImage : ObjectTemplate
   
   public void SetTint(Color color) => Tint = color;
   public Color GetTint() => Tint;
-  
+
   public override void Draw(Registry registry)
   {
     if (Resource is null) return;

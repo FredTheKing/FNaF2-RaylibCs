@@ -78,6 +78,8 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart =
   
   public double GetTargetTime() => TargetTime;
 
+  public double GetTimeLeft() => TargetTime - Time;
+
   public void KillTimer()
   {
     Go = false;

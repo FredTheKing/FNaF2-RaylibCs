@@ -1,6 +1,7 @@
 using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
+using ImGuiNET;
 using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
@@ -8,7 +9,13 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 public class SelectableImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null, float rotation = 0) : SimpleImage(position, resource.GetSize(), tint, newSize, rotation)
 {
   private int _currentFrame;
-  
+
+  public override void CallDebuggerInfo(Registry registry)
+  {
+    ImGui.Text($" > Current Frame: {_currentFrame}/{resource.GetMaterial().Count}");
+    base.CallDebuggerInfo(registry);
+  }
+
   public void PreviousFrame() => _currentFrame = (_currentFrame - 1 + resource.GetMaterial().Count) % resource.GetMaterial().Count;
   public void NextFrame() => _currentFrame = (_currentFrame + 1) % resource.GetMaterial().Count;
   public void SetFrame(int frame) => _currentFrame = frame % resource.GetMaterial().Count;
