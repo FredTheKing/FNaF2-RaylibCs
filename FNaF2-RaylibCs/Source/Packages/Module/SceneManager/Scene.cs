@@ -43,9 +43,13 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   public void AssignGlobalScriptInstance(dynamic scriptInstance) => _globalScriptInstance = scriptInstance;
 
   private void LayerInteraction(Action action) { action(); SortLayers(); }
-  public void ShowLayer(int layer) => LayerInteraction(() => _hiddenListLayers.Remove(layer));
+  public void ShowLayer(int layer) {
+    if (_hiddenListLayers.Contains(layer)) LayerInteraction(() => _hiddenListLayers.Remove(layer));
+  }
   public void ShowAllLayers() => LayerInteraction(() => _hiddenListLayers.Clear());
-  public void HideLayer(int layer) => LayerInteraction(() => _hiddenListLayers.Add(layer));
+  public void HideLayer(int layer) {
+    if (!_hiddenListLayers.Contains(layer)) LayerInteraction(() => _hiddenListLayers.Add(layer));
+  }
   public void HideAllLayers() => LayerInteraction(() => _hiddenListLayers.AddRange(_unsortedDictObjects.Keys));
   
   public void SortLayers() => _sortedListObjects = _unsortedDictObjects.Where(x => !_hiddenListLayers.Contains(x.Key)).OrderBy(x => x.Key).SelectMany(x => x.Value).ToList();

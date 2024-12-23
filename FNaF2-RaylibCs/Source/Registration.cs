@@ -109,6 +109,7 @@ public static class Registration
 
     public static SimpleImage? GameNewspapers;
     public static SelectableImage? GameOffice;
+    public static SimpleBox? GameBlackoutRectangle;
     public static SimpleAnimation? GameOfficeTable;
     public static DebugBox? GameCentralScroller;
     public static SelectableHitboxImage? GameLeftLightSwitch;
@@ -220,7 +221,8 @@ public static class Registration
     Objects.GameNewspapers = registry.RegisterObject("GameNewspapers", [Config.Scenes.GameNewspaper], [0], new SimpleImage(Vector2.Zero, Materials.GameNewspaperYooo!, Color.White));
     
     Objects.GameOffice = registry.RegisterObject("GameOffice", [Config.Scenes.GameMain], [0], new SelectableImage(Vector2.Zero, Materials.GameOfficeResource!, Color.White));
-    Objects.GameOfficeTable = registry.RegisterObject("GameOfficeTable", [Config.Scenes.GameMain], [0], new SimpleAnimation(Vector2.Zero, 18, Color.White, AnimationPlayMode.Replacement, Materials.GameOfficeTableResource!));
+    Objects.GameOfficeTable = registry.RegisterObject("GameOfficeTable", [Config.Scenes.GameMain], [6], new SimpleAnimation(Vector2.Zero, 18, Color.White, AnimationPlayMode.Replacement, Materials.GameOfficeTableResource!));
+    Objects.GameBlackoutRectangle = registry.RegisterObject("GameBlackoutRectangle", [Config.Scenes.GameMain], [6], new SimpleBox(Vector2.Zero, new Vector2(Config.WindowWidth, Config.WindowHeight), Color.Blank));
     Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [99], new DebugBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
     Objects.GameLeftLightSwitch = registry.RegisterObject("GameLeftLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameLeftLightResource!));
     Objects.GameRightLightSwitch = registry.RegisterObject("GameRightLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameRightLightResource!));
@@ -239,8 +241,13 @@ public static class Registration
     
     registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyFreddy, 3f, AnimatronicType.AutoBlackouter, [
       new MovementOpportunity(Location.Cam09, Location.OfficeFrontFar, 1f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontClose, 1f),
-      new MovementOpportunity(Location.OfficeFrontClose, Location.OfficeInside, 1f)
+      new MovementOpportunity(Location.Cam09, Location.Cam09, .9f),
+      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontClose, .3f),
+      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeInside, .1f),
+      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontFar, .6f),
+      new MovementOpportunity(Location.OfficeFrontClose, Location.OfficeInside, .2f),
+      new MovementOpportunity(Location.OfficeFrontClose, Location.OfficeFrontClose, .8f),
+      new MovementOpportunity(Location.OfficeInside, Location.Cam09, 1f)
     ]));
     registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyBonnie, 3f, AnimatronicType.AutoBlackouter, [
       new MovementOpportunity(Location.Cam09, Location.Cam07, 1f)

@@ -20,5 +20,6 @@ public enum Location
   OfficeLeft,
   OfficeRight,
   OfficeInside,
-  Jumpscare
+  Jumpscare,
+  WaitingRoom
 }

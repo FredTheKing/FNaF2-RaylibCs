@@ -27,6 +27,9 @@ public class SimpleBox(Vector2 position, Vector2 size, Color color) : ObjectTemp
       ImGui.TextColored(new Vector4(60, 60, 60, 120), Color.A.ToString());
     ImGui.EndGroup();
   }
+  
+  public void SetColor(Color color) => Color = color;
+  public Color GetColor() => Color;
 
   public override void Draw(Registry registry)
   {

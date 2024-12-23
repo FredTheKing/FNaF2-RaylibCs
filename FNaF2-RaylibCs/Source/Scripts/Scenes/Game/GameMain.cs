@@ -2,6 +2,7 @@ using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
+using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 using Raylib_cs;
 using static FNaF2_RaylibCs.Source.Config.AnimatronicsNames;
 
@@ -13,10 +14,14 @@ public class GameMain : ScriptTemplate
   private const float DeadZone = 100f;
   private const float Sensitivity = 0.35f; // lower sensitivity = bigger number
 
+  private SimpleTimer _blackoutFlickeringTimer = new(.1);
+  private SimpleTimer _blackoutDurationTimer = new(5);
+  private float _blackoutCustomAlpha;
+  
   private float _scrollerPositionX;
-  private int _officeFrame; // 0-neither, 1-left, 2-front, 3-right
-  private bool _balloonMf = false;
-  private bool _mangleMf = true;
+  private int _officeFrame;
+  private bool _balloonMf;
+  private bool _mangleMf;
   private bool _brokenLight;
   private bool _blackout;
   
@@ -40,6 +45,7 @@ public class GameMain : ScriptTemplate
     Registration.Objects.GameOfficeTable!.SetPosition(office.GetPosition() + new Vector2(575, 333));
     Registration.Objects.GameOfficeBalloonBoy!.SetPosition(office.GetPosition() + new Vector2(262, 270));
     Registration.Objects.GameOfficeMangle!.SetPosition(office.GetPosition() + new Vector2(700, 0));
+    Registration.Objects.GameOfficeToyFreddy!.SetPosition(office.GetPosition() + new Vector2(820, 0));
   }
 
   private void LightButtonsReaction()
@@ -57,7 +63,19 @@ public class GameMain : ScriptTemplate
     if (_balloonMf) registry.GetSceneManager().GetCurrentScene().ShowLayer(5);
     else registry.GetSceneManager().GetCurrentScene().HideLayer(5);
     
-    if (nameInside != NoOne)
+    var officers = new Dictionary<string, int>
+    {
+      { ToyFreddy, 1 },
+      { ToyBonnie, 2 },
+      { ToyChica, 3 }
+    };
+
+    if (nameInside == NoOne)
+    {
+      foreach (var animatronic in officers.Keys)
+        if (nameInside != animatronic) registry.GetSceneManager().GetCurrentScene().HideLayer(officers[animatronic]);
+    }
+    else
     {
       _officeFrame = nameInside switch
       {
@@ -66,23 +84,9 @@ public class GameMain : ScriptTemplate
         WitheredChica => 21,
         _ => 0
       };
-        
-      registry.GetSceneManager().GetCurrentScene().HideLayer(1);
-      registry.GetSceneManager().GetCurrentScene().HideLayer(2);
-      registry.GetSceneManager().GetCurrentScene().HideLayer(3);
-        
-      switch (nameInside)
-      {
-        case ToyFreddy:
-          registry.GetSceneManager().GetCurrentScene().ShowLayer(1);
-          break;
-        case ToyBonnie:
-          registry.GetSceneManager().GetCurrentScene().ShowLayer(2);
-          break;
-        case ToyChica:
-          registry.GetSceneManager().GetCurrentScene().ShowLayer(3);
-          break;
-      }
+      
+      foreach (var animatronic in officers.Keys.Where(animatronic => nameInside == animatronic))
+        registry.GetSceneManager().GetCurrentScene().ShowLayer(officers[animatronic]);
         
       if (!_blackout) _blackout = true;
       return;
@@ -148,27 +152,78 @@ public class GameMain : ScriptTemplate
     LightButtonsReaction();
     Registration.Objects.GameOffice!.SetFrame(_officeFrame);
     
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.B)) _brokenLight = !_brokenLight;
+    _brokenLight = _blackout || _balloonMf;
+  }
+
+  private void UpdateBlackout(Registry registry)
+  {
+    _blackoutFlickeringTimer.Update(registry);
+    _blackoutDurationTimer.Update(registry);
     
-    _brokenLight = _blackout || _balloonMf || _brokenLight;
+    if (_blackoutDurationTimer.TargetTrigger())
+    {
+      _blackout = false;
+      _blackoutFlickeringTimer.StopAndResetTimer();
+      _blackoutDurationTimer.StopAndResetTimer();
+      _blackoutCustomAlpha = 255;
+      registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)!.Move();
+    }
+
+    if (_blackout)
+    {
+      _blackoutFlickeringTimer.ContinuousStartTimer();
+      _blackoutDurationTimer.ContinuousStartTimer();
+    }
+    else
+    {
+      if (_blackoutCustomAlpha > 0) Math.Clamp(_blackoutCustomAlpha -= 71 * Raylib.GetFrameTime(), 0, 255);
+      Registration.Objects.GameBlackoutRectangle!.SetColor(new Color(0, 0, 0, (int)_blackoutCustomAlpha));
+    }
+
+    if (_blackoutDurationTimer.GetTimeLeft() > 1.6f && _blackout)
+    {
+      if (!_blackoutFlickeringTimer.TargetTrigger()) return;
+      int randomValue = new Random().Next(4);
+      Color newColor = randomValue switch
+      {
+        0 => new Color {R = 0, G = 0, B = 0, A = 243},
+        1 => new Color {R = 0, G = 0, B = 0, A = 210},
+        2 => new Color {R = 0, G = 0, B = 0, A = 132},
+        _ => new Color {R = 0, G = 0, B = 0, A = 40}
+      };
+      Registration.Objects.GameBlackoutRectangle!.SetColor(newColor);
+    }
+    else if (_blackout) 
+      Registration.Objects.GameBlackoutRectangle!.SetColor(Color.Black);
   }
 
   public override void Activation(Registry registry)
   {
+    _blackoutFlickeringTimer.Activation(registry);
+    _blackoutDurationTimer.Activation(registry);
+    _blackoutCustomAlpha = 0;
+    
     Registration.Objects.GameOffice!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
-    _brokenLight = false;
-    _blackout = false;
     
     registry.GetSceneManager().GetCurrentScene().HideLayer(1);
     registry.GetSceneManager().GetCurrentScene().HideLayer(2);
     registry.GetSceneManager().GetCurrentScene().HideLayer(3);
     registry.GetSceneManager().GetCurrentScene().HideLayer(4);
     registry.GetSceneManager().GetCurrentScene().HideLayer(5);
+    
+    registry.GetFNaF().GetAnimatronicManager().Activation(registry);
+    registry.GetFNaF().GetAnimatronicManager().Update(registry);
+    _balloonMf = false;
+    _mangleMf = false;
+    _brokenLight = false;
+    _blackout = false;
   }
 
   public override void Update(Registry registry)
   {
     UpdateScroller();
     UpdateOffice(registry);
+    UpdateBlackout(registry);
+    Console.WriteLine("Debug: " + (_brokenLight ? 1 : 0) + " " + (_blackout ? 1 : 0));
   }
 }

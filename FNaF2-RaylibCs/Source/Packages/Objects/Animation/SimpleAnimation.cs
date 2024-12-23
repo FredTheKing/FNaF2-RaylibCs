@@ -56,6 +56,11 @@ public class SimpleAnimation(Vector2 position, float fps, Color color, Animation
     else 
       Raylib.DrawTexturePro(resource.GetMaterial()[_currentFrame], new Rectangle(Vector2.Zero, resource.GetSize().X, resource.GetSize().Y), new Rectangle(Position, Size), Vector2.Zero, 0, color);
     base.Draw(registry);
-    if(registry.GetShowBounds() & registry.GetDebugMode()) Raylib.DrawRectangleLinesEx(new Rectangle(Position, Size), 1, Color.Lime);
+    DrawDebug(registry);
+  }
+  
+  protected void DrawDebug(Registry registry)
+  {
+    if (registry.GetShowBounds() & registry.GetDebugMode()) Raylib.DrawRectangleLinesEx(new Rectangle(Position, Size), 1, Color.Blue);
   }
 }

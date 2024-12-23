@@ -80,7 +80,7 @@ public class Animatronic : ScriptTemplate
       {
         case AnimatronicType.AutoBlackouter or AnimatronicType.LightHater:
           if (!_timer.TargetTrigger()) return;
-          if (SuccessfulMovement()) Move();
+          if (SuccessfulMovement() && CurrentLocation != Location.OfficeInside) Move();
           break;
         case AnimatronicType.TriggerWaiter:
           if (GrantMovement) Move();
@@ -98,7 +98,7 @@ public class Animatronic : ScriptTemplate
 
   private bool SuccessfulMovement() => new Random().Next(1, Config.MaxAnimatronicsDifficulty) <= Difficulty;
 
-  private void Move()
+  public void Move()
   {
     GrantMovement = false;
     List<MovementOpportunity> targetMovements = Movements.Where(x => x.From == CurrentLocation).ToList();
