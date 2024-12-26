@@ -70,7 +70,7 @@ public class Animatronic : ScriptTemplate
   public List<ExcludeOpportunity>? Excludes;
   public List<GrantOpportunity>? Grants;
   public AnimatronicType Type;
-  public int Difficulty = 15;
+  public int Difficulty = Config.MaxAnimatronicsDifficulty;
   public (Animatronic, Location)? NextQueue;
   public Location? PlanningLocation;
   public Location CurrentLocation;

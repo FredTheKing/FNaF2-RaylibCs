@@ -6,22 +6,34 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
-public class SelectableImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null, float rotation = 0) : SimpleImage(position, resource.GetSize(), tint, newSize, rotation)
+public class SelectableImage : SimpleImage
 {
-  private int _currentFrame;
+  public SelectableImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null) : base(position, resource.GetSize(), tint, newSize) { Resource = resource; Tint = tint ?? Color.White; }
+  public SelectableImage(Vector2 position, Vector2 originalSize, Color? tint = null, Vector2? newSize = null) : base(position, originalSize, tint, newSize) { Tint = tint ?? Color.White; }
+  
+  protected new ImageStackResource? Resource;
+  protected int CurrentFrame;
 
   public override void CallDebuggerInfo(Registry registry)
   {
-    ImGui.Text($" > Current Frame: {_currentFrame}/{resource.GetMaterial().Count}");
+    if (Resource is not null) ImGui.Text($" > Current Frame: {CurrentFrame}/{Resource.GetMaterial().Count}");
     base.CallDebuggerInfo(registry);
   }
 
-  public void PreviousFrame() => _currentFrame = (_currentFrame - 1 + resource.GetMaterial().Count) % resource.GetMaterial().Count;
-  public void NextFrame() => _currentFrame = (_currentFrame + 1) % resource.GetMaterial().Count;
-  public void SetFrame(int frame) => _currentFrame = frame % resource.GetMaterial().Count;
-  public int GetFrameIndex() => _currentFrame;
+  protected void OnlyIfNotNull(Action action)
+  {
+    if (Resource is not null) action();
+  }
+
+  public void PreviousFrame() => OnlyIfNotNull(() => { CurrentFrame = (CurrentFrame - 1 + Resource!.GetMaterial().Count) % Resource.GetMaterial().Count; });
+
+  public void NextFrame() => OnlyIfNotNull(() => { CurrentFrame = (CurrentFrame + 1) % Resource!.GetMaterial().Count; });
+
+  public void SetFrame(int frame) => OnlyIfNotNull(() => { CurrentFrame = frame % Resource!.GetMaterial().Count; });
+  
+  public int GetFrameIndex() => CurrentFrame;
   
   public void SetColor(Color color) => Tint = color;
-  
-  public override void Draw(Registry registry) => Raylib.DrawTexturePro(resource.GetMaterial()[_currentFrame], new Rectangle(Vector2.Zero, resource.GetMaterial()[_currentFrame].Width, resource.GetMaterial()[_currentFrame].Height), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint);
+
+  public override void Draw(Registry registry) => OnlyIfNotNull(() => { Raylib.DrawTexturePro(Resource!.GetMaterial()[CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize()), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint); });
 }

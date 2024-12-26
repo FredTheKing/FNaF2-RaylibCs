@@ -9,7 +9,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
 public class SimpleImage : ObjectTemplate
 {
-  public SimpleImage(Vector2 position, ImageResource resource, Color? tint = null, Vector2? newSize = null, float rotation = 0) : base(position, newSize ?? resource.GetSize()) { this.Resource = resource; Tint = tint ?? Color.White; Rotation = rotation; }
+  public SimpleImage(Vector2 position, ImageResource resource, Color? tint = null, Vector2? newSize = null, float rotation = 0) : base(position, newSize ?? resource.GetSize()) { Resource = resource; Tint = tint ?? Color.White; Rotation = rotation; }
   public SimpleImage(Vector2 position, Vector2 originalSize, Color? tint = null, Vector2? newSize = null, float rotation = 0) : base(position, newSize ?? originalSize) { Tint = tint ?? Color.White; Rotation = rotation; }
 
   protected Color Tint;

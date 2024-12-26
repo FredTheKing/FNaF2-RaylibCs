@@ -27,7 +27,6 @@ public class ImageStackResource : MaterialTemplate
       Material!.Add(Raylib.LoadTextureFromImage(image));
     _size = new Vector2(Material![0].Width, Material[0].Height);
   }
-  
   public ImageStackResource(List<Texture2D> textures) 
   { 
     Material = textures;
