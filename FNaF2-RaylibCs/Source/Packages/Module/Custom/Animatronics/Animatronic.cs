@@ -8,17 +8,20 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 public enum AnimatronicType
 {
   AutoBlackouter,
-  LightHater,
   TriggerWaiter
 }
 
 public class Animatronic : ScriptTemplate
 {
-  public Animatronic(Scene gameScenePointer, string name, float targetTime, AnimatronicType type, List<MovementOpportunity> movements)
+  public Animatronic(Scene gameScenePointer, string name, float targetTime, AnimatronicType type, Location afkRoom, List<MovementOpportunity> movements)
   {
     _gameScenePointer = gameScenePointer;
     _startLocation = movements[0].From;
-    _timer = new SimpleTimer(targetTime, true);
+    _autoerBrakeLocation = afkRoom;
+    Timer = new SimpleTimer(targetTime, true);
+    NextQueue = null;
+
+    if (Type is AnimatronicType.TriggerWaiter) _autoer = false;
     
     Name = name;
     Movements = movements;
@@ -27,17 +30,23 @@ public class Animatronic : ScriptTemplate
   }
   
   private Scene _gameScenePointer;
+  private Location _autoerBrakeLocation;
   private Location _startLocation;
-  private SimpleTimer _timer;
+  private bool _locationChanged;
+  private bool _autoer = true;
+  private float _lightHatering = 3000f;
   private float _droppedChance = -1f;
   private List<float> _chances = [];
-  
+  private bool _grant;
+
   public string Name;
+  public SimpleTimer Timer;
   public List<MovementOpportunity> Movements;
   public AnimatronicType Type;
   public int Difficulty = 15;
+  public (Animatronic, Location)? NextQueue;
+  public Location? PlanningLocation;
   public Location CurrentLocation;
-  public bool GrantMovement;
 
   public override void CallDebuggerInfo(Registry registry)
   {
@@ -51,10 +60,13 @@ public class Animatronic : ScriptTemplate
         ImGui.Text($">{chance}");
       }
       ImGui.Separator();
+      ImGui.Text($" > Queue: {NextQueue?.Item1.Name} - {NextQueue?.Item2}");
+      ImGui.Text($" > Walking: {_autoer}");
       ImGui.Text($" > Difficulty: {Difficulty}");
       ImGui.Text($" > Type: {Type}");
-      ImGui.Text($" > Time to Try: {_timer.GetTimeLeft()}");
+      ImGui.Text($" > Time to Try: {Timer.GetTimeLeft()}");
       ImGui.Text($" > Start Location: {_startLocation}");
+      ImGui.Text($" > Planning Location: {PlanningLocation}");
       OnlyGameScene(() => { ImGui.Text($" > Current Location: {CurrentLocation}"); }, registry);
       ImGui.Text($" > Movements: {Movements.Count}");
       OnlyGameScene(() => { ImGui.Text($" > Current Movements: {Movements.Count(x => x.From == CurrentLocation)}"); }, registry);
@@ -63,33 +75,50 @@ public class Animatronic : ScriptTemplate
   }
 
   public override void Deactivation(Registry registry, string nextSceneName) => 
-    OnlyGameScene(() => { _timer.StopAndResetTimer(); }, registry);
+    OnlyGameScene(() => { Timer.StopAndResetTimer(); }, registry);
   
   public override void Activation(Registry registry) => 
     OnlyGameScene(() =>
     {
-      _timer.Activation(registry);
+      Timer.Activation(registry);
       CurrentLocation = _startLocation;
+      _lightHatering = 3000f;
+      NextQueue = null;
     }, registry);
   
   public override void Update(Registry registry) => 
     OnlyGameScene(() =>
     {
-      _timer.Update(registry);
+      Timer.Update(registry);
+      _autoer = CurrentLocation != _autoerBrakeLocation;
+
+      if (_locationChanged)
+      {
+        if (NextQueue != null)
+        {
+          NextQueue!.Value.Item1.Timer.StartTimer();
+          NextQueue!.Value.Item1.PlanningLocation = NextQueue!.Value.Item2;
+          NextQueue = null;
+        }
+        _locationChanged = false;
+      }
+      
       switch (Type)
       {
-        case AnimatronicType.AutoBlackouter or AnimatronicType.LightHater:
-          if (!_timer.TargetTrigger()) return;
-          if (SuccessfulMovement() && CurrentLocation != Location.OfficeInside) Move();
+        case AnimatronicType.AutoBlackouter:
+          if (!Timer.TargetTrigger()) return;
+          if (SuccessfulMovement() && _autoer) Move(registry);
           break;
         case AnimatronicType.TriggerWaiter:
-          if (GrantMovement) Move();
+          if (_grant) Move(registry);
           break;
       }
     }, registry);
   
   public override void Draw(Registry registry) => 
     OnlyGameScene(() => { }, registry);
+  
+  public void GrantMovement() => _grant = true;
   
   private void OnlyGameScene(Action action, Registry registry)
   {
@@ -98,19 +127,39 @@ public class Animatronic : ScriptTemplate
 
   private bool SuccessfulMovement() => new Random().Next(1, Config.MaxAnimatronicsDifficulty) <= Difficulty;
 
-  public void Move()
+  public void Move(Registry registry)
   {
-    GrantMovement = false;
-    List<MovementOpportunity> targetMovements = Movements.Where(x => x.From == CurrentLocation).ToList();
-    _droppedChance = (float)new Random().NextDouble();
-    _chances = [ 0f ];
-    _chances.AddRange(targetMovements.Select(m => _chances.Last() + m.Chance));
-
-    for (int i = 0; i < targetMovements.Count; i++)
+    _grant = false;
+    if (PlanningLocation is null)
     {
-      if (!(_droppedChance >= _chances[i]) || !(_droppedChance < _chances[i + 1])) continue;
-      CurrentLocation = targetMovements[i].To;
-      break;
+      List<MovementOpportunity> targetMovements = Movements.Where(x => x.From == CurrentLocation).ToList();
+      _droppedChance = (float)new Random().NextDouble();
+      _chances = [0f];
+      _chances.AddRange(targetMovements.Select(m => _chances.Last() + m.Chance));
+
+      for (int i = 0; i < targetMovements.Count; i++)
+      {
+        if (!(_droppedChance >= _chances[i]) || !(_droppedChance < _chances[i + 1])) continue;
+        PlanningLocation = targetMovements[i].To;
+        break;
+      }
     }
+
+    foreach (Animatronic animatronic in registry.GetFNaF().GetAnimatronicManager().GetAnimatronics())
+    {
+      if (animatronic.CurrentLocation != PlanningLocation || animatronic == this) continue;
+      
+      Animatronic visitor = animatronic;
+      while (visitor.NextQueue != null) 
+        visitor = visitor.NextQueue!.Value.Item1;
+      
+      visitor.NextQueue = (this, (Location)PlanningLocation!);
+      Timer.StopAndResetTimer();
+      return;
+    }
+    
+    if (PlanningLocation != CurrentLocation) _locationChanged = true;
+    CurrentLocation = (Location)PlanningLocation!;
+    PlanningLocation = null!;
   }
 }

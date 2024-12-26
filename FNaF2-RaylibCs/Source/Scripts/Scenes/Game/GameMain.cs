@@ -166,7 +166,7 @@ public class GameMain : ScriptTemplate
       _blackoutFlickeringTimer.StopAndResetTimer();
       _blackoutDurationTimer.StopAndResetTimer();
       _blackoutCustomAlpha = 255;
-      registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)!.Move();
+      registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)!.Move(registry);
     }
 
     if (_blackout)

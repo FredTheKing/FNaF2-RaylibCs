@@ -239,7 +239,7 @@ public static class Registration
   {
     Scene gameScene = registry.GetSceneManager().GetScenes()[Config.Scenes.GameMain];
     
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyFreddy, 3f, AnimatronicType.AutoBlackouter, [
+    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyFreddy, 6f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
       new MovementOpportunity(Location.Cam09, Location.OfficeFrontFar, 1f),
       new MovementOpportunity(Location.Cam09, Location.Cam09, .9f),
       new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontClose, .3f),
@@ -249,39 +249,46 @@ public static class Registration
       new MovementOpportunity(Location.OfficeFrontClose, Location.OfficeFrontClose, .8f),
       new MovementOpportunity(Location.OfficeInside, Location.Cam09, 1f)
     ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyBonnie, 3f, AnimatronicType.AutoBlackouter, [
-      new MovementOpportunity(Location.Cam09, Location.Cam07, 1f)
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyBonnie, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam09, Location.Cam07, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyChica, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam09, Location.Cam07, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Mangle, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.BalloonBoy, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredFreddy, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredBonnie, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredChica, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
+    //]));
+    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredFoxy, 5f, AnimatronicType.AutoBlackouter, Location.Cam01, [
+      new MovementOpportunity(Location.Cam08, Location.OfficeFrontFar, 1f),
+      new MovementOpportunity(Location.OfficeFrontFar, Location.Cam01, .1f),
+      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontFar, .9f)
     ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyChica, 3f, AnimatronicType.AutoBlackouter, [
-      new MovementOpportunity(Location.Cam09, Location.Cam07, 1f)
+    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredBonnie, 3f, AnimatronicType.AutoBlackouter, Location.Cam02, [
+      new MovementOpportunity(Location.Cam08, Location.OfficeFrontFar, 1f),
+      new MovementOpportunity(Location.OfficeFrontFar, Location.Cam02, .1f),
+      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontFar, .9f)
     ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Mangle, 3f, AnimatronicType.AutoBlackouter, [
-      new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.BalloonBoy, 3f, AnimatronicType.AutoBlackouter, [
-      new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredFreddy, 3f, AnimatronicType.AutoBlackouter, [
-      new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredBonnie, 3f, AnimatronicType.AutoBlackouter, [
-      new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredChica, 3f, AnimatronicType.AutoBlackouter, [
-      new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredFoxy, 3f, AnimatronicType.LightHater, [
-      new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Marionette, 3f, AnimatronicType.TriggerWaiter, [
-      new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.GoldenFreddy, 3f, AnimatronicType.TriggerWaiter, [
-      new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
-    ]));
-    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Endo, 3f, AnimatronicType.TriggerWaiter, [
-      new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
-    ]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Marionette, 3f, AnimatronicType.TriggerWaiter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.GoldenFreddy, 3f, AnimatronicType.TriggerWaiter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
+    //]));
+    //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Endo, 3f, AnimatronicType.TriggerWaiter, Location.OfficeInside, [
+    //  new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)
+    //]));
   }
   
   public static void RegistryInitialisation(Registry registry)
