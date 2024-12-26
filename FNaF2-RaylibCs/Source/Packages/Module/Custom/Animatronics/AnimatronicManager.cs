@@ -24,10 +24,10 @@ public class AnimatronicManager : ScriptTemplate
   {
     if (ImGui.TreeNode("Directions Filled"))
     {
-      ImGui.Text($" > Left: {(_leftAnimatronic != null ? _leftAnimatronic.Select(x => x.Name) : "-")}");
-      ImGui.Text($" > Right: {(_rightAnimatronic != null ? _rightAnimatronic.Select(x => x.Name) : "-")}");
-      ImGui.Text($" > Front: {(_frontAnimatronic != null ? _frontAnimatronic.Select(x => x.Name) : "-")}");
-      ImGui.Text($" > Inside: {(_insideAnimatronic != null ? _insideAnimatronic.Select(x => x.Name) : "-")}");
+      ImGui.Text($" > Left: {(_leftAnimatronic != null ? string.Join(", ", _leftAnimatronic.Select(x => x.Name)) : "-")}");
+      ImGui.Text($" > Right: {(_rightAnimatronic != null ? string.Join(", ", _rightAnimatronic.Select(x => x.Name)) : "-")}");
+      ImGui.Text($" > Front: {(_frontAnimatronic != null ? string.Join(", ", _frontAnimatronic.Select(x => x.Name)) : "-")}");
+      ImGui.Text($" > Inside: {(_insideAnimatronic != null ? string.Join(", ", _insideAnimatronic.Select(x => x.Name)) : "-")}");
       ImGui.TreePop();
     }
     ImGui.Separator();
@@ -65,8 +65,8 @@ public class AnimatronicManager : ScriptTemplate
     foreach (Animatronic animatronic in _animatronics)
     {
       animatronic.Update(registry);
-      _leftAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeFront).ToList();
-      _rightAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeFront).ToList();
+      _leftAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeLeft).ToList();
+      _rightAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeRight).ToList();
       _frontAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeFront).ToList();
       _insideAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeInside).ToList();
     }

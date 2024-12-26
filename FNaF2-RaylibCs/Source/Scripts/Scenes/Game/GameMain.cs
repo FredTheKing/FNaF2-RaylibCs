@@ -55,6 +55,7 @@ public class GameMain : ScriptTemplate
   private void OfficeAssetReaction(Registry registry)
   {
     List<string> nameInside = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.Select(a => a.Name).ToList() ?? [];
+    Animatronic? actualInside = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
     
     var separatedAssetsAnimatronics = new Dictionary<string, int>
     {
@@ -65,27 +66,21 @@ public class GameMain : ScriptTemplate
       { BalloonBoy, 5 }
     };
 
-    if (nameInside.Count == 0)
+    foreach (KeyValuePair<string,int> pair in separatedAssetsAnimatronics)
     {
-      foreach (var animatronicName in separatedAssetsAnimatronics.Keys)
-        foreach (string name in nameInside)
-          if (name != animatronicName) registry.GetSceneManager().GetCurrentScene().HideLayer(separatedAssetsAnimatronics[animatronicName]);
+      if (nameInside.Contains(pair.Key)) registry.GetSceneManager().GetCurrentScene().ShowLayer(pair.Value);
+      else registry.GetSceneManager().GetCurrentScene().HideLayer(pair.Value);
     }
-    else
+
+    if (actualInside is not null)
     {
-      foreach (string name in nameInside)
+      _officeFrame = actualInside.Name switch
       {
-        _officeFrame = name switch
-        {
-          WitheredFreddy => 19,
-          WitheredBonnie => 20,
-          WitheredChica => 21,
-          _ => throw new NotImplementedException()
-        };
-      }
-      
-      foreach (var animatronic in separatedAssetsAnimatronics.Keys.Where(animatronic => nameInside.Contains(animatronic)))
-        registry.GetSceneManager().GetCurrentScene().ShowLayer(separatedAssetsAnimatronics[animatronic]);
+        WitheredFreddy => 19,
+        WitheredBonnie => 20,
+        WitheredChica => 21,
+        _ => 0
+      };
         
       if (!_blackout) _blackout = true;
       return;
@@ -93,7 +88,7 @@ public class GameMain : ScriptTemplate
     
     if (registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl))
     {
-      List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.Select(a => a.Name).ToList() ?? [];
+      List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Front)?.Select(a => a.Name).ToList() ?? [];
       
       if (_brokenLight && nameFront.Intersect([WitheredFreddy, WitheredChica, WitheredBonnie]).Any())
       {
@@ -104,7 +99,7 @@ public class GameMain : ScriptTemplate
       _officeFrame = nameFront switch
       {
         [] => 2,
-        [ToyFreddy] => new Random().Next(9, 10),
+        [ToyFreddy] => new Random().Next(9, 11),
         [ToyChica] => 11,
         [WitheredBonnie] => 12,
         [WitheredFreddy] => 13,
@@ -113,35 +108,32 @@ public class GameMain : ScriptTemplate
         [WitheredFoxy, Mangle] => 16,
         [WitheredFoxy, WitheredBonnie] => 17,
         [GoldenFreddy] => 18,
-        _ => throw new NotImplementedException()
+        _ => throw new Exception("No asset this type of list")
       };
     }
     else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
     {
-      string name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Left)?.Name ?? NoOne;
+      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Left)?.Select(a => a.Name).ToList() ?? [];
       _officeFrame = name switch
       {
-        NoOne => 1,
-        ToyChica => 6,
-        BalloonBoy => 5,
-        _ => throw new NotImplementedException()
+        [] => 1,
+        [ToyChica] => 6,
+        [BalloonBoy] => 5,
+        _ => throw new Exception("No asset this type of list")
       };
     }
     else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
     {
-      string name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Right)?.Name ?? NoOne;
+      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Right)?.Select(a => a.Name).ToList() ?? [];
       _officeFrame = name switch
       {
-        NoOne => 3,
-        ToyBonnie => 7,
-        Mangle => 8,
-        _ => throw new NotImplementedException()
+        [] => 3,
+        [ToyBonnie] => 7,
+        [Mangle] => 8,
+        _ => throw new Exception("No asset this type of list")
       };
     }
-    else
-    {
-      _officeFrame = 0;
-    }
+    else _officeFrame = 0;
   }
 
   private void UpdateOffice(Registry registry)
@@ -165,7 +157,10 @@ public class GameMain : ScriptTemplate
       _blackoutFlickeringTimer.StopAndResetTimer();
       _blackoutDurationTimer.StopAndResetTimer();
       _blackoutCustomAlpha = 255;
-      registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)!.Move(registry);
+      List<Animatronic> thingo =
+        registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)!
+          .Where(a => a.Name is not Mangle and not BalloonBoy).ToList();
+      thingo[0].Move(registry);
     }
 
     if (_blackout)
@@ -221,6 +216,5 @@ public class GameMain : ScriptTemplate
     UpdateScroller();
     UpdateOffice(registry);
     UpdateBlackout(registry);
-    Console.WriteLine("Debug: " + (_brokenLight ? 1 : 0) + " " + (_blackout ? 1 : 0));
   }
 }
