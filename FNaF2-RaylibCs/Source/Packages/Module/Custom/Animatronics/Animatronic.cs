@@ -5,27 +5,27 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
-public record struct MovementOpportunity(Location From, Location To, float Chance)
+public record struct MovementOpportunity(Location from, Location to, float chance)
 {
   // struct for animatronics to know where to go from where and with what chance
-    // From what location
-    // To what location
-    // Chance of him going there
+    // from = From what location
+    // to = To what location
+    // chance = Chance of him going there
 }
 
-public record struct ExcludeOpportunity(Location PlanningTo, string Who, Location Where)
+public record struct ExcludeOpportunity(Location planningTo, string who, Location where)
 {
   // struct for animatronics to avoid going to certain locations if some animatronics are on specific locations
-    // Where current animatronic planning to go
-    // Which animatronic compare to
-    // Where selected animatronic need to be for current animatronic to fail his location change
+    // planningTo = Where current animatronic planning to go
+    // who = Which animatronic compare to
+    // where = Where selected animatronic need to be for current animatronic to fail his location change
 }
 
-public record struct GrantOpportunity(string Who, Location Where)
+public record struct GrantOpportunity(string who, Location where)
 {
   // struct for animatronics to ignore existence of presented animatronic on certain location (therefore not getting into queue)
-    // What animatronic to ignore
-    // Where to ignore selected animatronic
+    // who = What animatronic to ignore
+    // where = When trying to go on this location
 }
 
 public enum AnimatronicType
@@ -39,7 +39,7 @@ public class Animatronic : ScriptTemplate
   public Animatronic(Scene gameScenePointer, string name, float targetTime, AnimatronicType type, Location afkRoom, List<MovementOpportunity> movements, List<GrantOpportunity>? grants = null, List<ExcludeOpportunity>? excludes = null)
   {
     _gameScenePointer = gameScenePointer;
-    _startLocation = movements[0].From;
+    _startLocation = movements[0].from;
     _autoerBrakeLocation = afkRoom;
     Timer = new SimpleTimer(targetTime, true);
     NextQueue = null;
@@ -96,7 +96,7 @@ public class Animatronic : ScriptTemplate
       ImGui.Text($" > Planning Location: {PlanningLocation}");
       OnlyGameScene(() => { ImGui.Text($" > Current Location: {CurrentLocation}"); }, registry);
       ImGui.Text($" > Movements: {Movements.Count}");
-      OnlyGameScene(() => { ImGui.Text($" > Current Movements: {Movements.Count(x => x.From == CurrentLocation)}"); }, registry);
+      OnlyGameScene(() => { ImGui.Text($" > Current Movements: {Movements.Count(x => x.from == CurrentLocation)}"); }, registry);
       ImGui.TreePop();
     }
   }
@@ -159,24 +159,24 @@ public class Animatronic : ScriptTemplate
     _forceMove = false;
     if (PlanningLocation is null)
     {
-      List<MovementOpportunity> targetMovements = Movements.Where(x => x.From == CurrentLocation).ToList();
+      List<MovementOpportunity> targetMovements = Movements.Where(x => x.from == CurrentLocation).ToList();
       _droppedChance = (float)new Random().NextDouble();
       _chances = [0f];
-      _chances.AddRange(targetMovements.Select(m => _chances.Last() + m.Chance));
+      _chances.AddRange(targetMovements.Select(m => _chances.Last() + m.chance));
 
       for (int i = 0; i < targetMovements.Count; i++)
       {
         if (!(_droppedChance >= _chances[i]) || !(_droppedChance < _chances[i + 1])) continue;
-        PlanningLocation = targetMovements[i].To;
+        PlanningLocation = targetMovements[i].to;
         break;
       }
     }
     
+    if (Excludes is not null && Excludes.Any(x => x.planningTo == PlanningLocation && registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().FirstOrDefault(a => a.Name == x.who && a.CurrentLocation == x.where) is not null)) return;
     
     foreach (Animatronic animatronic in registry.GetFNaF().GetAnimatronicManager().GetAnimatronics())
     {
-      if (animatronic.CurrentLocation != PlanningLocation || animatronic == this) continue;
-      if ((bool)Grants?.Any(a => a.Who == animatronic.Name && a.Where == PlanningLocation)) continue;
+      if (animatronic.CurrentLocation != PlanningLocation || animatronic == this || (bool)Grants?.Any(a => a.who == animatronic.Name && a.where == PlanningLocation)) continue;
       
       Animatronic visitor = animatronic;
       while (visitor.NextQueue != null) 
