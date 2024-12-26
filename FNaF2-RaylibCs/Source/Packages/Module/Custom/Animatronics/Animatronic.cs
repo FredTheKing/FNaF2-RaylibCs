@@ -5,6 +5,29 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
+public struct MovementOpportunity(Location from, Location to, float chance)
+{
+  // struct for animatronics to know where to go from where and with what chance
+  public readonly Location From = from; // From what location
+  public readonly Location To = to; // To what location
+  public readonly float Chance = chance; // Chance of him going there
+}
+
+public struct ExcludeOpportunity(Location planningTo, Config.AnimatronicsNames who, Location where)
+{
+  // struct for animatronics to avoid going to certain locations if some animatronics are on specific locations
+  public readonly Location PlanningTo = planningTo; // Where current animatronic planning to go
+  public readonly Config.AnimatronicsNames Who = who; // Which animatronic compare to
+  public readonly Location Where = where; // Where selected animatronic need to be for current animatronic to fail his location change
+}
+
+public struct GrantOpportunity(Config.AnimatronicsNames who, Location where)
+{
+  // struct for animatronics to ignore existence of presented animatronic on certain location (therefore not getting into queue)
+  public readonly Config.AnimatronicsNames Who = who; // What animatronic to ignore
+  public readonly Location Where = where; // Where to ignore selected animatronic
+}
+
 public enum AnimatronicType
 {
   AutoBlackouter,
@@ -13,7 +36,7 @@ public enum AnimatronicType
 
 public class Animatronic : ScriptTemplate
 {
-  public Animatronic(Scene gameScenePointer, string name, float targetTime, AnimatronicType type, Location afkRoom, List<MovementOpportunity> movements)
+  public Animatronic(Scene gameScenePointer, string name, float targetTime, AnimatronicType type, Location afkRoom, List<MovementOpportunity> movements, List<ExcludeOpportunity>? excludes = null, List<GrantOpportunity>? grants = null)
   {
     _gameScenePointer = gameScenePointer;
     _startLocation = movements[0].From;
@@ -25,6 +48,8 @@ public class Animatronic : ScriptTemplate
     
     Name = name;
     Movements = movements;
+    Excludes = excludes;
+    Grants = grants;
     Type = type;
     CurrentLocation = _startLocation;
   }
@@ -42,6 +67,8 @@ public class Animatronic : ScriptTemplate
   public string Name;
   public SimpleTimer Timer;
   public List<MovementOpportunity> Movements;
+  public List<ExcludeOpportunity>? Excludes;
+  public List<GrantOpportunity>? Grants;
   public AnimatronicType Type;
   public int Difficulty = 15;
   public (Animatronic, Location)? NextQueue;

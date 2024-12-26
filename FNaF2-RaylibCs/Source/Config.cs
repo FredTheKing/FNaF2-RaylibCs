@@ -45,7 +45,7 @@ public struct Config
 
   public const int MaxAnimatronicsDifficulty = 20;
   public const string StartSceneName = Scenes.GameMain;
-  public const string AllScenesShortcut = "*";
+  public const string AllShortcut = "*";
   public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign
   public static readonly string SeparatorLine = new('-', 100);
 }

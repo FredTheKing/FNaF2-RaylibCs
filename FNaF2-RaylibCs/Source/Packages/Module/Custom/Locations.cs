@@ -15,10 +15,9 @@ public enum Location
   Cam11,
   Cam12,
   GoldenFreddyRoom,
-  OfficeFrontFar,
-  OfficeFrontClose,
   OfficeLeft,
   OfficeRight,
+  OfficeFront,
   OfficeInside,
   Jumpscare,
   WaitingRoom

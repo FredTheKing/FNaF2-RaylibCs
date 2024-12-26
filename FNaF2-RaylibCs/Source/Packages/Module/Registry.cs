@@ -39,12 +39,12 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
   public dynamic RegisterObject(string name, string[] scenesNames, int[] zLayers, dynamic obj)
   {
     List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == Config.AllScenesShortcut;
+    bool haveStar = scenesNames[0] == Config.AllShortcut;
     
     if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
     foreach (string sceneName in scenesNames)
     {
-      if (sceneName == Config.AllScenesShortcut) continue;
+      if (sceneName == Config.AllShortcut) continue;
       
       if (haveStar) targetScenes.Remove(sceneName);
       else targetScenes.Add(sceneName);
@@ -70,12 +70,12 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
   public dynamic RegisterMaterial(string name, string[] scenesNames, dynamic mat)
   {
     List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == Config.AllScenesShortcut;
+    bool haveStar = scenesNames[0] == Config.AllShortcut;
     
     if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
     foreach (string sceneName in scenesNames)
     {
-      if (sceneName == Config.AllScenesShortcut) continue;
+      if (sceneName == Config.AllShortcut) continue;
       
       if (haveStar) targetScenes.Remove(sceneName);
       else targetScenes.Add(sceneName);
@@ -93,12 +93,12 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
   public dynamic RegisterSound(String name, string[] scenesNames, SoundObject snd)
   {
     List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == Config.AllScenesShortcut;
+    bool haveStar = scenesNames[0] == Config.AllShortcut;
     
     if (haveStar) targetScenes.AddRange(_sceneManager.GetScenes().Keys);
     foreach (string sceneName in scenesNames)
     {
-      if (sceneName == Config.AllScenesShortcut) continue;
+      if (sceneName == Config.AllShortcut) continue;
       
       if (haveStar) targetScenes.Remove(sceneName);
       else targetScenes.Add(sceneName);

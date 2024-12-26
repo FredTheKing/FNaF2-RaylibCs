@@ -124,9 +124,9 @@ public static class Registration
   public static void MaterialsInitialisation(Registry registry)
   {
     Materials.MenuMusicResource = registry.RegisterMaterial("MenuMusicResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameNewspaper], new SoundResource(Config.ResPath + "Sound/MenuMusic.wav"));
-    Materials.SetSoundResource = registry.RegisterMaterial("SetSoundResource", [Config.AllScenesShortcut], new SoundResource(Config.ResPath + "Sound/Set.wav"));
+    Materials.SetSoundResource = registry.RegisterMaterial("SetSoundResource", [Config.AllShortcut], new SoundResource(Config.ResPath + "Sound/Set.wav"));
     
-    Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", [Config.AllScenesShortcut], new FontResource(Config.ResPath + "Font/consolas.ttf", 128));
+    Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", [Config.AllShortcut], new FontResource(Config.ResPath + "Font/consolas.ttf", 128));
     Materials.MenuFont = registry.RegisterMaterial("MenuFont", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new FontResource(Config.ResPath + "Font/regular.ttf", 128));
     
     Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackgroundStackResource", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Background", 4)));
@@ -158,7 +158,7 @@ public static class Registration
   public static void SoundsInitialisation(Registry registry)
   {
     Sounds.MenuMusic = registry.RegisterSound("MenuMusic", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameNewspaper], new SoundObject(Materials.MenuMusicResource!, true, true, true));
-    Sounds.SetSound = registry.RegisterSound("SetSound", [Config.AllScenesShortcut], new SoundObject(Materials.SetSoundResource!, false, false, true, true));
+    Sounds.SetSound = registry.RegisterSound("SetSound", [Config.AllShortcut], new SoundObject(Materials.SetSoundResource!, false, false, true, true));
   }
 
   public static void ObjectsInitialisation(Registry registry)
@@ -240,13 +240,10 @@ public static class Registration
     Scene gameScene = registry.GetSceneManager().GetScenes()[Config.Scenes.GameMain];
     
     registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyFreddy, 6f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
-      new MovementOpportunity(Location.Cam09, Location.OfficeFrontFar, 1f),
+      new MovementOpportunity(Location.Cam09, Location.OfficeFront, 1f),
       new MovementOpportunity(Location.Cam09, Location.Cam09, .9f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontClose, .3f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeInside, .1f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontFar, .6f),
-      new MovementOpportunity(Location.OfficeFrontClose, Location.OfficeInside, .2f),
-      new MovementOpportunity(Location.OfficeFrontClose, Location.OfficeFrontClose, .8f),
+      new MovementOpportunity(Location.OfficeFront, Location.OfficeFront, .7f),
+      new MovementOpportunity(Location.OfficeFront, Location.OfficeInside, .3f),
       new MovementOpportunity(Location.OfficeInside, Location.Cam09, 1f)
     ]));
     //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyBonnie, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
@@ -271,14 +268,14 @@ public static class Registration
     //  new MovementOpportunity(Location.Cam08, Location.Cam07, 1f)
     //]));
     registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredFoxy, 5f, AnimatronicType.AutoBlackouter, Location.Cam01, [
-      new MovementOpportunity(Location.Cam08, Location.OfficeFrontFar, 1f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.Cam01, .1f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontFar, .9f)
+      new MovementOpportunity(Location.Cam08, Location.OfficeFront, 1f),
+      new MovementOpportunity(Location.OfficeFront, Location.Cam01, .1f),
+      new MovementOpportunity(Location.OfficeFront, Location.OfficeFront, .9f)
     ]));
     registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredBonnie, 3f, AnimatronicType.AutoBlackouter, Location.Cam02, [
-      new MovementOpportunity(Location.Cam08, Location.OfficeFrontFar, 1f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.Cam02, .1f),
-      new MovementOpportunity(Location.OfficeFrontFar, Location.OfficeFrontFar, .9f)
+      new MovementOpportunity(Location.Cam08, Location.OfficeFront, 1f),
+      new MovementOpportunity(Location.OfficeFront, Location.Cam02, .1f),
+      new MovementOpportunity(Location.OfficeFront, Location.OfficeFront, .9f)
     ]));
     //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Marionette, 3f, AnimatronicType.TriggerWaiter, Location.OfficeInside, [
     //  new MovementOpportunity(Location.Cam12, Location.Cam11, 1f)

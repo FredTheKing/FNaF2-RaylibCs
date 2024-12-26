@@ -8,47 +8,41 @@ public enum OfficeDirection
 {
   Left,
   Right,
-  FrontFar,
-  FrontClose,
+  Front,
   Inside
 }
 
 public class AnimatronicManager : ScriptTemplate
 {
   private List<Animatronic> _animatronics = [];
-  private Animatronic? _leftAnimatronic;
-  private Animatronic? _rightAnimatronic;
-  private Animatronic? _frontFarAnimatronic;
-  private Animatronic? _frontNearAnimatronic;
-  private Animatronic? _insideAnimatronic;
+  private List<Animatronic>? _leftAnimatronic;
+  private List<Animatronic>? _rightAnimatronic;
+  private List<Animatronic>? _frontAnimatronic;
+  private List<Animatronic>? _insideAnimatronic;
 
   public override void CallDebuggerInfo(Registry registry)
   {
     if (ImGui.TreeNode("Directions Filled"))
     {
-      ImGui.Text($" > Left: {(_leftAnimatronic != null ? _leftAnimatronic.Name : "-")}");
-      ImGui.Text($" > Right: {(_rightAnimatronic != null ? _rightAnimatronic.Name : "-")}");
-      ImGui.Text($" > Front Far: {(_frontFarAnimatronic != null ? _frontFarAnimatronic.Name : "-")}");
-      ImGui.Text($" > Front Close: {(_frontNearAnimatronic != null ? _frontNearAnimatronic.Name : "-")}");
-      ImGui.Text($" > Inside: {(_insideAnimatronic != null ? _insideAnimatronic.Name : "-")}");
+      ImGui.Text($" > Left: {(_leftAnimatronic != null ? _leftAnimatronic.Select(x => x.Name) : "-")}");
+      ImGui.Text($" > Right: {(_rightAnimatronic != null ? _rightAnimatronic.Select(x => x.Name) : "-")}");
+      ImGui.Text($" > Front: {(_frontAnimatronic != null ? _frontAnimatronic.Select(x => x.Name) : "-")}");
+      ImGui.Text($" > Inside: {(_insideAnimatronic != null ? _insideAnimatronic.Select(x => x.Name) : "-")}");
       ImGui.TreePop();
     }
-    if (ImGui.TreeNode("Animatronics"))
-    {
-      foreach (Animatronic animatronic in _animatronics) 
-        animatronic.CallDebuggerInfo(registry);
-      ImGui.TreePop();
-    }
+    ImGui.Separator();
+    foreach (Animatronic animatronic in _animatronics) 
+      animatronic.CallDebuggerInfo(registry);
+    ImGui.TreePop();
   }
 
-  public Animatronic? GetDirectionalAnimatronic(OfficeDirection direction)
+  public List<Animatronic>? GetDirectionalAnimatronic(OfficeDirection direction)
   {
     return direction switch
     {
       OfficeDirection.Left => _leftAnimatronic,
       OfficeDirection.Right => _rightAnimatronic,
-      OfficeDirection.FrontFar => _frontFarAnimatronic,
-      OfficeDirection.FrontClose => _frontNearAnimatronic,
+      OfficeDirection.Front => _frontAnimatronic,
       OfficeDirection.Inside => _insideAnimatronic,
       _ => null
     };
@@ -71,12 +65,10 @@ public class AnimatronicManager : ScriptTemplate
     foreach (Animatronic animatronic in _animatronics)
     {
       animatronic.Update(registry);
-      
-      _leftAnimatronic = _leftAnimatronic?.CurrentLocation == Location.OfficeLeft ? _leftAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeLeft);
-      _rightAnimatronic = _rightAnimatronic?.CurrentLocation == Location.OfficeRight ? _rightAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeRight);
-      _frontFarAnimatronic = _frontFarAnimatronic?.CurrentLocation == Location.OfficeFrontFar ? _frontFarAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeFrontFar);
-      _frontNearAnimatronic = _frontNearAnimatronic?.CurrentLocation == Location.OfficeFrontClose ? _frontNearAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeFrontClose);
-      _insideAnimatronic = _insideAnimatronic?.CurrentLocation == Location.OfficeInside ? _insideAnimatronic : _animatronics.FirstOrDefault(a => a.CurrentLocation == Location.OfficeInside);
+      _leftAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeFront).ToList();
+      _rightAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeFront).ToList();
+      _frontAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeFront).ToList();
+      _insideAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeInside).ToList();
     }
   }
 

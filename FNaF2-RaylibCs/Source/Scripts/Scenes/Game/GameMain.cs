@@ -20,8 +20,6 @@ public class GameMain : ScriptTemplate
   
   private float _scrollerPositionX;
   private int _officeFrame;
-  private bool _balloonMf;
-  private bool _mangleMf;
   private bool _brokenLight;
   private bool _blackout;
   
@@ -50,43 +48,44 @@ public class GameMain : ScriptTemplate
 
   private void LightButtonsReaction()
   {
-    Registration.Objects.GameLeftLightSwitch!.SetFrame(_officeFrame == 1 ? 1 : 0);
-    Registration.Objects.GameRightLightSwitch!.SetFrame(_officeFrame == 3 ? 1 : 0);
+    Registration.Objects.GameLeftLightSwitch!.SetFrame(_officeFrame is 1 or 6 or 5 ? 1 : 0);
+    Registration.Objects.GameRightLightSwitch!.SetFrame(_officeFrame is 3 or 7 or 8 ? 1 : 0);
   }
 
   private void OfficeAssetReaction(Registry registry)
   {
-    string nameInside = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.Name ?? NoOne;
+    List<string> nameInside = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.Select(a => a.Name).ToList() ?? [];
     
-    if (_mangleMf) registry.GetSceneManager().GetCurrentScene().ShowLayer(4);
-    else registry.GetSceneManager().GetCurrentScene().HideLayer(4);
-    if (_balloonMf) registry.GetSceneManager().GetCurrentScene().ShowLayer(5);
-    else registry.GetSceneManager().GetCurrentScene().HideLayer(5);
-    
-    var officers = new Dictionary<string, int>
+    var separatedAssetsAnimatronics = new Dictionary<string, int>
     {
       { ToyFreddy, 1 },
       { ToyBonnie, 2 },
-      { ToyChica, 3 }
+      { ToyChica, 3 },
+      { Mangle, 4 },
+      { BalloonBoy, 5 }
     };
 
-    if (nameInside == NoOne)
+    if (nameInside.Count == 0)
     {
-      foreach (var animatronic in officers.Keys)
-        if (nameInside != animatronic) registry.GetSceneManager().GetCurrentScene().HideLayer(officers[animatronic]);
+      foreach (var animatronicName in separatedAssetsAnimatronics.Keys)
+        foreach (string name in nameInside)
+          if (name != animatronicName) registry.GetSceneManager().GetCurrentScene().HideLayer(separatedAssetsAnimatronics[animatronicName]);
     }
     else
     {
-      _officeFrame = nameInside switch
+      foreach (string name in nameInside)
       {
-        WitheredFreddy => 19,
-        WitheredBonnie => 20,
-        WitheredChica => 21,
-        _ => 0
-      };
+        _officeFrame = name switch
+        {
+          WitheredFreddy => 19,
+          WitheredBonnie => 20,
+          WitheredChica => 21,
+          _ => throw new NotImplementedException()
+        };
+      }
       
-      foreach (var animatronic in officers.Keys.Where(animatronic => nameInside == animatronic))
-        registry.GetSceneManager().GetCurrentScene().ShowLayer(officers[animatronic]);
+      foreach (var animatronic in separatedAssetsAnimatronics.Keys.Where(animatronic => nameInside.Contains(animatronic)))
+        registry.GetSceneManager().GetCurrentScene().ShowLayer(separatedAssetsAnimatronics[animatronic]);
         
       if (!_blackout) _blackout = true;
       return;
@@ -94,29 +93,27 @@ public class GameMain : ScriptTemplate
     
     if (registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl))
     {
-      string nameFar = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.FrontFar)?.Name ?? NoOne;
-      string nameClose = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.FrontClose)?.Name ?? NoOne;
+      List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.Select(a => a.Name).ToList() ?? [];
       
-      if (_brokenLight && nameInside is not WitheredFreddy or WitheredBonnie or WitheredChica)
+      if (_brokenLight && nameFront.Intersect([WitheredFreddy, WitheredChica, WitheredBonnie]).Any())
       {
         _officeFrame = 4;
         return;
       }
       
-      _officeFrame = nameFar switch
+      _officeFrame = nameFront switch
       {
-        NoOne when nameClose == NoOne => 2,
-        ToyFreddy when nameClose == NoOne => 9,
-        NoOne when nameClose == ToyFreddy => 10,
-        ToyChica when nameClose == NoOne => 11,
-        WitheredBonnie when nameClose == NoOne => 12,
-        NoOne when nameClose == WitheredFreddy => 13,
-        NoOne when nameClose == Mangle => 14,
-        WitheredFoxy when nameClose == NoOne => 15,
-        WitheredFoxy when nameClose == Mangle => 16,
-        WitheredFoxy when nameClose == WitheredBonnie => 17,
-        GoldenFreddy when nameClose == NoOne => 18,
-        _ => 0
+        [] => 2,
+        [ToyFreddy] => new Random().Next(9, 10),
+        [ToyChica] => 11,
+        [WitheredBonnie] => 12,
+        [WitheredFreddy] => 13,
+        [Mangle] => 14,
+        [WitheredFoxy] => 15,
+        [WitheredFoxy, Mangle] => 16,
+        [WitheredFoxy, WitheredBonnie] => 17,
+        [GoldenFreddy] => 18,
+        _ => throw new NotImplementedException()
       };
     }
     else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
@@ -126,7 +123,8 @@ public class GameMain : ScriptTemplate
       {
         NoOne => 1,
         ToyChica => 6,
-        BalloonBoy => 5
+        BalloonBoy => 5,
+        _ => throw new NotImplementedException()
       };
     }
     else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
@@ -136,7 +134,8 @@ public class GameMain : ScriptTemplate
       {
         NoOne => 3,
         ToyBonnie => 7,
-        Mangle => 8
+        Mangle => 8,
+        _ => throw new NotImplementedException()
       };
     }
     else
@@ -149,10 +148,10 @@ public class GameMain : ScriptTemplate
   {
     OfficeScroll();
     OfficeAssetReaction(registry);
-    LightButtonsReaction();
     Registration.Objects.GameOffice!.SetFrame(_officeFrame);
+    LightButtonsReaction();
     
-    _brokenLight = _blackout || _balloonMf;
+    _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(4);
   }
 
   private void UpdateBlackout(Registry registry)
@@ -213,8 +212,6 @@ public class GameMain : ScriptTemplate
     
     registry.GetFNaF().GetAnimatronicManager().Activation(registry);
     registry.GetFNaF().GetAnimatronicManager().Update(registry);
-    _balloonMf = false;
-    _mangleMf = false;
     _brokenLight = false;
     _blackout = false;
   }

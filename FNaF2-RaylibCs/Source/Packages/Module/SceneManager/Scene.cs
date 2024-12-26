@@ -43,6 +43,8 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   public void AssignGlobalScriptInstance(dynamic scriptInstance) => _globalScriptInstance = scriptInstance;
 
   private void LayerInteraction(Action action) { action(); SortLayers(); }
+  
+  public bool IsLayerHidden(int layer) => _hiddenListLayers.Contains(layer);
   public void ShowLayer(int layer) {
     if (_hiddenListLayers.Contains(layer)) LayerInteraction(() => _hiddenListLayers.Remove(layer));
   }
