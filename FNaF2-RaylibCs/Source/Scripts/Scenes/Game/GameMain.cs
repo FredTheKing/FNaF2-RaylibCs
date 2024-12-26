@@ -105,8 +105,8 @@ public class GameMain : ScriptTemplate
         [WitheredFreddy] => 13,
         [Mangle] => 14,
         [WitheredFoxy] => 15,
-        [WitheredFoxy, Mangle] => 16,
-        [WitheredFoxy, WitheredBonnie] => 17,
+        [WitheredFoxy, Mangle] or [Mangle, WitheredFoxy] => 16,
+        [WitheredFoxy, WitheredBonnie] or [WitheredBonnie, WitheredFoxy] => 17,
         [GoldenFreddy] => 18,
         _ => throw new Exception("No asset this type of list")
       };
@@ -143,7 +143,7 @@ public class GameMain : ScriptTemplate
     Registration.Objects.GameOffice!.SetFrame(_officeFrame);
     LightButtonsReaction();
     
-    _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(4);
+    _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(5);
   }
 
   private void UpdateBlackout(Registry registry)
@@ -157,10 +157,7 @@ public class GameMain : ScriptTemplate
       _blackoutFlickeringTimer.StopAndResetTimer();
       _blackoutDurationTimer.StopAndResetTimer();
       _blackoutCustomAlpha = 255;
-      List<Animatronic> thingo =
-        registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)!
-          .Where(a => a.Name is not Mangle and not BalloonBoy).ToList();
-      thingo[0].Move(registry);
+      registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy)!.Move(registry);
     }
 
     if (_blackout)
