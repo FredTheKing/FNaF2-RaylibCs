@@ -10,7 +10,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Checkbox;
 public class SimpleCheckbox(Vector2 position, int size, Color color, bool checkedByDefault = false) : ObjectTemplate(position, new Vector2(size))
 {
   protected bool Checked = checkedByDefault;
-  protected RectangleHitbox Hitbox = new(position, new Vector2(size, size), new Color(255, 0, 0, 123));
+  protected RectangleHitbox Hitbox = new(position, new Vector2(size, size));
 
   public override void CallDebuggerInfo(Registry registry)
   {

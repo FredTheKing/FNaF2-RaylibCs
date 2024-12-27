@@ -14,7 +14,7 @@ public class HitboxText : SimpleText
   public HitboxText(Vector2 position, Vector2 size, int fontSize, Color color, bool alignCenterV = false, bool alignCenterH = false) : base(position, size, fontSize, color, alignCenterV, alignCenterH) { InitHitbox(position, size); }
   public HitboxText(Vector2 position, Vector2 size, int fontSize, Color color, FontResource font, bool alignCenterV = false, bool alignCenterH = false) : base(position, size, fontSize, color, font, alignCenterV, alignCenterH) { InitHitbox(position, size); }
 
-  private void InitHitbox(Vector2 position, Vector2 size) => Hitbox = new RectangleHitbox(position, size, new Color(255, 0, 0, 123));
+  private void InitHitbox(Vector2 position, Vector2 size) => Hitbox = new RectangleHitbox(position, size);
 
   public RectangleHitbox GetHitbox() => Hitbox!;
   

@@ -25,15 +25,19 @@ public class SelectableImage : SimpleImage
     if (Resource is not null) action();
   }
 
-  public void PreviousFrame() => OnlyIfNotNull(() => { CurrentFrame = (CurrentFrame - 1 + Resource!.GetMaterial().Count) % Resource.GetMaterial().Count; });
+  public virtual void PreviousFrame() => OnlyIfNotNull(() => { CurrentFrame = (CurrentFrame - 1 + Resource!.GetMaterial().Count) % Resource.GetMaterial().Count; });
 
-  public void NextFrame() => OnlyIfNotNull(() => { CurrentFrame = (CurrentFrame + 1) % Resource!.GetMaterial().Count; });
+  public virtual void NextFrame() => OnlyIfNotNull(() => { CurrentFrame = (CurrentFrame + 1) % Resource!.GetMaterial().Count; });
 
-  public void SetFrame(int frame) => OnlyIfNotNull(() => { CurrentFrame = frame % Resource!.GetMaterial().Count; });
+  public virtual void SetFrame(int frame) => OnlyIfNotNull(() => { CurrentFrame = frame % Resource!.GetMaterial().Count; });
   
   public int GetFrameIndex() => CurrentFrame;
   
   public void SetColor(Color color) => Tint = color;
 
-  public override void Draw(Registry registry) => OnlyIfNotNull(() => { Raylib.DrawTexturePro(Resource!.GetMaterial()[CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize()), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint); });
+  public override void Draw(Registry registry) => OnlyIfNotNull(() =>
+  {
+    Raylib.DrawTexturePro(Resource!.GetMaterial()[CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize()), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint);
+    DrawDebug(registry);
+  });
 }

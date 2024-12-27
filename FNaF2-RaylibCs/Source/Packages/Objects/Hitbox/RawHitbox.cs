@@ -7,7 +7,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 
 public class RawHitbox(Vector2 position, Vector2 size, Color? color = null) : ObjectTemplate(position, size)
 {
-  protected Color Color = color ?? new Color(255, 0, 0, 123);
+  protected Color Color = color ?? new Color(255, 0, 0, 42);
   
   // LMB, RMB, MMB in List
   protected bool HitboxClickHover = false;

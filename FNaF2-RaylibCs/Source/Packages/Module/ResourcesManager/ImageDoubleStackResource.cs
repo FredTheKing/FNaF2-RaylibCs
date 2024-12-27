@@ -7,7 +7,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 
 public class ImageDoubleStackResource : MaterialTemplate
 {
-  private readonly Vector2 _size;
+  private readonly List<Vector2> _size = [];
   protected new List<List<string>>? Filename;
   protected new List<List<Texture2D>>? Material = [];
   private TextureFilter _filter = TextureFilter.Point;
@@ -17,9 +17,12 @@ public class ImageDoubleStackResource : MaterialTemplate
   public ImageDoubleStackResource(List<List<string>> filenames)
   {
     Filename = filenames;
-    Texture2D texture = Raylib.LoadTexture(Filename[0][0]);
-    _size = new Vector2(texture.Width, texture.Height);
-    Raylib.UnloadTexture(texture);
+    foreach (List<string> unpackedFilenames in filenames)
+    {
+      Texture2D texture = Raylib.LoadTexture(unpackedFilenames[0]);
+      _size.Add(new Vector2(texture.Width, texture.Height));
+      Raylib.UnloadTexture(texture);
+    }
   }
   public ImageDoubleStackResource(List<List<Image>> images)
   {
@@ -28,16 +31,17 @@ public class ImageDoubleStackResource : MaterialTemplate
       Material!.Add([]);
       foreach (Image image in unpackedImages)
         Material!.Last().Add(Raylib.LoadTextureFromImage(image));
+      _size.Add(new Vector2(unpackedImages[0].Width, unpackedImages[0].Height));
     }
-    _size = new Vector2(Material![0][0].Width, Material[0][0].Height);
   }
   public ImageDoubleStackResource(List<List<Texture2D>> textures) 
   { 
     Material = textures;
-    _size = new Vector2(Material[0][0].Width, Material[0][0].Height);
+    foreach (List<Texture2D> unpackedTextures in textures)
+      _size.Add(new Vector2(unpackedTextures[0].Width, unpackedTextures[0].Height));
   }
   
-  public Vector2 GetSize() => _size;
+  public Vector2 GetSize(int packIndex) => _size[packIndex];
   
   public void SetFilter(TextureFilter filter) => _filter = filter;
   
@@ -69,7 +73,12 @@ public class ImageDoubleStackResource : MaterialTemplate
   public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Items Count: {Filename?.Sum(x => x.Count) ?? Material?.Sum(x => x.Count)}");
-    ImGui.Text($" > Original Size: {_size.X}, {_size.Y}");
+    if (ImGui.TreeNode("Original Size"))
+    {
+      for (int i = 0; i < _size.Count; i++)
+        ImGui.Text($" > {i}: {_size[i].X}, {_size[i].Y}");
+      ImGui.TreePop();
+    }
     ImGui.Text($" > Loaded: {(Filename != null ? Material?.Sum(x => x.Count) + "/" + Filename.Sum(x => x.Count) : Material?.Sum(x => x.Count))}");
   }
 }

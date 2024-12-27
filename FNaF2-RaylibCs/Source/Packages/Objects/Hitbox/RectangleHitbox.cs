@@ -5,7 +5,7 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Hitbox;
 
-public class RectangleHitbox(Vector2 position, Vector2 size, Color color) : RawHitbox(position, size, color)
+public class RectangleHitbox(Vector2 position, Vector2 size, Color? color = null) : RawHitbox(position, size, color)
 {
   public override void CallDebuggerInfo(Registry registry)
   {

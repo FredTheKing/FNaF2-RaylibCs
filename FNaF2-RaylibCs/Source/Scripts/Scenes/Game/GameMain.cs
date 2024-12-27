@@ -34,7 +34,7 @@ public class GameMain : ScriptTemplate
 
   private void OfficeScroll()
   {
-    var office = Registration.Objects.GameOffice!;
+    var office = Registration.Objects.GameOfficeCamera!;
     
     office.AddPosition(new Vector2(-_scrollerPositionX * Raylib.GetFrameTime(), 0));
     office.SetPosition(new Vector2(Math.Clamp(office.GetPosition().X, -ScrollBorder, 0), 0));
@@ -140,7 +140,7 @@ public class GameMain : ScriptTemplate
   {
     OfficeScroll();
     OfficeAssetReaction(registry);
-    Registration.Objects.GameOffice!.SetFrame(_officeFrame);
+    Registration.Objects.GameOfficeCamera!.SetFrame(_officeFrame);
     LightButtonsReaction();
     
     _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(5);
@@ -194,7 +194,7 @@ public class GameMain : ScriptTemplate
     _blackoutDurationTimer.Activation(registry);
     _blackoutCustomAlpha = 0;
     
-    Registration.Objects.GameOffice!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
+    Registration.Objects.GameOfficeCamera!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
     
     registry.GetSceneManager().GetCurrentScene().HideLayer(1);
     registry.GetSceneManager().GetCurrentScene().HideLayer(2);
@@ -213,5 +213,8 @@ public class GameMain : ScriptTemplate
     UpdateScroller();
     UpdateOffice(registry);
     UpdateBlackout(registry);
+
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.Y)) Registration.Objects.GameOfficeCamera!.PreviousPack();
+    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.U)) Registration.Objects.GameOfficeCamera!.NextPack();
   }
 }

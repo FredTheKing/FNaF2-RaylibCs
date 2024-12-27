@@ -22,7 +22,7 @@ public class SimpleSlider : ObjectTemplate
     _leftSide = position.X;
     _rightSide = position.X + size.X;
     
-    Hitbox = new RectangleHitbox(position with { X = position.X - Radius }, size with { X = size.X + 2 * Radius }, new Color(255, 0, 0, 123));
+    Hitbox = new RectangleHitbox(position with { X = position.X - Radius }, size with { X = size.X + 2 * Radius });
     Percentage = new SimpleText(position + new Vector2(_percentSpace, 0), size with { X = 60 }, 20, "0%", Color, true);
   }
   

@@ -8,7 +8,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
 public class SelectableHitboxImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null) : SelectableImage(position, resource, tint, newSize)
 {
-  protected RectangleHitbox Hitbox = new(position, resource.GetSize(), new Color(255, 0, 0, 101));
+  protected RectangleHitbox Hitbox = new(position, resource.GetSize());
 
   public RectangleHitbox GetHitbox() => Hitbox;
 
