@@ -50,8 +50,10 @@ public static class Registration
     public static ImageResource? GameOfficeToyChicaResource;
     public static ImageResource? GameOfficeMangleResource;
     public static ImageResource? GameOfficeBalloonBoyResource;
-    public static ImageResource? GameUiMaskResource;
-    public static ImageResource? GameUiCameraResource;
+    public static ImageDoubleStackResource? GameUiMaskResource;
+    public static ImageDoubleStackResource? GameUiCameraResource;
+    public static ImageResource? GameUiMaskButtonResource;
+    public static ImageResource? GameUiCameraButtonResource;
   }
 
   public struct Sounds
@@ -121,8 +123,8 @@ public static class Registration
     public static SimpleImage? GameOfficeToyChica;
     public static SimpleImage? GameOfficeMangle;
     public static SimpleImage? GameOfficeBalloonBoy;
-    public static SimpleImage? GameUiMaskButton;
-    public static SimpleImage? GameUiCameraButton;
+    public static HitboxImage? GameUiMaskButton;
+    public static HitboxImage? GameUiCameraButton;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -169,8 +171,18 @@ public static class Registration
     Materials.GameOfficeToyChicaResource = registry.RegisterMaterial("GameOfficeToyChicaResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/ToyChica.png"));
     Materials.GameOfficeMangleResource = registry.RegisterMaterial("GameOfficeMangleResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/Mango.png"));
     Materials.GameOfficeBalloonBoyResource = registry.RegisterMaterial("GameOfficeBalloonBoyResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/BB.png"));
-    Materials.GameUiMaskResource = registry.RegisterMaterial("GameUiMaskResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Mask.png"));
-    Materials.GameUiCameraResource = registry.RegisterMaterial("GameUiCameraResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Camera.png"));
+    Materials.GameUiMaskButtonResource = registry.RegisterMaterial("GameUiMaskButtonResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Mask.png"));
+    Materials.GameUiCameraButtonResource = registry.RegisterMaterial("GameUiCameraButtonResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Camera.png"));
+    Materials.GameUiMaskResource = registry.RegisterMaterial("GameUiMaskResource", [Config.Scenes.GameMain], new ImageDoubleStackResource([
+      Loaders.LoadSingleFilenameAsList("Game/Main/UI/Nothing.png"),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Masking", 9),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Masking", 9, inverted: true)
+    ]));
+    Materials.GameUiCameraResource = registry.RegisterMaterial("GameUiCameraResource", [Config.Scenes.GameMain], new ImageDoubleStackResource([
+      Loaders.LoadSingleFilenameAsList("Game/Main/UI/Nothing.png"),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Camering", 11),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Camering", 11, inverted: true)
+    ]));
     
     Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/WhiteBlinko", 6)));
   }
@@ -251,8 +263,8 @@ public static class Registration
     Objects.GameOfficeToyChica = registry.RegisterObject("GameOfficeToyChica", [Config.Scenes.GameMain], [3], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyChicaResource!));
     Objects.GameOfficeMangle = registry.RegisterObject("GameOfficeMangle", [Config.Scenes.GameMain], [4], new SimpleImage(Vector2.Zero, Materials.GameOfficeMangleResource!));
     Objects.GameOfficeBalloonBoy = registry.RegisterObject("GameOfficeBalloonBoy", [Config.Scenes.GameMain], [5], new SimpleImage(Vector2.Zero, Materials.GameOfficeBalloonBoyResource!));
-    Objects.GameUiMaskButton = registry.RegisterObject("GameUiMaskButton", [Config.Scenes.GameMain], [20], new HitboxImage(new Vector2(6, Config.WindowHeight - 50), Materials.GameUiMaskResource!));
-    Objects.GameUiCameraButton = registry.RegisterObject("GameUiCameraButton", [Config.Scenes.GameMain], [21], new HitboxImage(new Vector2(518, Config.WindowHeight - 50), Materials.GameUiCameraResource!));
+    Objects.GameUiMaskButton = registry.RegisterObject("GameUiMaskButton", [Config.Scenes.GameMain], [20], new HitboxImage(new Vector2(6, Config.WindowHeight - 50), Materials.GameUiMaskButtonResource!));
+    Objects.GameUiCameraButton = registry.RegisterObject("GameUiCameraButton", [Config.Scenes.GameMain], [21], new HitboxImage(new Vector2(518, Config.WindowHeight - 50), Materials.GameUiCameraButtonResource!));
   }
   
   

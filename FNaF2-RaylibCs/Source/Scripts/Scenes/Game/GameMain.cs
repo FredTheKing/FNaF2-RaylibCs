@@ -2,11 +2,14 @@ using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
+using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 using Raylib_cs;
 using static FNaF2_RaylibCs.Source.Config.AnimatronicsNames;
 
 namespace FNaF2_RaylibCs.Source.Scripts.Scenes.Game;
+
+internal enum Tool { Nothing, Mask, Camera }
 
 public class GameMain : ScriptTemplate
 {
@@ -18,8 +21,10 @@ public class GameMain : ScriptTemplate
   private SimpleTimer _blackoutDurationTimer = new(5);
   private float _blackoutCustomAlpha;
   
+  private float _battery = 10000;
   private float _scrollerPositionX;
-  private int _officeFrame;
+  private Tool _currentTool = Tool.Nothing;
+  private byte _assetFrame;
   private bool _brokenLight;
   private bool _blackout;
   
@@ -48,8 +53,8 @@ public class GameMain : ScriptTemplate
 
   private void LightButtonsReaction()
   {
-    Registration.Objects.GameLeftLightSwitch!.SetFrame(_officeFrame is 1 or 6 or 5 ? 1 : 0);
-    Registration.Objects.GameRightLightSwitch!.SetFrame(_officeFrame is 3 or 7 or 8 ? 1 : 0);
+    Registration.Objects.GameLeftLightSwitch!.SetFrame(_assetFrame is 1 or 6 or 5 ? 1 : 0);
+    Registration.Objects.GameRightLightSwitch!.SetFrame(_assetFrame is 3 or 7 or 8 ? 1 : 0);
   }
 
   private void OfficeAssetReaction(Registry registry)
@@ -74,7 +79,7 @@ public class GameMain : ScriptTemplate
 
     if (actualInside is not null)
     {
-      _officeFrame = actualInside.Name switch
+      _assetFrame = actualInside.Name switch
       {
         WitheredFreddy => 19,
         WitheredBonnie => 20,
@@ -89,17 +94,23 @@ public class GameMain : ScriptTemplate
     if (registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl))
     {
       List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Front)?.Select(a => a.Name).ToList() ?? [];
-      
-      if (_brokenLight && nameFront.Intersect([WitheredFreddy, WitheredChica, WitheredBonnie]).Any())
+
+      if (_battery != 0)
       {
-        _officeFrame = 4;
+        _battery -= 10000 / 135f * Raylib.GetFrameTime();
+        _battery = Math.Clamp(_battery, 0, 10000);
+      }
+      
+      if (_brokenLight && nameFront.Intersect([WitheredFreddy, WitheredChica, WitheredBonnie]).Any() || _battery <= 0)
+      {
+        _assetFrame = 4;
         return;
       }
       
-      _officeFrame = nameFront switch
+      _assetFrame = nameFront switch
       {
         [] => 2,
-        [ToyFreddy] => new Random().Next(9, 11),
+        [ToyFreddy] => (byte)new Random().Next(9, 11),
         [ToyChica] => 11,
         [WitheredBonnie] => 12,
         [WitheredFreddy] => 13,
@@ -108,13 +119,13 @@ public class GameMain : ScriptTemplate
         [WitheredFoxy, Mangle] or [Mangle, WitheredFoxy] => 16,
         [WitheredFoxy, WitheredBonnie] or [WitheredBonnie, WitheredFoxy] => 17,
         [GoldenFreddy] => 18,
-        _ => throw new Exception("No asset this type of list")
+        _ => throw new Exception("No asset for this type of list")
       };
     }
     else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
     {
       List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Left)?.Select(a => a.Name).ToList() ?? [];
-      _officeFrame = name switch
+      _assetFrame = name switch
       {
         [] => 1,
         [ToyChica] => 6,
@@ -125,7 +136,7 @@ public class GameMain : ScriptTemplate
     else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
     {
       List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Right)?.Select(a => a.Name).ToList() ?? [];
-      _officeFrame = name switch
+      _assetFrame = name switch
       {
         [] => 3,
         [ToyBonnie] => 7,
@@ -133,14 +144,14 @@ public class GameMain : ScriptTemplate
         _ => throw new Exception("No asset this type of list")
       };
     }
-    else _officeFrame = 0;
+    else _assetFrame = 0;
   }
 
   private void UpdateOffice(Registry registry)
   {
     OfficeScroll();
     OfficeAssetReaction(registry);
-    Registration.Objects.GameOfficeCamera!.SetFrame(_officeFrame);
+    Registration.Objects.GameOfficeCamera!.SetFrame(_assetFrame);
     LightButtonsReaction();
     
     _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(5);
@@ -188,19 +199,59 @@ public class GameMain : ScriptTemplate
       Registration.Objects.GameBlackoutRectangle!.SetColor(Color.Black);
   }
 
+  private void UiButtonsReaction(Registry registry)
+  {
+    if (Registration.Objects.GameUiMaskButton!.GetHitbox().GetMouseHoverFrame())
+      _currentTool = _currentTool switch
+      {
+        Tool.Nothing => Tool.Mask,
+        Tool.Mask => Tool.Nothing,
+        _ => _currentTool
+      };
+    
+    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame())
+      _currentTool = _currentTool switch
+      {
+        Tool.Nothing => Tool.Camera,
+        Tool.Camera => Tool.Nothing,
+        _ => _currentTool
+      };
+
+    switch (_currentTool)
+    {
+      case Tool.Nothing:
+        registry.GetSceneManager().GetCurrentScene().ShowLayer(20, 21);
+        break;
+      case Tool.Mask:
+        registry.GetSceneManager().GetCurrentScene().ShowLayer(20);
+        registry.GetSceneManager().GetCurrentScene().HideLayer(21);
+        break;
+      case Tool.Camera:
+        registry.GetSceneManager().GetCurrentScene().HideLayer(20);
+        registry.GetSceneManager().GetCurrentScene().ShowLayer(21);
+        break;
+      default:
+        throw new ArgumentOutOfRangeException();
+    }
+  }
+
   public override void Activation(Registry registry)
   {
     _blackoutFlickeringTimer.Activation(registry);
     _blackoutDurationTimer.Activation(registry);
     _blackoutCustomAlpha = 0;
+    _battery = 10000;
+    _currentTool = Tool.Nothing;
+    foreach (HitboxImage button in (List<HitboxImage>)[Registration.Objects.GameUiMaskButton!, Registration.Objects.GameUiCameraButton!])
+    {
+      button.GetHitbox().SetSize(button.GetHitbox().GetSize() + new Vector2(12, 20));
+      button.GetHitbox().AddPosition(new Vector2(-6, 0));
+    }
     
     Registration.Objects.GameOfficeCamera!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
+    Registration.Objects.GameOfficeCamera.SetPack(0);
     
-    registry.GetSceneManager().GetCurrentScene().HideLayer(1);
-    registry.GetSceneManager().GetCurrentScene().HideLayer(2);
-    registry.GetSceneManager().GetCurrentScene().HideLayer(3);
-    registry.GetSceneManager().GetCurrentScene().HideLayer(4);
-    registry.GetSceneManager().GetCurrentScene().HideLayer(5);
+    registry.GetSceneManager().GetCurrentScene().HideLayer(1, 2, 3, 4, 5);
     
     registry.GetFNaF().GetAnimatronicManager().Activation(registry);
     registry.GetFNaF().GetAnimatronicManager().Update(registry);
@@ -210,9 +261,18 @@ public class GameMain : ScriptTemplate
 
   public override void Update(Registry registry)
   {
-    UpdateScroller();
-    UpdateOffice(registry);
-    UpdateBlackout(registry);
+    Console.WriteLine(_battery);
+    UiButtonsReaction(registry);
+    if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
+    {
+      UpdateScroller();
+      UpdateOffice(registry);
+      UpdateBlackout(registry);
+    }
+    else
+    {
+      
+    }
 
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.Y)) Registration.Objects.GameOfficeCamera!.PreviousPack();
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.U)) Registration.Objects.GameOfficeCamera!.NextPack();

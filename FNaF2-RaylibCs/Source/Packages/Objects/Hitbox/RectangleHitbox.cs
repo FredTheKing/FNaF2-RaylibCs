@@ -27,7 +27,8 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color? color = null
       ImGui.Separator();
       
       ImGui.TextColored(new Vector4(30, 30, 30, 1), " # Mouse list = [LMB|RMB|MMB]");
-      ImGui.Text($" > Mouse Hovered: {(HitboxClickHover ? 1 : 0)}");
+      ImGui.Text($" > Mouse Hovered: {(HitboxHover ? 1 : 0)}");
+      ImGui.Text($" > Mouse Hovered (Frame): {(HitboxHoverFrame ? 1 : 0)}");
       ImGui.Text($" > Mouse Pressed: {(HitboxClickPress[0] ? 1 : 0)}|{(HitboxClickPress[1] ? 1 : 0)}|{(HitboxClickPress[2] ? 1 : 0)}");
       ImGui.Text($" > Mouse Outside Pressed: {(HitboxClickOutsidePress[0] ? 1 : 0)}|{(HitboxClickOutsidePress[1] ? 1 : 0)}|{(HitboxClickOutsidePress[2] ? 1 : 0)}");
       ImGui.Text($" > Mouse Held: {(HitboxClickHold[0] ? 1 : 0)}|{(HitboxClickHold[1] ? 1 : 0)}|{(HitboxClickHold[2] ? 1 : 0)}");
@@ -45,8 +46,9 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color? color = null
 
   private void CheckMouseHover()
   {
-    Vector2 nonrefPosition = Position;
-    HitboxClickHover = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(nonrefPosition, Size));
+    HitboxHover = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(Position, Size));
+    HitboxHoverFrame = HitboxHover && !PreviousHoverState;
+    PreviousHoverState = HitboxHover;
   }
   
   public override void Update(Registry registry)

@@ -45,12 +45,14 @@ public class Scene(string name) : CallDebuggerInfoTemplate
   private void LayerInteraction(Action action) { action(); SortLayers(); }
   
   public bool IsLayerHidden(int layer) => _hiddenListLayers.Contains(layer);
-  public void ShowLayer(int layer) {
-    if (_hiddenListLayers.Contains(layer)) LayerInteraction(() => _hiddenListLayers.Remove(layer));
+  public void ShowLayer(params int[] layer) {
+    foreach (int l in layer)
+      if (_hiddenListLayers.Contains(l)) LayerInteraction(() => _hiddenListLayers.Remove(l));
   }
   public void ShowAllLayers() => LayerInteraction(() => _hiddenListLayers.Clear());
-  public void HideLayer(int layer) {
-    if (!_hiddenListLayers.Contains(layer)) LayerInteraction(() => _hiddenListLayers.Add(layer));
+  public void HideLayer(params int[] layer) {
+    foreach (int l in layer)
+      if (!_hiddenListLayers.Contains(l)) LayerInteraction(() => _hiddenListLayers.Add(l));
   }
   public void HideAllLayers() => LayerInteraction(() => _hiddenListLayers.AddRange(_unsortedDictObjects.Keys));
   

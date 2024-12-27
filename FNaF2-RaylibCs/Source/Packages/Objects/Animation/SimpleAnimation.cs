@@ -10,51 +10,68 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 
 public enum AnimationPlayMode { Replacement, Addition };
 
-public class SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, ImageStackResource resource, SimpleTimer? customUpdateTimer = null, bool restartOnSceneChange = true) : ObjectTemplate(position, resource.GetSize())
+public class SimpleAnimation : ObjectTemplate
 {
-  private SimpleTimer _updateTimer = customUpdateTimer ?? new SimpleTimer(1f / fps, true);
-  private int _currentFrame;
+  public SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, ImageStackResource resource, bool restartOnSceneChange = true, SimpleTimer? customUpdateTimer = null) : base(position, resource.GetSize()) { InitAnimation(fps, color, playMode, customUpdateTimer, restartOnSceneChange); Resource = resource; }
+  public SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, Vector2 originalSize, bool restartOnSceneChange = true, SimpleTimer? customUpdateTimer = null) : base(position, originalSize) { InitAnimation(fps, color, playMode, customUpdateTimer, restartOnSceneChange); }
+
+  private void InitAnimation(float fps, Color color, AnimationPlayMode playMode, SimpleTimer? customUpdateTimer, bool restartOnSceneChange)
+  {
+    UpdateTimer = customUpdateTimer ?? new SimpleTimer(1 / fps, restartOnSceneChange);
+    Tint = color;
+    RestartOnSceneChange = restartOnSceneChange;
+    PlayMode = playMode;
+  }
+  
+  protected int CurrentFrame;
+  protected SimpleTimer UpdateTimer = null!;
+  protected Color Tint;
+  protected bool RestartOnSceneChange;
+  protected AnimationPlayMode PlayMode;
+  protected ImageStackResource? Resource;
 
   public override void CallDebuggerInfo(Registry registry)
   {
     ImGui.Text($" > Position: {Position.X}, {Position.Y}");
     ImGui.Text($" > Size: {Size.X}, {Size.Y}");
-    ImGui.Text($" > Color: {color.R}, {color.G}, {color.B}, {color.A}");
+    ImGui.Text($" > Color: {Tint.R}, {Tint.G}, {Tint.B}, {Tint.A}");
     ImGui.Separator();
-    ImGui.Text($" > Play Mode: {playMode.ToString()}");
-    ImGui.Text($" > Current Frame: {_currentFrame + 1} / {resource.GetMaterial().Count}");
-    _updateTimer.CallDebuggerInfo(registry);
+    ImGui.Text($" > Play Mode: {PlayMode.ToString()}");
+    ImGui.Text($" > Current Frame: {CurrentFrame + 1} / {(Resource is null ? "???" : Resource.GetMaterial().Count)}");
+    UpdateTimer.CallDebuggerInfo(registry);
 
     if (ImGui.TreeNode("Animation Resource"))
     {
-      resource.CallDebuggerInfo(registry);
+      Resource?.CallDebuggerInfo(registry);
       ImGui.TreePop();
     }
   }
 
-  public SimpleTimer GetUpdateTimer() => _updateTimer;
+  public SimpleTimer GetUpdateTimer() => UpdateTimer;
 
   public override void Activation(Registry registry)
   {
-    if (restartOnSceneChange) _currentFrame = 0;
-    _updateTimer.Activation(registry);
+    if (RestartOnSceneChange) CurrentFrame = 0;
+    UpdateTimer.Activation(registry);
     base.Activation(registry);
   }
 
   public override void Update(Registry registry)
   {
-    _updateTimer.Update(registry);
-    if (_updateTimer.TargetTrigger()) _currentFrame = (_currentFrame + 1) % (resource.GetMaterial().Count);
+    UpdateTimer.Update(registry);
+    if (Resource is null) return;
+    if (UpdateTimer.TargetTrigger()) CurrentFrame = (CurrentFrame + 1) % (Resource.GetMaterial().Count);
     base.Update(registry);
   }
 
   public override void Draw(Registry registry)
   {
-    if (playMode == AnimationPlayMode.Addition) 
-      for (int i = 0; i < _currentFrame; i++) 
-        Raylib.DrawTexturePro(resource.GetMaterial()[i], new Rectangle(Vector2.Zero, resource.GetSize().X, resource.GetSize().Y), new Rectangle(Position, Size), Vector2.Zero, 0, color);
+    if (Resource is null) return;
+    if (PlayMode == AnimationPlayMode.Addition) 
+      for (int i = 0; i < CurrentFrame; i++) 
+        Raylib.DrawTexturePro(Resource.GetMaterial()[i], new Rectangle(Vector2.Zero, Resource.GetSize().X, Resource.GetSize().Y), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
     else 
-      Raylib.DrawTexturePro(resource.GetMaterial()[_currentFrame], new Rectangle(Vector2.Zero, resource.GetSize().X, resource.GetSize().Y), new Rectangle(Position, Size), Vector2.Zero, 0, color);
+      Raylib.DrawTexturePro(Resource.GetMaterial()[CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize().X, Resource.GetSize().Y), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
     base.Draw(registry);
     DrawDebug(registry);
   }

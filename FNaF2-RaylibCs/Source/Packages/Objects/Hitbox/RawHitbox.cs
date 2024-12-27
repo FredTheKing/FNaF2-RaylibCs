@@ -10,7 +10,9 @@ public class RawHitbox(Vector2 position, Vector2 size, Color? color = null) : Ob
   protected Color Color = color ?? new Color(255, 0, 0, 42);
   
   // LMB, RMB, MMB in List
-  protected bool HitboxClickHover = false;
+  protected bool PreviousHoverState = true;
+  protected bool HitboxHover = false;
+  protected bool HitboxHoverFrame = false;
   protected readonly List<bool> HitboxClickPress = [false, false, false];
   protected readonly List<bool> HitboxClickOutsidePress = [false, false, false];
   protected readonly List<bool> HitboxClickHold = [false, false, false];
@@ -19,16 +21,16 @@ public class RawHitbox(Vector2 position, Vector2 size, Color? color = null) : Ob
   
   private void CheckMousePressed()
   {
-    HitboxClickPress[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & HitboxClickHover;
-    HitboxClickPress[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & HitboxClickHover;
-    HitboxClickPress[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & HitboxClickHover;
+    HitboxClickPress[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & HitboxHover;
+    HitboxClickPress[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & HitboxHover;
+    HitboxClickPress[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & HitboxHover;
   }
   
   private void CheckMouseOutsidePressed()
   {
-    HitboxClickOutsidePress[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & !HitboxClickHover;
-    HitboxClickOutsidePress[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & !HitboxClickHover;
-    HitboxClickOutsidePress[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & !HitboxClickHover;
+    HitboxClickOutsidePress[0] = Raylib.IsMouseButtonPressed(MouseButton.Left) & !HitboxHover;
+    HitboxClickOutsidePress[1] = Raylib.IsMouseButtonPressed(MouseButton.Right) & !HitboxHover;
+    HitboxClickOutsidePress[2] = Raylib.IsMouseButtonPressed(MouseButton.Middle) & !HitboxHover;
   }
   
   private void CheckMouseHeld()
@@ -42,7 +44,7 @@ public class RawHitbox(Vector2 position, Vector2 size, Color? color = null) : Ob
   {
     for (int i = 0; i < 3; i++)
     {
-      if (!HitboxClickDrag[i] & HitboxClickPress[i] & HitboxClickHover) 
+      if (!HitboxClickDrag[i] & HitboxClickPress[i] & HitboxHover) 
         HitboxClickDrag[i] = true;
       if (HitboxClickDrag[i] & !HitboxClickHold[i]) 
         HitboxClickDrag[i] = false;
@@ -51,9 +53,9 @@ public class RawHitbox(Vector2 position, Vector2 size, Color? color = null) : Ob
   
   private void CheckMouseReleased()
   {
-    HitboxClickRelease[0] = Raylib.IsMouseButtonReleased(MouseButton.Left) & HitboxClickHover;
-    HitboxClickRelease[1] = Raylib.IsMouseButtonReleased(MouseButton.Right) & HitboxClickHover;
-    HitboxClickRelease[2] = Raylib.IsMouseButtonReleased(MouseButton.Middle) & HitboxClickHover;
+    HitboxClickRelease[0] = Raylib.IsMouseButtonReleased(MouseButton.Left) & HitboxHover;
+    HitboxClickRelease[1] = Raylib.IsMouseButtonReleased(MouseButton.Right) & HitboxHover;
+    HitboxClickRelease[2] = Raylib.IsMouseButtonReleased(MouseButton.Middle) & HitboxHover;
   }
 
   protected void UpdateClicksDetection()
@@ -65,7 +67,9 @@ public class RawHitbox(Vector2 position, Vector2 size, Color? color = null) : Ob
     CheckMouseReleased();
   }
 
-  public bool GetMouseHover() => HitboxClickHover;
+  public bool GetMouseHover() => HitboxHover;
+
+  public bool GetMouseHoverFrame() => HitboxHoverFrame;
   
   public bool GetMousePress(MouseButton button) => HitboxClickPress[(int)button];
   
