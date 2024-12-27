@@ -148,8 +148,18 @@ public static class Registration
     Materials.GamePerspectiveShaderResource = registry.RegisterMaterial("GamePerspectiveShaderResource", [Config.Scenes.GameMain], new ShaderResource(Config.ResPath + "Shaders/perspective.vs", Config.ResPath + "Shaders/perspective.fs"));
     Materials.GameOfficeCameraResource = registry.RegisterMaterial("GameOfficeCameraResource", [Config.Scenes.GameMain], new ImageDoubleStackResource([
       Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office", 22),
-      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 4, 22),
-      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 5, 26)
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 4),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 5, 4),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 5, 9),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 7, 14),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 6, 21),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 5, 27),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 6, 32),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 7, 38),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 7, 45),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 6, 52),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 6, 58),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Camera", 3, 64)
     ]));
     Materials.GameOfficeTableResource = registry.RegisterMaterial("GameOfficeTableResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/Table", 4)));
     Materials.GameLeftLightResource = registry.RegisterMaterial("GameLeftLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2)));
