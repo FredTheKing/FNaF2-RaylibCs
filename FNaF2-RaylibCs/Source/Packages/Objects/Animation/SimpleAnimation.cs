@@ -59,22 +59,30 @@ public class SimpleAnimation : ObjectTemplate
   public override void Update(Registry registry)
   {
     UpdateTimer.Update(registry);
-    if (Resource is null) return;
-    if (UpdateTimer.TargetTrigger()) CurrentFrame = (CurrentFrame + 1) % (Resource.GetMaterial().Count);
+    if (Resource is not null) 
+      if (UpdateTimer.TargetTrigger()) CurrentFrame = (CurrentFrame + 1) % (Resource.GetMaterial().Count);
     base.Update(registry);
   }
 
   public override void Draw(Registry registry)
   {
-    if (Resource is null) return;
-    if (PlayMode == AnimationPlayMode.Addition) 
-      for (int i = 0; i < CurrentFrame; i++) 
-        Raylib.DrawTexturePro(Resource.GetMaterial()[i], new Rectangle(Vector2.Zero, Resource.GetSize().X, Resource.GetSize().Y), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
-    else 
-      Raylib.DrawTexturePro(Resource.GetMaterial()[CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize().X, Resource.GetSize().Y), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
+    if (Resource is not null)
+    {
+      if (PlayMode == AnimationPlayMode.Addition)
+        for (int i = 0; i < CurrentFrame; i++)
+          Raylib.DrawTexturePro(Resource.GetMaterial()[i],
+            new Rectangle(Vector2.Zero, Resource.GetSize().X, Resource.GetSize().Y), new Rectangle(Position, Size),
+            Vector2.Zero, 0, Tint);
+      else
+        Raylib.DrawTexturePro(Resource.GetMaterial()[CurrentFrame],
+          new Rectangle(Vector2.Zero, Resource.GetSize().X, Resource.GetSize().Y), new Rectangle(Position, Size),
+          Vector2.Zero, 0, Tint);
+    }
     base.Draw(registry);
     DrawDebug(registry);
   }
+
+  public virtual bool IsFinished() => Resource != null && CurrentFrame == Resource.GetMaterial().Count - 1;
   
   protected void DrawDebug(Registry registry)
   {

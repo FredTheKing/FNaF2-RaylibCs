@@ -32,8 +32,10 @@ public class SelectableAnimation(Vector2 position, float fps, Color color, Anima
       for (int i = 0; i < CurrentFrame; i++) 
         Raylib.DrawTexturePro(Resource!.GetMaterial()[_currentPack][i], new Rectangle(Vector2.Zero, Resource.GetSize(_currentPack)), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
     else 
-      Raylib.DrawTexturePro(Resource!.GetMaterial()[_currentPack][CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize(_currentPack)), new Rectangle(Position, Size), Vector2.Zero, 0, Tint);
+      Raylib.DrawTexturePro(Resource!.GetMaterial()[_currentPack][CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize(_currentPack)), new Rectangle(Position, Resource.GetSize(_currentPack)), Vector2.Zero, 0, Tint);
     base.Draw(registry);
     DrawDebug(registry);
   }
+
+  public override bool IsFinished() => CurrentFrame == Resource!.GetMaterial()[_currentPack].Count - 1;
 }

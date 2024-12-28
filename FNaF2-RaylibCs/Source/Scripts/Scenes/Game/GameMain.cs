@@ -13,6 +13,7 @@ internal enum Tool { Nothing, Mask, Camera }
 
 public class GameMain : ScriptTemplate
 {
+  private const float BatteryUsageSpeed = 20f; // 135f is default
   private const int ScrollBorder = 576;
   private const float DeadZone = 100f;
   private const float Sensitivity = 0.35f; // lower sensitivity = bigger number
@@ -24,7 +25,8 @@ public class GameMain : ScriptTemplate
   private float _battery = 10000;
   private float _scrollerPositionX;
   private Tool _currentTool = Tool.Nothing;
-  private byte _assetFrame;
+  private int _assetFrame;
+  private int _cameraPack;
   private bool _brokenLight;
   private bool _blackout;
   
@@ -97,7 +99,7 @@ public class GameMain : ScriptTemplate
 
       if (_battery != 0)
       {
-        _battery -= 10000 / 135f * Raylib.GetFrameTime();
+        _battery -= 10000 / BatteryUsageSpeed * Raylib.GetFrameTime();
         _battery = Math.Clamp(_battery, 0, 10000);
       }
       
@@ -259,19 +261,31 @@ public class GameMain : ScriptTemplate
     _blackout = false;
   }
 
+  private void UiMaskAndCameraReaction()
+  {
+    if (Registration.Objects.GameUiMaskButton!.GetHitbox().GetMouseHoverFrame()) Registration.Objects.GameUiMask!.GetScript()!.TriggerPullAction();
+    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame()) Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
+  }
+
+  private void UiBatteryUpdate() => Registration.Objects.GameUiBattery!.SetFrame((int)Math.Ceiling(_battery / 2500.0));
+
   public override void Update(Registry registry)
   {
     Console.WriteLine(_battery);
     UiButtonsReaction(registry);
+    UiMaskAndCameraReaction();
+    UiBatteryUpdate();
+    
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
+      registry.GetSceneManager().GetCurrentScene().ShowLayer(6);
       UpdateScroller();
       UpdateOffice(registry);
       UpdateBlackout(registry);
     }
     else
     {
-      
+      registry.GetSceneManager().GetCurrentScene().HideLayer(6);
     }
 
     if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.Y)) Registration.Objects.GameOfficeCamera!.PreviousPack();

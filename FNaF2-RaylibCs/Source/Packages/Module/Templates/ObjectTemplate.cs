@@ -16,6 +16,7 @@ public abstract class ObjectTemplate : ScriptTemplate
   public override void Update(Registry registry) { if (ScriptInstance != null) ScriptInstance.Update(registry); }
   public override void Draw(Registry registry) { if (ScriptInstance != null) ScriptInstance.Draw(registry); }
   public void AssignObjectScript(dynamic? scriptInstance) => ScriptInstance = scriptInstance;
+  public dynamic? GetScript() => ScriptInstance;
   
   public virtual void SetPosition(Vector2 position) => Position = position;
   

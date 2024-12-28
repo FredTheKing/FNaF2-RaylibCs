@@ -23,5 +23,5 @@ public class SelectablePackedImage(Vector2 position, ImageDoubleStackResource re
   public int GetPackIndex() => _currentPack;
 
   public override void Draw(Registry registry) =>
-    Raylib.DrawTexturePro(Resource.GetMaterial()[_currentPack][CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize(_currentPack)), new Rectangle(Position, Size), Vector2.Zero, Rotation, Tint);
+    Raylib.DrawTexturePro(Resource.GetMaterial()[_currentPack][CurrentFrame], new Rectangle(Vector2.Zero, Resource.GetSize(_currentPack)), new Rectangle(Position, Resource.GetSize(_currentPack)), Vector2.Zero, Rotation, Tint);
 }

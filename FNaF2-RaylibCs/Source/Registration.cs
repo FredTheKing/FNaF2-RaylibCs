@@ -50,6 +50,7 @@ public static class Registration
     public static ImageResource? GameOfficeToyChicaResource;
     public static ImageResource? GameOfficeMangleResource;
     public static ImageResource? GameOfficeBalloonBoyResource;
+    public static ImageStackResource? GameUiBatteryResource;
     public static ImageDoubleStackResource? GameUiMaskResource;
     public static ImageDoubleStackResource? GameUiCameraResource;
     public static ImageResource? GameUiMaskButtonResource;
@@ -123,8 +124,11 @@ public static class Registration
     public static SimpleImage? GameOfficeToyChica;
     public static SimpleImage? GameOfficeMangle;
     public static SimpleImage? GameOfficeBalloonBoy;
+    public static SelectableImage? GameUiBattery;
     public static HitboxImage? GameUiMaskButton;
     public static HitboxImage? GameUiCameraButton;
+    public static SelectableAnimation? GameUiMask;
+    public static SelectableAnimation? GameUiCamera;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -171,16 +175,19 @@ public static class Registration
     Materials.GameOfficeToyChicaResource = registry.RegisterMaterial("GameOfficeToyChicaResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/ToyChica.png"));
     Materials.GameOfficeMangleResource = registry.RegisterMaterial("GameOfficeMangleResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/Mango.png"));
     Materials.GameOfficeBalloonBoyResource = registry.RegisterMaterial("GameOfficeBalloonBoyResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/BB.png"));
+    Materials.GameUiBatteryResource = registry.RegisterMaterial("GameUiBatteryResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Battery", 5)));
     Materials.GameUiMaskButtonResource = registry.RegisterMaterial("GameUiMaskButtonResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Mask.png"));
     Materials.GameUiCameraButtonResource = registry.RegisterMaterial("GameUiCameraButtonResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Camera.png"));
     Materials.GameUiMaskResource = registry.RegisterMaterial("GameUiMaskResource", [Config.Scenes.GameMain], new ImageDoubleStackResource([
-      Loaders.LoadSingleFilenameAsList("Game/Main/UI/Nothing.png"),
+      Loaders.LoadSingleFilenameAsList(Config.ResPath + "Game/Main/UI/Nothing.png"),
       Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Masking", 9),
+      Loaders.LoadSingleFilenameAsList(Config.ResPath + "Game/Main/UI/Masking/8.png"),
       Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Masking", 9, inverted: true)
     ]));
     Materials.GameUiCameraResource = registry.RegisterMaterial("GameUiCameraResource", [Config.Scenes.GameMain], new ImageDoubleStackResource([
-      Loaders.LoadSingleFilenameAsList("Game/Main/UI/Nothing.png"),
+      Loaders.LoadSingleFilenameAsList(Config.ResPath + "Game/Main/UI/Nothing.png"),
       Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Camering", 11),
+      Loaders.LoadSingleFilenameAsList(Config.ResPath + "Game/Main/UI/Nothing.png"),
       Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Camering", 11, inverted: true)
     ]));
     
@@ -255,16 +262,21 @@ public static class Registration
     Objects.GameOfficeCamera = registry.RegisterObject("GameOffice", [Config.Scenes.GameMain], [0], new SelectablePackedImage(Vector2.Zero, Materials.GameOfficeCameraResource!, Color.White));
     Objects.GameOfficeTable = registry.RegisterObject("GameOfficeTable", [Config.Scenes.GameMain], [6], new SimpleAnimation(Vector2.Zero, 18, Color.White, AnimationPlayMode.Replacement, Materials.GameOfficeTableResource!));
     Objects.GameBlackoutRectangle = registry.RegisterObject("GameBlackoutRectangle", [Config.Scenes.GameMain], [6], new SimpleBox(Vector2.Zero, new Vector2(Config.WindowWidth, Config.WindowHeight), Color.Blank));
-    Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [99], new DebugBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
-    Objects.GameLeftLightSwitch = registry.RegisterObject("GameLeftLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameLeftLightResource!));
-    Objects.GameRightLightSwitch = registry.RegisterObject("GameRightLightSwitch", [Config.Scenes.GameMain], [0], new SelectableHitboxImage(Vector2.Zero, Materials.GameRightLightResource!));
+    Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [6], new DebugBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
+    Objects.GameLeftLightSwitch = registry.RegisterObject("GameLeftLightSwitch", [Config.Scenes.GameMain], [6], new SelectableHitboxImage(Vector2.Zero, Materials.GameLeftLightResource!));
+    Objects.GameRightLightSwitch = registry.RegisterObject("GameRightLightSwitch", [Config.Scenes.GameMain], [6], new SelectableHitboxImage(Vector2.Zero, Materials.GameRightLightResource!));
     Objects.GameOfficeToyFreddy = registry.RegisterObject("GameOfficeToyFreddy", [Config.Scenes.GameMain], [1], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyFreddyResource!));
     Objects.GameOfficeToyBonnie = registry.RegisterObject("GameOfficeToyBonnie", [Config.Scenes.GameMain], [2], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyBonnieResource!));
     Objects.GameOfficeToyChica = registry.RegisterObject("GameOfficeToyChica", [Config.Scenes.GameMain], [3], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyChicaResource!));
     Objects.GameOfficeMangle = registry.RegisterObject("GameOfficeMangle", [Config.Scenes.GameMain], [4], new SimpleImage(Vector2.Zero, Materials.GameOfficeMangleResource!));
     Objects.GameOfficeBalloonBoy = registry.RegisterObject("GameOfficeBalloonBoy", [Config.Scenes.GameMain], [5], new SimpleImage(Vector2.Zero, Materials.GameOfficeBalloonBoyResource!));
+    Objects.GameUiBattery = registry.RegisterObject("GameUiBattery", [Config.Scenes.GameMain], [99], new SelectableImage(new Vector2(18), Materials.GameUiBatteryResource!));
     Objects.GameUiMaskButton = registry.RegisterObject("GameUiMaskButton", [Config.Scenes.GameMain], [20], new HitboxImage(new Vector2(6, Config.WindowHeight - 50), Materials.GameUiMaskButtonResource!));
     Objects.GameUiCameraButton = registry.RegisterObject("GameUiCameraButton", [Config.Scenes.GameMain], [21], new HitboxImage(new Vector2(518, Config.WindowHeight - 50), Materials.GameUiCameraButtonResource!));
+    Objects.GameUiCamera = registry.RegisterObject("GameUiCamera", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 24, Color.White, AnimationPlayMode.Replacement, Materials.GameUiCameraResource!));
+    Objects.GameUiCamera.AssignObjectScript(new PullAnimationScript(Objects.GameUiCamera));
+    Objects.GameUiMask = registry.RegisterObject("GameUiMask", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 24, Color.White, AnimationPlayMode.Replacement, Materials.GameUiMaskResource!));
+    Objects.GameUiMask.AssignObjectScript(new PullAnimationScript(Objects.GameUiMask));
   }
   
   
@@ -281,6 +293,16 @@ public static class Registration
     //], [
     //  new GrantOpportunity(Config.AnimatronicsNames.WitheredFoxy, Location.OfficeFront)
     //]));
+    
+    registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredBonnie, 3.1f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+      new MovementOpportunity(Location.Cam08, Location.OfficeFront, .6f),
+      new MovementOpportunity(Location.Cam08, Location.Cam08, .4f),
+      
+      new MovementOpportunity(Location.OfficeFront, Location.OfficeInside, .3f),
+      new MovementOpportunity(Location.OfficeFront, Location.OfficeFront, .7f),
+      
+      new MovementOpportunity(Location.OfficeInside, Location.Cam08, 1f),
+    ]));
     
     //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.WitheredFoxy, 3.2f, AnimatronicType.AutoBlackouter, Location.Cam01, [
     //  new MovementOpportunity(Location.Cam08, Location.OfficeFront, 1f),
