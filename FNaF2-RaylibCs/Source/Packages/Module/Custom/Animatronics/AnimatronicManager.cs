@@ -4,48 +4,15 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
-public enum OfficeDirection
-{
-  Left,
-  Right,
-  Front,
-  Inside
-}
-
 public class AnimatronicManager : ScriptTemplate
 {
   private List<Animatronic> _animatronics = [];
-  private List<Animatronic>? _leftAnimatronic;
-  private List<Animatronic>? _rightAnimatronic;
-  private List<Animatronic>? _frontAnimatronic;
-  private List<Animatronic>? _insideAnimatronic;
 
   public override void CallDebuggerInfo(Registry registry)
   {
-    if (ImGui.TreeNode("Directions Filled"))
-    {
-      ImGui.Text($" > Left: {(_leftAnimatronic != null ? string.Join(", ", _leftAnimatronic.Select(x => x.Name)) : "-")}");
-      ImGui.Text($" > Right: {(_rightAnimatronic != null ? string.Join(", ", _rightAnimatronic.Select(x => x.Name)) : "-")}");
-      ImGui.Text($" > Front: {(_frontAnimatronic != null ? string.Join(", ", _frontAnimatronic.Select(x => x.Name)) : "-")}");
-      ImGui.Text($" > Inside: {(_insideAnimatronic != null ? string.Join(", ", _insideAnimatronic.Select(x => x.Name)) : "-")}");
-      ImGui.TreePop();
-    }
-    ImGui.Separator();
     foreach (Animatronic animatronic in _animatronics) 
       animatronic.CallDebuggerInfo(registry);
     ImGui.TreePop();
-  }
-
-  public List<Animatronic>? GetDirectionalAnimatronic(OfficeDirection direction)
-  {
-    return direction switch
-    {
-      OfficeDirection.Left => _leftAnimatronic,
-      OfficeDirection.Right => _rightAnimatronic,
-      OfficeDirection.Front => _frontAnimatronic,
-      OfficeDirection.Inside => _insideAnimatronic,
-      _ => null
-    };
   }
 
   public override void Deactivation(Registry registry, string nextSceneName)
@@ -63,13 +30,7 @@ public class AnimatronicManager : ScriptTemplate
   public override void Update(Registry registry)
   {
     foreach (Animatronic animatronic in _animatronics)
-    {
       animatronic.Update(registry);
-      _leftAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeLeft).ToList();
-      _rightAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeRight).ToList();
-      _frontAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeFront).ToList();
-      _insideAnimatronic = _animatronics.Where(a => a.CurrentLocation == Location.OfficeInside).ToList();
-    }
   }
 
   public override void Draw(Registry registry)

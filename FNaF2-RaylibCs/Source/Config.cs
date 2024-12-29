@@ -44,7 +44,11 @@ public struct Config
   public const float DefaultMasterVolume = 1f;
 
   public const int MaxAnimatronicsDifficulty = 20;
+  #if DEBUG
   public const string StartSceneName = Scenes.GameMain;
+  #else
+  public const string StartSceneName = Scenes.MenuMain;
+  #endif
   public const string AllShortcut = "*";
   public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign
   public static readonly string SeparatorLine = new('-', 100);

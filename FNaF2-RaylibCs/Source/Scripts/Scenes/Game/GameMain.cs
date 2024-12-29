@@ -1,5 +1,6 @@
 using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.Custom;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
@@ -30,7 +31,7 @@ public class GameMain : ScriptTemplate
   private bool _brokenLight;
   private bool _blackout;
   
-  private void UpdateScroller()
+  private void UpdateOfficeScroller()
   {
     _scrollerPositionX = Raylib.GetMouseX() - Registration.Objects.GameCentralScroller!.GetPosition().X - 2;
     if (_scrollerPositionX is > -DeadZone and < DeadZone || Raylib.GetMouseX() > Config.WindowWidth) _scrollerPositionX = 0;
@@ -63,8 +64,8 @@ public class GameMain : ScriptTemplate
 
   private void OfficeAssetReaction(Registry registry)
   {
-    List<string> nameInside = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.Select(a => a.Name).ToList() ?? [];
-    Animatronic? actualInside = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
+    List<string> nameInside = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).Select(a => a.Name).ToList();
+    Animatronic? actualInside = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
     
     var separatedAssetsAnimatronics = new Dictionary<string, int>
     {
@@ -97,7 +98,7 @@ public class GameMain : ScriptTemplate
     
     if (registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl) && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
-      List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Front)?.Select(a => a.Name).ToList() ?? [];
+      List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeFront).Select(a => a.Name).ToList();
 
       if (_battery != 0)
       {
@@ -128,7 +129,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
-      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Left)?.Select(a => a.Name).ToList() ?? [];
+      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeLeft).Select(a => a.Name).ToList();
       _assetFrame = name switch
       {
         [] => 1,
@@ -139,7 +140,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
-      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Right)?.Select(a => a.Name).ToList() ?? [];
+      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeRight).Select(a => a.Name).ToList();
       _assetFrame = name switch
       {
         [] => 3,
@@ -171,7 +172,7 @@ public class GameMain : ScriptTemplate
       _blackoutFlickeringTimer.StopAndResetTimer();
       _blackoutDurationTimer.StopAndResetTimer();
       _blackoutCustomAlpha = 255;
-      registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Inside)?.FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy)!.Move(registry);
+      registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy)!.Move(registry);
     }
 
     if (_blackout)
@@ -272,8 +273,162 @@ public class GameMain : ScriptTemplate
 
   private void CameraToggling()
   {
-    if (Registration.Objects.GameUiCamera!.GetPackIndex() == 2) Registration.Objects.GameOfficeCamera!.SetPack(_cameraPack);
-    else Registration.Objects.GameOfficeCamera!.SetPack(0);
+    Registration.Objects.GameOfficeCamera!.SetPack(Registration.Objects.GameUiCamera!.GetPackIndex() == 2 ? _cameraPack : 0);
+  }
+
+  private void UpdateCamera(Registry registry)
+  {
+    bool lightning = registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl);
+    if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 1)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam01).Select(a => a.Name).ToList() switch
+      {
+        [] or [ToyChica] or [WitheredBonnie] when !lightning => 0,
+        [] when lightning => 1,
+        [ToyChica] when lightning => 2,
+        [WitheredBonnie] when lightning => 3,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 2)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam02).Select(a => a.Name).ToList() switch
+      {
+        [] or [ToyBonnie] when !lightning => 0,
+        [WitheredChica] when !lightning => 1,
+        [] when lightning => 2,
+        [WitheredChica] when lightning => 3,
+        [ToyBonnie] when lightning => 4,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 3)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam03).Select(a => a.Name).ToList() switch
+      {
+        [] or [ToyBonnie] when !lightning => 0,
+        [WitheredFreddy] when !lightning => 1,
+        [] when lightning => 2,
+        [WitheredFreddy] when lightning => 3,
+        [ToyBonnie] when lightning => 4,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 4)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam04).Select(a => a.Name).ToList() switch
+      {
+        [] or [ToyChica] or [WitheredChica] when !lightning => 0,
+        [ToyBonnie] when !lightning => 1,
+        [] when lightning => 2,
+        [ToyBonnie] when lightning => 3,
+        [ToyChica] when lightning => 4,
+        [WitheredChica] when lightning => 5,
+        //[PAPEREMAAAAN] when lightning => 6,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 5)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam05).Select(a => a.Name).ToList() switch
+      {
+        [] or [ToyChica] or [WitheredBonnie] or [BalloonBoy] or [Endo] when !lightning => 0,
+        [] when lightning => 1,
+        [ToyChica] when lightning => 2,
+        [WitheredBonnie] when lightning => 3,
+        [BalloonBoy] when lightning => 4,
+        [Endo] when lightning => 5,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 6)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam06).Select(a => a.Name).ToList() switch
+      {
+        [] or [ToyBonnie] or [WitheredChica] or [Mangle] when !lightning => 0,
+        [] when lightning => 1,
+        [ToyBonnie] when lightning => 2,
+        [WitheredChica] when lightning => 3,
+        [Mangle] when lightning => 4,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 7)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam07).Select(a => a.Name).ToList() switch
+      {
+        [] or [WitheredBonnie] or [WitheredFreddy] when !lightning => 0,
+        [ToyChica] when !lightning => 1,
+        [] when lightning => 2,
+        [ToyChica] when lightning => 3,
+        [WitheredBonnie] when lightning => 4,
+        [WitheredFreddy] when lightning => 5,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 8)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam08).Select(a => a.Name).ToList() switch
+      {
+        [] or [WitheredFoxy] or [WitheredFreddy, WitheredFoxy] or [WitheredFoxy, WitheredFreddy] or [WitheredFreddy, WitheredChica, WitheredFoxy] or [WitheredChica, WitheredFreddy, WitheredFoxy] or [WitheredFreddy, WitheredFoxy, WitheredChica] or [WitheredChica, WitheredFoxy, WitheredFreddy] or [WitheredFoxy, WitheredChica, WitheredFreddy] or [WitheredFreddy, WitheredBonnie, WitheredChica, WitheredFoxy] or [WitheredBonnie, WitheredFreddy, WitheredChica, WitheredFoxy] or [WitheredFreddy, WitheredBonnie, WitheredFoxy, WitheredChica] or [WitheredBonnie, WitheredChica, WitheredFreddy, WitheredFoxy] or [WitheredChica, WitheredBonnie, WitheredFreddy, WitheredFoxy] or [WitheredBonnie, WitheredFoxy, WitheredChica, WitheredFreddy] or [WitheredFoxy, WitheredBonnie, WitheredChica, WitheredFreddy] or [WitheredChica, WitheredFoxy, WitheredBonnie, WitheredFreddy] or [WitheredFoxy, WitheredChica, WitheredBonnie, WitheredFreddy] when !lightning => 0,
+        [WitheredFreddy, WitheredBonnie, WitheredChica, WitheredFoxy] or [WitheredBonnie, WitheredFreddy, WitheredChica, WitheredFoxy] or [WitheredFreddy, WitheredBonnie, WitheredFoxy, WitheredChica] or [WitheredBonnie, WitheredChica, WitheredFreddy, WitheredFoxy] or [WitheredChica, WitheredBonnie, WitheredFreddy, WitheredFoxy] or [WitheredBonnie, WitheredFoxy, WitheredChica, WitheredFreddy] or [WitheredFoxy, WitheredBonnie, WitheredChica, WitheredFreddy] or [WitheredChica, WitheredFoxy, WitheredBonnie, WitheredFreddy] or [WitheredFoxy, WitheredChica, WitheredBonnie, WitheredFreddy] when lightning => 1,
+        [WitheredFreddy, WitheredChica, WitheredFoxy] or [WitheredChica, WitheredFreddy, WitheredFoxy] or [WitheredFreddy, WitheredFoxy, WitheredChica] or [WitheredChica, WitheredFoxy, WitheredFreddy] or [WitheredFoxy, WitheredChica, WitheredFreddy] when lightning => 2,
+        [WitheredFreddy, WitheredFoxy] or [WitheredFoxy, WitheredFreddy] when lightning => 3,
+        [] when lightning => 4,
+        [WitheredFoxy] when lightning => 5,
+        //[SHADDDOOOOWWWWSHIIT?!!?!?!] when lightning => 6,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 9)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam09).Select(a => a.Name).ToList() switch
+      {
+        [ToyFreddy, ToyBonnie, ToyChica] or [ToyFreddy, ToyChica, ToyBonnie] or [ToyBonnie, ToyFreddy, ToyChica] or [ToyBonnie, ToyChica, ToyFreddy] or [ToyChica, ToyFreddy, ToyBonnie] or [ToyChica, ToyBonnie, ToyFreddy] when !lightning => 0,
+        [ToyFreddy, ToyChica] or [ToyChica, ToyFreddy] when !lightning => 1,
+        [ToyFreddy] when !lightning => 2,
+        [] when !lightning => 3,
+        [] when lightning => 3,
+        [ToyFreddy, ToyBonnie, ToyChica] or [ToyFreddy, ToyChica, ToyBonnie] or [ToyBonnie, ToyFreddy, ToyChica] or [ToyBonnie, ToyChica, ToyFreddy] or [ToyChica, ToyFreddy, ToyBonnie] or [ToyChica, ToyBonnie, ToyFreddy] when lightning => 4,
+        [ToyFreddy, ToyChica] or [ToyChica, ToyFreddy] when lightning => 5,
+        [ToyFreddy] when lightning => 6,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 10)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam10).Select(a => a.Name).ToList() switch
+      {
+        [BalloonBoy] or [BalloonBoy, ToyFreddy] or [ToyFreddy, BalloonBoy] when !lightning => 0,
+        [] or [ToyFreddy] when !lightning => 1,
+        [BalloonBoy] when lightning => 2,
+        [BalloonBoy, ToyFreddy] or [ToyFreddy, BalloonBoy] when lightning => 3,
+        [ToyFreddy] when lightning => 4,
+        [] when lightning => 5,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 11)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam11).Select(a => a.Name).ToList() switch
+      {
+        [] or [Marionette] or [Endo] when !lightning => 0,
+        [Marionette] when lightning => 1,
+        [] when lightning => 4,
+        [Endo] when lightning => 5,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
+    else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 12)
+    {
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam12).Select(a => a.Name).ToList() switch
+      {
+        [] or [Mangle] when !lightning => 0,
+        [Mangle] when lightning => 1,
+        [] when lightning => 2,
+        _ => throw new Exception("No asset for this type of list")
+      };
+    }
   }
   
   public override void Update(Registry registry)
@@ -283,17 +438,19 @@ public class GameMain : ScriptTemplate
     UiMaskAndCameraReaction();
 
     CameraToggling();
+    _assetFrame = 0;
     
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
       registry.GetSceneManager().GetCurrentScene().ShowLayer(6);
-      if (Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3) UpdateScroller();
+      if (Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3) UpdateOfficeScroller();
       UpdateOffice(registry);
       UpdateBlackout(registry);
     }
     else
     {
       registry.GetSceneManager().GetCurrentScene().HideLayer(6);
+      UpdateCamera(registry);
     }
   }
 }
