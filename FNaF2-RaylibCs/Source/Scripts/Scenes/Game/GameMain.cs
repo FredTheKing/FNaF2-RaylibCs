@@ -155,7 +155,6 @@ public class GameMain : ScriptTemplate
   private void UpdateOffice(Registry registry)
   {
     OfficeAssetReaction(registry);
-    Registration.Objects.GameOfficeCamera!.SetFrame(_assetFrame);
     LightButtonsReaction();
     
     _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(5) || _currentTool == Tool.Mask;
@@ -292,7 +291,10 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 2)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam02).Select(a => a.Name).ToList() switch
+      var wasd = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics()
+        .Where(a => a.CurrentLocation == Location.Cam02).Select(a => a.Name).ToList();
+      Console.WriteLine(string.Join(", ", wasd));
+      _assetFrame = wasd switch
       {
         [] or [ToyBonnie] when !lightning => 0,
         [WitheredChica] when !lightning => 1,
@@ -438,7 +440,6 @@ public class GameMain : ScriptTemplate
     UiMaskAndCameraReaction();
 
     CameraToggling();
-    _assetFrame = 0;
     
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
@@ -452,5 +453,7 @@ public class GameMain : ScriptTemplate
       registry.GetSceneManager().GetCurrentScene().HideLayer(6);
       UpdateCamera(registry);
     }
+    
+    Registration.Objects.GameOfficeCamera.SetFrame(_assetFrame);
   }
 }
