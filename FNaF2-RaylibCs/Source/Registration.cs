@@ -53,6 +53,7 @@ public static class Registration
     public static ImageStackResource? GameUiBatteryResource;
     public static ImageDoubleStackResource? GameUiMaskResource;
     public static ImageDoubleStackResource? GameUiCameraResource;
+    public static ImageDoubleStackResource? GameJumpscaresResource;
     public static ImageResource? GameUiMaskButtonResource;
     public static ImageResource? GameUiCameraButtonResource;
   }
@@ -129,6 +130,7 @@ public static class Registration
     public static HitboxImage? GameUiCameraButton;
     public static SelectableAnimation? GameUiMask;
     public static SelectableAnimation? GameUiCamera;
+    public static SelectableAnimation? GameJumpscares;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -190,6 +192,19 @@ public static class Registration
       Loaders.LoadSingleFilenameAsList(Config.ResPath + "Game/Main/UI/Nothing.png"),
       Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Camering", 11, inverted: true)
     ]));
+    Materials.GameJumpscaresResource = registry.RegisterMaterial("GameJumpscaresResource", [Config.Scenes.GameMain], new ImageDoubleStackResource([
+      Loaders.LoadSingleFilenameAsList(Config.ResPath + "Game/Main/Jumpscares/Nothing.png"),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/WitheredFreddy", 13),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/WitheredBonnie", 16),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/WitheredChica", 12),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/WitheredFoxy", 14),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/ToyFreddy", 12),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/ToyBonnie", 13),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/ToyChica", 13),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/Mangle", 16),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/Marionette", 15),
+      Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Jumpscares/GoldenFreddy", 13)
+    ]));
     
     Materials.MenuWhiteBlinkoStackResource = registry.RegisterMaterial("GlobalWhiteBlinkoStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/WhiteBlinko", 6)));
   }
@@ -203,7 +218,7 @@ public static class Registration
   public static void ObjectsInitialisation(Registry registry)
   {
     Objects.MenuWhiteBlinko = registry.RegisterObject("GlobalWhiteBlinko", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading], [9], new SelectableImage(Vector2.Zero, Materials.MenuWhiteBlinkoStackResource!, Color.White));
-    Objects.MenuWhiteBlinko.AssignObjectScript(new WhiteBlinkoScript(Objects.MenuWhiteBlinko));
+    Objects.MenuWhiteBlinko.AssignScript(new WhiteBlinkoScript(Objects.MenuWhiteBlinko));
     
     Objects.MenuBackground = registry.RegisterObject("MenuBackground", [Config.Scenes.MenuMain], [0], new SelectableImage(Vector2.Zero, Materials.MenuBackgroundStackResource!, Color.White));
     Objects.MenuStatic = registry.RegisterObject("MenuStatic", [Config.Scenes.MenuMain, "Menu/Settings", Config.Scenes.MenuExtras, "Menu/Credits", "Menu/CustomNight"], [0], new SimpleAnimation(Vector2.Zero, 24, new Color(255, 255, 255, 100), AnimationPlayMode.Replacement, Materials.MenuStaticStackResource!));
@@ -218,7 +233,7 @@ public static class Registration
     
     Objects.ExtrasTitle = registry.RegisterObject("ExtrasTitle", [Config.Scenes.MenuExtras], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Extras", Color.White, Materials.MenuFont!, true, true));
     Objects.ExtrasBackToPage = registry.RegisterObject("ExtrasBackToPage", [Config.Scenes.MenuSettings, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight], [1], new HitboxText(new Vector2(50, 30), new Vector2(80, 60), 48, "<<", Color.White, Materials.MenuFont!, true));
-    Objects.ExtrasBackToPage.AssignObjectScript(new BackToExtrasScript(Objects.ExtrasBackToPage));
+    Objects.ExtrasBackToPage.AssignScript(new BackToExtrasScript(Objects.ExtrasBackToPage));
     Objects.ExtrasProjectLinkGithub = registry.RegisterObject("ExtrasProjectLinkGithub", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 120), new Vector2(500, 65), 48, "Project's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.MenuFont!, true));
     Objects.ExtrasAuthorLinkGithub = registry.RegisterObject("ExtrasAuthorLinkGithub", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 185), new Vector2(500, 65), 48, "Author's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.MenuFont!, true));
     Objects.ExtrasCustomNight = registry.RegisterObject("ExtrasCustomNight", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 250), new Vector2(500, 65), 48, "Custom Night", Color.White, Materials.MenuFont!, true));
@@ -273,10 +288,11 @@ public static class Registration
     Objects.GameUiBattery = registry.RegisterObject("GameUiBattery", [Config.Scenes.GameMain], [99], new SelectableImage(new Vector2(18), Materials.GameUiBatteryResource!));
     Objects.GameUiMaskButton = registry.RegisterObject("GameUiMaskButton", [Config.Scenes.GameMain], [20], new HitboxImage(new Vector2(6, Config.WindowHeight - 50), Materials.GameUiMaskButtonResource!));
     Objects.GameUiCameraButton = registry.RegisterObject("GameUiCameraButton", [Config.Scenes.GameMain], [21], new HitboxImage(new Vector2(518, Config.WindowHeight - 50), Materials.GameUiCameraButtonResource!));
-    Objects.GameUiCamera = registry.RegisterObject("GameUiCamera", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 24, Color.White, AnimationPlayMode.Replacement, Materials.GameUiCameraResource!));
-    Objects.GameUiCamera.AssignObjectScript(new PullAnimationScript(Objects.GameUiCamera));
-    Objects.GameUiMask = registry.RegisterObject("GameUiMask", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 24, Color.White, AnimationPlayMode.Replacement, Materials.GameUiMaskResource!));
-    Objects.GameUiMask.AssignObjectScript(new PullAnimationScript(Objects.GameUiMask));
+    Objects.GameUiCamera = registry.RegisterObject("GameUiCamera", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameUiCameraResource!));
+    Objects.GameUiCamera.AssignScript(new PullAnimationScript(Objects.GameUiCamera));
+    Objects.GameUiMask = registry.RegisterObject("GameUiMask", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameUiMaskResource!));
+    Objects.GameUiMask.AssignScript(new PullAnimationScript(Objects.GameUiMask));
+    Objects.GameJumpscares = registry.RegisterObject("GameJumpscares", [Config.Scenes.GameMain], [30], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameJumpscaresResource!));
   }
   
   

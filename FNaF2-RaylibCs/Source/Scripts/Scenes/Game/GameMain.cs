@@ -13,10 +13,10 @@ internal enum Tool { Nothing, Mask, Camera }
 
 public class GameMain : ScriptTemplate
 {
-  private const float BatteryUsageSpeed = 20f; // 135f is default
+  private const float BatteryUsageSpeed = 135f; // 135f is default. Bigger number = slower drain
   private const int ScrollBorder = 576;
-  private const float DeadZone = 100f;
-  private const float Sensitivity = 0.35f; // lower sensitivity = bigger number
+  private const float DeadZone = 170f;
+  private const float Sensitivity = 0.3f; // lower sensitivity = bigger number
 
   private SimpleTimer _blackoutFlickeringTimer = new(.1);
   private SimpleTimer _blackoutDurationTimer = new(5);
@@ -26,7 +26,7 @@ public class GameMain : ScriptTemplate
   private float _scrollerPositionX;
   private Tool _currentTool = Tool.Nothing;
   private int _assetFrame;
-  private int _cameraPack;
+  private int _cameraPack = 2;
   private bool _brokenLight;
   private bool _blackout;
   
@@ -37,6 +37,8 @@ public class GameMain : ScriptTemplate
     else if (_scrollerPositionX > DeadZone) _scrollerPositionX -= DeadZone;
     else if (_scrollerPositionX < -DeadZone) _scrollerPositionX += DeadZone;
     _scrollerPositionX /= Sensitivity;
+    
+    OfficeScroll();
   }
 
   private void OfficeScroll()
@@ -93,7 +95,7 @@ public class GameMain : ScriptTemplate
       return;
     }
     
-    if (registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl))
+    if (registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl) && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
       List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Front)?.Select(a => a.Name).ToList() ?? [];
 
@@ -103,7 +105,7 @@ public class GameMain : ScriptTemplate
         _battery = Math.Clamp(_battery, 0, 10000);
       }
       
-      if (_brokenLight && nameFront.Intersect([WitheredFreddy, WitheredChica, WitheredBonnie]).Any() || _battery <= 0)
+      if (_brokenLight || _battery <= 0)
       {
         _assetFrame = 4;
         return;
@@ -124,7 +126,7 @@ public class GameMain : ScriptTemplate
         _ => throw new Exception("No asset for this type of list")
       };
     }
-    else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
+    else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
       List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Left)?.Select(a => a.Name).ToList() ?? [];
       _assetFrame = name switch
@@ -135,7 +137,7 @@ public class GameMain : ScriptTemplate
         _ => throw new Exception("No asset this type of list")
       };
     }
-    else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight)
+    else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
       List<string> name = registry.GetFNaF().GetAnimatronicManager().GetDirectionalAnimatronic(OfficeDirection.Right)?.Select(a => a.Name).ToList() ?? [];
       _assetFrame = name switch
@@ -151,12 +153,11 @@ public class GameMain : ScriptTemplate
 
   private void UpdateOffice(Registry registry)
   {
-    OfficeScroll();
     OfficeAssetReaction(registry);
     Registration.Objects.GameOfficeCamera!.SetFrame(_assetFrame);
     LightButtonsReaction();
     
-    _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(5);
+    _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(5) || _currentTool == Tool.Mask;
   }
 
   private void UpdateBlackout(Registry registry)
@@ -211,7 +212,7 @@ public class GameMain : ScriptTemplate
         _ => _currentTool
       };
     
-    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame())
+    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame() && !_blackout)
       _currentTool = _currentTool switch
       {
         Tool.Nothing => Tool.Camera,
@@ -264,22 +265,29 @@ public class GameMain : ScriptTemplate
   private void UiMaskAndCameraReaction()
   {
     if (Registration.Objects.GameUiMaskButton!.GetHitbox().GetMouseHoverFrame()) Registration.Objects.GameUiMask!.GetScript()!.TriggerPullAction();
-    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame()) Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
+    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame() && !_blackout) Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
   }
 
   private void UiBatteryUpdate() => Registration.Objects.GameUiBattery!.SetFrame((int)Math.Ceiling(_battery / 2500.0));
 
+  private void CameraToggling()
+  {
+    if (Registration.Objects.GameUiCamera!.GetPackIndex() == 2) Registration.Objects.GameOfficeCamera!.SetPack(_cameraPack);
+    else Registration.Objects.GameOfficeCamera!.SetPack(0);
+  }
+  
   public override void Update(Registry registry)
   {
-    Console.WriteLine(_battery);
+    UiBatteryUpdate();
     UiButtonsReaction(registry);
     UiMaskAndCameraReaction();
-    UiBatteryUpdate();
+
+    CameraToggling();
     
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
       registry.GetSceneManager().GetCurrentScene().ShowLayer(6);
-      UpdateScroller();
+      if (Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3) UpdateScroller();
       UpdateOffice(registry);
       UpdateBlackout(registry);
     }
@@ -287,8 +295,5 @@ public class GameMain : ScriptTemplate
     {
       registry.GetSceneManager().GetCurrentScene().HideLayer(6);
     }
-
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.Y)) Registration.Objects.GameOfficeCamera!.PreviousPack();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.U)) Registration.Objects.GameOfficeCamera!.NextPack();
   }
 }
