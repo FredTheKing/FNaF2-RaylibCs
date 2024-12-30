@@ -275,16 +275,16 @@ public static class Registration
     Objects.GameNewspapers = registry.RegisterObject("GameNewspapers", [Config.Scenes.GameNewspaper], [0], new SimpleImage(Vector2.Zero, Materials.GameNewspaperYooo!, Color.White));
     
     Objects.GameOfficeCamera = registry.RegisterObject("GameOffice", [Config.Scenes.GameMain], [0], new SelectablePackedImage(Vector2.Zero, Materials.GameOfficeCameraResource!, Color.White));
-    Objects.GameOfficeTable = registry.RegisterObject("GameOfficeTable", [Config.Scenes.GameMain], [6], new SimpleAnimation(Vector2.Zero, 18, Color.White, AnimationPlayMode.Replacement, Materials.GameOfficeTableResource!));
-    Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [6], new DebugBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
-    Objects.GameLeftLightSwitch = registry.RegisterObject("GameLeftLightSwitch", [Config.Scenes.GameMain], [6], new SelectableHitboxImage(Vector2.Zero, Materials.GameLeftLightResource!));
-    Objects.GameRightLightSwitch = registry.RegisterObject("GameRightLightSwitch", [Config.Scenes.GameMain], [6], new SelectableHitboxImage(Vector2.Zero, Materials.GameRightLightResource!));
-    Objects.GameBlackoutRectangle = registry.RegisterObject("GameBlackoutRectangle", [Config.Scenes.GameMain], [6], new SimpleBox(Vector2.Zero, new Vector2(Config.WindowWidth, Config.WindowHeight), Color.Blank));
+    Objects.GameOfficeTable = registry.RegisterObject("GameOfficeTable", [Config.Scenes.GameMain], [2], new SimpleAnimation(Vector2.Zero, 18, Color.White, AnimationPlayMode.Replacement, Materials.GameOfficeTableResource!));
+    Objects.GameCentralScroller = registry.RegisterObject("GameCentralScroller", [Config.Scenes.GameMain], [7], new DebugBox(new Vector2(Config.WindowWidth/2 - 2, 0), new Vector2(4, Config.WindowHeight), Color.Gold));
+    Objects.GameLeftLightSwitch = registry.RegisterObject("GameLeftLightSwitch", [Config.Scenes.GameMain], [7], new SelectableHitboxImage(Vector2.Zero, Materials.GameLeftLightResource!));
+    Objects.GameRightLightSwitch = registry.RegisterObject("GameRightLightSwitch", [Config.Scenes.GameMain], [7], new SelectableHitboxImage(Vector2.Zero, Materials.GameRightLightResource!));
+    Objects.GameBlackoutRectangle = registry.RegisterObject("GameBlackoutRectangle", [Config.Scenes.GameMain], [7], new SimpleBox(Vector2.Zero, new Vector2(Config.WindowWidth, Config.WindowHeight), Color.Blank));
     Objects.GameOfficeToyFreddy = registry.RegisterObject("GameOfficeToyFreddy", [Config.Scenes.GameMain], [1], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyFreddyResource!));
-    Objects.GameOfficeToyBonnie = registry.RegisterObject("GameOfficeToyBonnie", [Config.Scenes.GameMain], [2], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyBonnieResource!));
-    Objects.GameOfficeToyChica = registry.RegisterObject("GameOfficeToyChica", [Config.Scenes.GameMain], [3], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyChicaResource!));
-    Objects.GameOfficeMangle = registry.RegisterObject("GameOfficeMangle", [Config.Scenes.GameMain], [4], new SimpleImage(Vector2.Zero, Materials.GameOfficeMangleResource!));
-    Objects.GameOfficeBalloonBoy = registry.RegisterObject("GameOfficeBalloonBoy", [Config.Scenes.GameMain], [5], new SimpleImage(Vector2.Zero, Materials.GameOfficeBalloonBoyResource!));
+    Objects.GameOfficeToyBonnie = registry.RegisterObject("GameOfficeToyBonnie", [Config.Scenes.GameMain], [3], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyBonnieResource!));
+    Objects.GameOfficeToyChica = registry.RegisterObject("GameOfficeToyChica", [Config.Scenes.GameMain], [4], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyChicaResource!));
+    Objects.GameOfficeMangle = registry.RegisterObject("GameOfficeMangle", [Config.Scenes.GameMain], [5], new SimpleImage(Vector2.Zero, Materials.GameOfficeMangleResource!));
+    Objects.GameOfficeBalloonBoy = registry.RegisterObject("GameOfficeBalloonBoy", [Config.Scenes.GameMain], [6], new SimpleImage(Vector2.Zero, Materials.GameOfficeBalloonBoyResource!));
     Objects.GameUiBattery = registry.RegisterObject("GameUiBattery", [Config.Scenes.GameMain], [99], new SelectableImage(new Vector2(18), Materials.GameUiBatteryResource!));
     Objects.GameUiMaskButton = registry.RegisterObject("GameUiMaskButton", [Config.Scenes.GameMain], [20], new HitboxImage(new Vector2(6, Config.WindowHeight - 50), Materials.GameUiMaskButtonResource!));
     Objects.GameUiCameraButton = registry.RegisterObject("GameUiCameraButton", [Config.Scenes.GameMain], [21], new HitboxImage(new Vector2(518, Config.WindowHeight - 50), Materials.GameUiCameraButtonResource!));

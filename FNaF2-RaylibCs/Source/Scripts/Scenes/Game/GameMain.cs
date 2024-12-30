@@ -71,10 +71,10 @@ public class GameMain : ScriptTemplate
     var separatedAssetsAnimatronics = new Dictionary<string, int>
     {
       { ToyFreddy, 1 },
-      { ToyBonnie, 2 },
-      { ToyChica, 3 },
-      { Mangle, 4 },
-      { BalloonBoy, 5 }
+      { ToyBonnie, 3 },
+      { ToyChica, 4 },
+      { Mangle, 5 },
+      { BalloonBoy, 6 }
     };
 
     foreach (KeyValuePair<string,int> pair in separatedAssetsAnimatronics)
@@ -431,7 +431,7 @@ public class GameMain : ScriptTemplate
     Registration.Objects.GameOfficeCamera!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
     Registration.Objects.GameOfficeCamera.SetPack(0);
     
-    registry.GetSceneManager().GetCurrentScene().HideLayer(1, 2, 3, 4, 5);
+    registry.GetSceneManager().GetCurrentScene().HideLayer(1, 3, 4, 5, 6);
     
     registry.GetFNaF().GetAnimatronicManager().Activation(registry);
     registry.GetFNaF().GetAnimatronicManager().Update(registry);
@@ -449,14 +449,14 @@ public class GameMain : ScriptTemplate
     
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
-      registry.GetSceneManager().GetCurrentScene().ShowLayer(6);
+      registry.GetSceneManager().GetCurrentScene().ShowLayer(7, 2);
       if (Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3) UpdateOfficeScroller();
       UpdateOffice(registry);
       UpdateBlackout(registry);
     }
     else
     {
-      registry.GetSceneManager().GetCurrentScene().HideLayer(6);
+      registry.GetSceneManager().GetCurrentScene().HideLayer(7, 2);
       _blackoutCustomAlpha = 0;
       UpdateCamera(registry);
     }
