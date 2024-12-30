@@ -12,7 +12,8 @@ public class GameLoading : ScriptTemplate
   public override void Activation(Registry registry)
   {
     _timer.Activation(registry);
-    gotoGame = false; 
+    gotoGame = false;
+    Registration.Objects.WhiteBlinko!.GetScript()!.Play();
     Registration.Objects.LoadingNightText!.SetText("Night " + registry.GetFNaF().GetNightManager().GetUpcomingNight());
     Registration.Objects.LoadingClockThingo!.SetTint(Color.Blank);
   }

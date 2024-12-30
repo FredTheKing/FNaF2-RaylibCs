@@ -9,14 +9,19 @@ namespace FNaF2_RaylibCs.Source.Scripts.Objects;
 public class WhiteBlinkoScript(SelectableImage obj) : ScriptTemplate
 {
   private int _stage; //0-stay white, 1-random, 2-go blank, 3-dead
-  private SimpleTimer _timer = new(0.084f, true);
+  private SimpleTimer _timer = new(0.084f);
   private SimpleTimer _changingWhito = new(0.006f);
 
   public override void Activation(Registry registry)
   {
+    obj.SetColor(Color.Blank);
+    _stage = 3;
+  }
+
+  public void Play()
+  {
     Registration.Sounds.SetSound!.Play();
-    _timer.Activation(registry);
-    _changingWhito.Activation(registry);
+    _timer.StartTimer();
     _stage = 0;
     obj.SetColor(Color.White);
     obj.SetFrame(0);

@@ -42,6 +42,7 @@ public class MenuExtras : ScriptTemplate
 
   public override void Activation(Registry registry)
   {
+    Registration.Objects.WhiteBlinko!.GetScript()!.Play();
     float initialY = Registration.Objects.ExtrasProjectLinkGithub!.GetPosition().Y;
     Registration.Objects.MenuSet!.SetY(initialY);
     _prevSetY = initialY;

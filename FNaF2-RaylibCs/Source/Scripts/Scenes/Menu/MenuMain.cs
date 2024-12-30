@@ -58,6 +58,7 @@ public class MenuMain : ScriptTemplate
   public override void Activation(Registry registry)
   {
     _twitchTimer.Activation(registry);
+    Registration.Objects.WhiteBlinko!.GetScript()!.Play();
     
     float initialY = Registration.Objects.MenuNewGame!.GetPosition().Y;
     Registration.Objects.MenuSet!.SetY(initialY);

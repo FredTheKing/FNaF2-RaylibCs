@@ -9,10 +9,10 @@ public class SelectableText : SimpleText
   protected List<string> Text;
   protected int TextIndex;
 
-  SelectableText(Vector2 position, Vector2 size, int fontSize, List<string> texts, Color color, bool alignCenterV = false,
+  public SelectableText(Vector2 position, Vector2 size, int fontSize, List<string> texts, Color color, bool alignCenterV = false,
     bool alignCenterH = false) : base(position, size, fontSize, color, alignCenterV, alignCenterH) => Text = texts;
 
-  SelectableText(Vector2 position, Vector2 size, int fontSize, List<string> texts, Color color, FontResource font,
+  public SelectableText(Vector2 position, Vector2 size, int fontSize, List<string> texts, Color color, FontResource font,
     bool alignCenterV = false, bool alignCenterH = false) : base(position, size, fontSize, color, font,
     alignCenterV, alignCenterH) => Text = texts;
   

@@ -3,6 +3,7 @@ using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom;
 using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
+using FNaF2_RaylibCs.Source.Packages.Objects.Box;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 using FNaF2_RaylibCs.Source.Scripts.Objects;
@@ -20,21 +21,23 @@ public class GameMain : ScriptTemplate
   private const float DeadZone = 170f;
   private const float Sensitivity = 0.3f; // lower sensitivity = bigger number
 
+  private SimpleTimer _reddoTimer = new(.777f, true);
   private SimpleTimer _blackoutFlickeringTimer = new(.1);
   private SimpleTimer _blackoutDurationTimer = new(5);
   private float _blackoutCustomAlpha;
   
+  private bool _reddo = false;
   private float _battery = 10000;
   private float _scrollerPositionX;
   private Tool _currentTool = Tool.Nothing;
   private int _assetFrame;
-  private int _cameraPack = 6;
+  private int _cameraPack = 1;
   private bool _brokenLight;
   private bool _blackout;
   
   private void UpdateOfficeScroller()
   {
-    _scrollerPositionX = Raylib.GetMouseX() - Registration.Objects.GameCentralScroller!.GetPosition().X - 2;
+    _scrollerPositionX = Raylib.GetMouseX() - Registration.Objects.GameCentralOfficeScroller!.GetPosition().X - 2;
     if (_scrollerPositionX is > -DeadZone and < DeadZone || Raylib.GetMouseX() > Config.WindowWidth) _scrollerPositionX = 0;
     else if (_scrollerPositionX > DeadZone) _scrollerPositionX -= DeadZone;
     else if (_scrollerPositionX < -DeadZone) _scrollerPositionX += DeadZone;
@@ -45,16 +48,17 @@ public class GameMain : ScriptTemplate
 
   private void OfficeScroll()
   {
-    var office = Registration.Objects.GameOfficeCamera!;
+    var anchorPoint = Registration.Objects.GameOfficeScroller!;
     
-    office.AddPosition(new Vector2(-_scrollerPositionX * Raylib.GetFrameTime(), 0));
-    office.SetPosition(new Vector2(Math.Clamp(office.GetPosition().X, -ScrollBorder, 0), 0));
-    Registration.Objects.GameLeftLightSwitch!.SetPosition(office.GetPosition() + new Vector2(100, 356));
-    Registration.Objects.GameRightLightSwitch!.SetPosition(office.GetPosition() + new Vector2(1408, 356));
-    Registration.Objects.GameOfficeTable!.SetPosition(office.GetPosition() + new Vector2(575, 333));
-    Registration.Objects.GameOfficeBalloonBoy!.SetPosition(office.GetPosition() + new Vector2(262, 270));
-    Registration.Objects.GameOfficeMangle!.SetPosition(office.GetPosition() + new Vector2(700, 0));
-    Registration.Objects.GameOfficeToyFreddy!.SetPosition(office.GetPosition() + new Vector2(820, 0));
+    anchorPoint.AddPosition(new Vector2(-_scrollerPositionX * Raylib.GetFrameTime(), 0));
+    anchorPoint.SetPosition(new Vector2(Math.Clamp(anchorPoint.GetPosition().X, -ScrollBorder, 0), 0));
+    Registration.Objects.GameOfficeCamera!.SetPosition(anchorPoint.GetPosition());
+    Registration.Objects.GameLeftLightSwitch!.SetPosition(anchorPoint.GetPosition() + new Vector2(100, 356));
+    Registration.Objects.GameRightLightSwitch!.SetPosition(anchorPoint.GetPosition() + new Vector2(1408, 356));
+    Registration.Objects.GameOfficeTable!.SetPosition(anchorPoint.GetPosition() + new Vector2(575, 333));
+    Registration.Objects.GameOfficeBalloonBoy!.SetPosition(anchorPoint.GetPosition() + new Vector2(262, 270));
+    Registration.Objects.GameOfficeMangle!.SetPosition(anchorPoint.GetPosition() + new Vector2(700, 0));
+    Registration.Objects.GameOfficeToyFreddy!.SetPosition(anchorPoint.GetPosition() + new Vector2(820, 0));
   }
 
   private void LightButtonsReaction()
@@ -255,6 +259,7 @@ public class GameMain : ScriptTemplate
 
   private void UpdateCamera(Registry registry)
   {
+    _cameraPack = Registration.Objects.GameUiMapWithCams!.GetSelectedCam()+1;
     bool lightning = registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl);
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 1)
     {
@@ -410,18 +415,37 @@ public class GameMain : ScriptTemplate
 
   private void UiBatteryUpdate() => Registration.Objects.GameUiBattery!.SetFrame((int)Math.Ceiling(_battery / 2500.0));
 
-  private void CameraToggling()
+  private void ApplyingPack() => Registration.Objects.GameOfficeCamera!.SetPack(Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up ? _cameraPack : 0);
+
+  private void ReddoDotto(Registry registry)
   {
-    Registration.Objects.GameOfficeCamera!.SetPack(Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up ? _cameraPack : 0);
+    _reddoTimer.Update(registry);
+    if (_reddoTimer.TargetTrigger()) _reddo = !_reddo;
+    Registration.Objects.GameCameraRecord!.SetTint(_reddo ? Color.White : Color.Blank);
+  }
+
+  private void UpdateCameraScrolling()
+  {
+    switch (_cameraPack)
+    {
+      case >= 1 and <= 6:
+        Registration.Objects.GameOfficeCamera!.SetPosition(Vector2.Zero);
+        return;
+      case > 6:
+        Registration.Objects.GameOfficeCamera!.SetPosition(Registration.Objects.GameCameraScroller!.GetPosition());
+        return;
+    }
   }
 
   public override void Activation(Registry registry)
   {
+    _reddoTimer.Activation(registry);
     _blackoutFlickeringTimer.Activation(registry);
     _blackoutDurationTimer.Activation(registry);
     _blackoutCustomAlpha = 0;
     _battery = 10000;
     _currentTool = Tool.Nothing;
+    Registration.Objects.GameCameraScroller!.GetScript()!.SetBorder(-ScrollBorder, 0);
     foreach (HitboxImage button in (List<HitboxImage>)[Registration.Objects.GameUiMaskButton!, Registration.Objects.GameUiCameraButton!])
     {
       button.GetHitbox().SetSize(button.GetHitbox().GetSize() + new Vector2(12, 20));
@@ -445,11 +469,12 @@ public class GameMain : ScriptTemplate
     UiButtonsReaction(registry);
     UiMaskAndCameraReaction(registry);
 
-    CameraToggling();
+    ApplyingPack();
     
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
       registry.GetSceneManager().GetCurrentScene().ShowLayer(7, 2);
+      registry.GetSceneManager().GetCurrentScene().HideLayer(8);
       if (Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3) UpdateOfficeScroller();
       UpdateOffice(registry);
       UpdateBlackout(registry);
@@ -457,8 +482,12 @@ public class GameMain : ScriptTemplate
     else
     {
       registry.GetSceneManager().GetCurrentScene().HideLayer(7, 2);
+      registry.GetSceneManager().GetCurrentScene().ShowLayer(8);
       _blackoutCustomAlpha = 0;
+      ReddoDotto(registry);
       UpdateCamera(registry);
+      UpdateCameraScrolling();
+      Registration.Objects.GameUiMapCamsTexts!.SetTextIndex(Registration.Objects.GameUiMapWithCams!.GetSelectedCam());
     }
     
     Registration.Objects.GameOfficeCamera.SetFrame(_assetFrame);

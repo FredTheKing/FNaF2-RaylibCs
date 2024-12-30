@@ -89,7 +89,6 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart =
   public new void Activation(Registry registry)
   {
     if (ActivationStart) StartTimer();
-    
     base.Activation(registry);
   }
 

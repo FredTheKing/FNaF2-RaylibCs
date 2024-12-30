@@ -8,6 +8,7 @@ public class MenuSettings : ScriptTemplate
 {
   public override void Activation(Registry registry)
   {
+    Registration.Objects.WhiteBlinko!.GetScript()!.Play();
     Registration.Objects.SettingsFullscreenCheckbox!.SetChecked(registry.GetSceneManager().GetFullscreen());
     Registration.Objects.SettingsVsyncCheckbox!.SetChecked(registry.GetSceneManager().GetVsync());
     Registration.Objects.SettingsVolumeSlider!.SetValue(registry.GetSceneManager().GetMasterVolume());

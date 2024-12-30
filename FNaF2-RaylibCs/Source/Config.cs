@@ -40,7 +40,7 @@ public struct Config
   public const string ResPath = "Resources/";
   public const string WindowIconPath = ResPath + "icon.png";
   public const int WindowTargetFramerate = -1;
-  public const bool FullscreenMode = false, VsyncMode = false;
+  public const bool FullscreenMode = false, VsyncMode = true;
   public const float DefaultMasterVolume = 1f;
 
   public const int MaxAnimatronicsDifficulty = 20;

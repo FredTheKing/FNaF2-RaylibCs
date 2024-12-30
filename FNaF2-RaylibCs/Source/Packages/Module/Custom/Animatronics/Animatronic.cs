@@ -120,7 +120,6 @@ public class Animatronic : ScriptTemplate
   public override void Update(Registry registry) => 
     OnlyGameScene(() =>
     {
-      Console.WriteLine(CameraHatering);
       Timer.Update(registry);
       _autoer = CurrentLocation != _autoerBrakeLocation;
       
