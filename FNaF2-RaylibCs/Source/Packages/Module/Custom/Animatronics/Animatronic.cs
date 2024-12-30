@@ -1,7 +1,9 @@
 using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
+using FNaF2_RaylibCs.Source.Scripts.Objects;
 using ImGuiNET;
+using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
@@ -59,11 +61,11 @@ public class Animatronic : ScriptTemplate
   private Location _startLocation;
   private bool _locationChanged;
   private bool _autoer = true;
-  private float _lightHatering = 3000f;
   private float _droppedChance = -1f;
   private List<float> _chances = [];
   private bool _forceMove;
 
+  public float CameraHatering = 3000f;
   public string Name;
   public SimpleTimer Timer;
   public List<MovementOpportunity> Movements;
@@ -74,6 +76,7 @@ public class Animatronic : ScriptTemplate
   public (Animatronic, Location)? NextQueue;
   public Location? PlanningLocation;
   public Location CurrentLocation;
+  public bool waitingToGoIntoOffice { get; private set; }
 
   public override void CallDebuggerInfo(Registry registry)
   {
@@ -95,6 +98,7 @@ public class Animatronic : ScriptTemplate
       ImGui.Text($" > Start Location: {_startLocation}");
       ImGui.Text($" > Planning Location: {PlanningLocation}");
       OnlyGameScene(() => { ImGui.Text($" > Current Location: {CurrentLocation}"); }, registry);
+      ImGui.Text($" > Waiting To Go Into Office: {waitingToGoIntoOffice}");
       ImGui.Text($" > Movements: {Movements.Count}");
       OnlyGameScene(() => { ImGui.Text($" > Current Movements: {Movements.Count(x => x.from == CurrentLocation)}"); }, registry);
       ImGui.TreePop();
@@ -109,16 +113,26 @@ public class Animatronic : ScriptTemplate
     {
       Timer.Activation(registry);
       CurrentLocation = _startLocation;
-      _lightHatering = 3000f;
+      CameraHatering = 3000f;
       NextQueue = null;
     }, registry);
   
   public override void Update(Registry registry) => 
     OnlyGameScene(() =>
     {
+      Console.WriteLine(CameraHatering);
       Timer.Update(registry);
       _autoer = CurrentLocation != _autoerBrakeLocation;
-
+      
+      if (CurrentLocation == Location.OfficeInside && Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up && CameraHatering > 0) CameraHatering = Math.Clamp(CameraHatering - 300 * Raylib.GetFrameTime(), 0, 3000f);
+      
+      if (waitingToGoIntoOffice && Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up)
+      {
+        waitingToGoIntoOffice = false;
+        Timer.StartTimer();
+        Move(registry);
+      }
+      
       if (_locationChanged)
       {
         if (NextQueue != null)
@@ -145,7 +159,7 @@ public class Animatronic : ScriptTemplate
   public override void Draw(Registry registry) => 
     OnlyGameScene(() => { }, registry);
   
-  public void ForceMove() => _forceMove = true;
+  public void TriggerMove() => _forceMove = true;
   
   private void OnlyGameScene(Action action, Registry registry)
   {
@@ -157,6 +171,7 @@ public class Animatronic : ScriptTemplate
   public void Move(Registry registry)
   {
     _forceMove = false;
+    CameraHatering = 3000f;
     if (PlanningLocation is null)
     {
       List<MovementOpportunity> targetMovements = Movements.Where(x => x.from == CurrentLocation).ToList();
@@ -172,11 +187,22 @@ public class Animatronic : ScriptTemplate
       }
     }
     
+    if (PlanningLocation == Location.OfficeInside)
+    {
+      if (Registration.Objects.GameUiCamera!.GetScript()!.State != States.Up)
+      {
+        Timer.StopAndResetTimer();
+        waitingToGoIntoOffice = true;
+        return;
+      }
+    }
+    
     if (Excludes is not null && Excludes.Any(x => x.planningTo == PlanningLocation && registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().FirstOrDefault(a => a.Name == x.who && a.CurrentLocation == x.where) is not null)) return;
     
     foreach (Animatronic animatronic in registry.GetFNaF().GetAnimatronicManager().GetAnimatronics())
     {
-      if (animatronic.CurrentLocation != PlanningLocation || animatronic == this || (bool)Grants?.Any(a => a.who == animatronic.Name && a.where == PlanningLocation)) continue;
+      if (animatronic.CurrentLocation != PlanningLocation || animatronic == this) continue;
+      if (animatronic.Grants != null && (bool)Grants?.Any(a => a.who == animatronic.Name && a.where == PlanningLocation)) continue;
       
       Animatronic visitor = animatronic;
       while (visitor.NextQueue != null) 

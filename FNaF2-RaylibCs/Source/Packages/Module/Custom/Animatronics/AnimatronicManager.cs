@@ -29,7 +29,7 @@ public class AnimatronicManager : ScriptTemplate
 
   public override void Update(Registry registry)
   {
-    foreach (Animatronic animatronic in _animatronics)
+    foreach (Animatronic animatronic in _animatronics.OrderBy(a => Guid.NewGuid()))
       animatronic.Update(registry);
   }
 

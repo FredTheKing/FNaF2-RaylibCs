@@ -5,6 +5,7 @@ using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
+using FNaF2_RaylibCs.Source.Scripts.Objects;
 using Raylib_cs;
 using static FNaF2_RaylibCs.Source.Config.AnimatronicsNames;
 
@@ -27,7 +28,7 @@ public class GameMain : ScriptTemplate
   private float _scrollerPositionX;
   private Tool _currentTool = Tool.Nothing;
   private int _assetFrame;
-  private int _cameraPack = 2;
+  private int _cameraPack = 6;
   private bool _brokenLight;
   private bool _blackout;
   
@@ -238,41 +239,18 @@ public class GameMain : ScriptTemplate
     }
   }
 
-  public override void Activation(Registry registry)
-  {
-    _blackoutFlickeringTimer.Activation(registry);
-    _blackoutDurationTimer.Activation(registry);
-    _blackoutCustomAlpha = 0;
-    _battery = 10000;
-    _currentTool = Tool.Nothing;
-    foreach (HitboxImage button in (List<HitboxImage>)[Registration.Objects.GameUiMaskButton!, Registration.Objects.GameUiCameraButton!])
-    {
-      button.GetHitbox().SetSize(button.GetHitbox().GetSize() + new Vector2(12, 20));
-      button.GetHitbox().AddPosition(new Vector2(-6, 0));
-    }
-    
-    Registration.Objects.GameOfficeCamera!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
-    Registration.Objects.GameOfficeCamera.SetPack(0);
-    
-    registry.GetSceneManager().GetCurrentScene().HideLayer(1, 2, 3, 4, 5);
-    
-    registry.GetFNaF().GetAnimatronicManager().Activation(registry);
-    registry.GetFNaF().GetAnimatronicManager().Update(registry);
-    _brokenLight = false;
-    _blackout = false;
-  }
-
-  private void UiMaskAndCameraReaction()
+  private void UiMaskAndCameraReaction(Registry registry)
   {
     if (Registration.Objects.GameUiMaskButton!.GetHitbox().GetMouseHoverFrame()) Registration.Objects.GameUiMask!.GetScript()!.TriggerPullAction();
     if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame() && !_blackout) Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
-  }
-
-  private void UiBatteryUpdate() => Registration.Objects.GameUiBattery!.SetFrame((int)Math.Ceiling(_battery / 2500.0));
-
-  private void CameraToggling()
-  {
-    Registration.Objects.GameOfficeCamera!.SetPack(Registration.Objects.GameUiCamera!.GetPackIndex() == 2 ? _cameraPack : 0);
+    
+    Animatronic? anima = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
+    if (anima is not null && anima.CameraHatering == 0)
+    {
+      anima.CameraHatering = -1;
+      Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
+      _currentTool = Tool.Nothing;
+    }
   }
 
   private void UpdateCamera(Registry registry)
@@ -291,10 +269,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 2)
     {
-      var wasd = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics()
-        .Where(a => a.CurrentLocation == Location.Cam02).Select(a => a.Name).ToList();
-      Console.WriteLine(string.Join(", ", wasd));
-      _assetFrame = wasd switch
+      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam02).Select(a => a.Name).ToList() switch
       {
         [] or [ToyBonnie] when !lightning => 0,
         [WitheredChica] when !lightning => 1,
@@ -432,12 +407,43 @@ public class GameMain : ScriptTemplate
       };
     }
   }
-  
+
+  private void UiBatteryUpdate() => Registration.Objects.GameUiBattery!.SetFrame((int)Math.Ceiling(_battery / 2500.0));
+
+  private void CameraToggling()
+  {
+    Registration.Objects.GameOfficeCamera!.SetPack(Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up ? _cameraPack : 0);
+  }
+
+  public override void Activation(Registry registry)
+  {
+    _blackoutFlickeringTimer.Activation(registry);
+    _blackoutDurationTimer.Activation(registry);
+    _blackoutCustomAlpha = 0;
+    _battery = 10000;
+    _currentTool = Tool.Nothing;
+    foreach (HitboxImage button in (List<HitboxImage>)[Registration.Objects.GameUiMaskButton!, Registration.Objects.GameUiCameraButton!])
+    {
+      button.GetHitbox().SetSize(button.GetHitbox().GetSize() + new Vector2(12, 20));
+      button.GetHitbox().AddPosition(new Vector2(-6, 0));
+    }
+    
+    Registration.Objects.GameOfficeCamera!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
+    Registration.Objects.GameOfficeCamera.SetPack(0);
+    
+    registry.GetSceneManager().GetCurrentScene().HideLayer(1, 2, 3, 4, 5);
+    
+    registry.GetFNaF().GetAnimatronicManager().Activation(registry);
+    registry.GetFNaF().GetAnimatronicManager().Update(registry);
+    _brokenLight = false;
+    _blackout = false;
+  }
+
   public override void Update(Registry registry)
   {
     UiBatteryUpdate();
     UiButtonsReaction(registry);
-    UiMaskAndCameraReaction();
+    UiMaskAndCameraReaction(registry);
 
     CameraToggling();
     
@@ -451,6 +457,7 @@ public class GameMain : ScriptTemplate
     else
     {
       registry.GetSceneManager().GetCurrentScene().HideLayer(6);
+      _blackoutCustomAlpha = 0;
       UpdateCamera(registry);
     }
     

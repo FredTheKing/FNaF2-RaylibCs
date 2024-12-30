@@ -4,7 +4,7 @@ using FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 
 namespace FNaF2_RaylibCs.Source.Scripts.Objects;
 
-internal enum States
+public enum States
 {
   Down,
   GoingUp,
@@ -14,18 +14,18 @@ internal enum States
 
 public class PullAnimationScript(SelectableAnimation obj) : ScriptTemplate
 {
-  private States _state = States.Down;
+  public States State = States.Down;
 
   public override void Activation(Registry registry)
   {
-    _state = States.Down;
+    State = States.Down;
     obj.SetPack(0);
     base.Activation(registry);
   }
 
   public void TriggerPullAction()
   {
-    States gottaGo = _state switch
+    States gottaGo = State switch
     {
       States.Down or States.GoingDown => States.GoingUp,
       States.Up or States.GoingUp => States.GoingDown
@@ -34,11 +34,11 @@ public class PullAnimationScript(SelectableAnimation obj) : ScriptTemplate
     switch (gottaGo)
     {
       case States.GoingUp:
-        _state = States.GoingUp;
+        State = States.GoingUp;
         obj.SetPack(1);
         break;
       case States.GoingDown:
-        _state = States.GoingDown;
+        State = States.GoingDown;
         obj.SetPack(3);
         break;
     }
@@ -48,14 +48,14 @@ public class PullAnimationScript(SelectableAnimation obj) : ScriptTemplate
   {
     if (obj.IsFinished())
     {
-      switch (_state)
+      switch (State)
       {
         case States.GoingUp:
-          _state = States.Up;
+          State = States.Up;
           obj.SetPack(2);
           break;
         case States.GoingDown:
-          _state = States.Down;
+          State = States.Down;
           obj.SetPack(0);
           break;
       }
