@@ -12,7 +12,7 @@ public class ImageStackResource : MaterialTemplate
   protected new List<Texture2D>? Material = [];
   private TextureFilter _filter = TextureFilter.Point;
 
-  public override bool IsMaterialLoaded() => Material!.Count(x => Raylib.IsTextureReady(x)) == Filename!.Count;
+  public override bool IsMaterialLoaded() => Material!.Count(x => Raylib.IsTextureValid(x)) == Filename!.Count;
 
   public ImageStackResource(List<string> filenames)
   {

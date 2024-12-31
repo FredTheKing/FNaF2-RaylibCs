@@ -12,7 +12,7 @@ public class ImageDoubleStackResource : MaterialTemplate
   protected new List<List<Texture2D>>? Material = [];
   private TextureFilter _filter = TextureFilter.Point;
   
-  public override bool IsMaterialLoaded() => Material!.Sum(x => x.Count(a => Raylib.IsTextureReady(a))) == Filename!.Sum(x => x.Count);
+  public override bool IsMaterialLoaded() => Material!.Sum(x => x.Count(a => Raylib.IsTextureValid(a))) == Filename!.Sum(x => x.Count);
   
   public ImageDoubleStackResource(List<List<string>> filenames)
   {

@@ -16,7 +16,7 @@ public class ShaderResource : MaterialTemplate
   public override bool IsMaterialLoaded()
   {
     if (Material is null) return false;
-    return Raylib.IsShaderReady(Material);
+    return Raylib.IsShaderValid(Material);
   }
   
   public override void Unload()

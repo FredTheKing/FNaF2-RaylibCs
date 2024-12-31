@@ -25,7 +25,7 @@ public class ImageResource : MaterialTemplate
   public override bool IsMaterialLoaded()
   {
     if (Material is null) return false;
-    return Raylib.IsTextureReady(Material);
+    return Raylib.IsTextureValid(Material);
   }
   
   public void SetFilter(TextureFilter filter) => _filter = filter;

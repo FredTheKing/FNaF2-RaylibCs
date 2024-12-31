@@ -12,7 +12,7 @@ public class SoundResource : MaterialTemplate
   public override bool IsMaterialLoaded()
   {
     if (Material is null) return false;
-    return Raylib.IsSoundReady(Material);
+    return Raylib.IsSoundValid(Material);
   }
   
   public override void CallDebuggerInfo(Registry registry) => ImGui.Text($" > Loaded: {IsMaterialLoaded()}");

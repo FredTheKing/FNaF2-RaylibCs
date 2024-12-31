@@ -14,7 +14,7 @@ public class FontResource : MaterialTemplate
   public override bool IsMaterialLoaded()
   {
     if (Material is null) return false;
-    return Raylib.IsFontReady(Material);
+    return Raylib.IsFontValid(Material);
   }
 
   public override void Unload()
