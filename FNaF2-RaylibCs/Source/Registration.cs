@@ -8,6 +8,7 @@ using FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 using FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 using FNaF2_RaylibCs.Source.Packages.Objects.Box;
 using FNaF2_RaylibCs.Source.Packages.Objects.Checkbox;
+using FNaF2_RaylibCs.Source.Packages.Objects.Circular;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using FNaF2_RaylibCs.Source.Packages.Objects.Slider;
 using FNaF2_RaylibCs.Source.Packages.Objects.Text;
@@ -39,13 +40,14 @@ public static class Registration
 
     public static ImageResource? LoadingClockResource;
 
-    public static FontResource? GameCameraCamsFontResource;
+    public static FontResource? PixilatedFont;
     public static ShaderResource? GamePerspectiveShaderResource;
     public static ImageResource? GameNewspaperYooo;
     public static ImageResource? GameCameraOutlineResource;
     public static ImageResource? GameCameraRecordResource;
     public static ImageResource? GameCameraMapResource;
     public static ImageStackResource? GameCameraCamsUnitResource;
+    public static ImageStackResource? GameMusicBoxWindUpButtonResource;
     public static ImageDoubleStackResource? GameOfficeCameraResource;
     public static ImageStackResource? GameOfficeTableResource;
     public static ImageStackResource? GameLeftLightResource;
@@ -142,6 +144,10 @@ public static class Registration
     public static SelectableAnimation? GameUiMask;
     public static SelectableAnimation? GameUiCamera;
     public static SelectableAnimation? GameJumpscares;
+    public static SimpleCircular? GameMusicBoxCircular;
+    public static SelectableHitboxImage? GameMusicBoxBox;
+    public static SimpleText? GameMusicBoxText;
+    public static SimpleText? GameMusicBoxBottomText;
   }
   
   public static void MaterialsInitialisation(Registry registry)
@@ -152,7 +158,7 @@ public static class Registration
     Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", [Config.AllShortcut], new FontResource(Config.ResPath + "Font/regular.ttf", 128));
     
     Materials.MenuBackgroundStackResource = registry.RegisterMaterial("MenuBackgroundStackResource", [Config.Scenes.MenuMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Background", 4)));
-    Materials.StaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Static", 8)));
+    Materials.StaticStackResource = registry.RegisterMaterial("MenuStaticStackResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameMain, Config.Scenes.GameLose], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Menu/Static", 8)));
     
     Materials.CreditsRaylibResource = registry.RegisterMaterial("CreditsRaylibResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Raylib.png"));
     Materials.CreditsMyResource = registry.RegisterMaterial("CreditsMyResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Me.png"));
@@ -160,7 +166,7 @@ public static class Registration
     
     Materials.LoadingClockResource = registry.RegisterMaterial("LoadingClockResource", [Config.Scenes.GameLoading], new ImageResource(Config.ResPath + "Game/Etc/Clock.png"));
     
-    Materials.GameCameraCamsFontResource = registry.RegisterMaterial("GameCameraCamsFontResource", [Config.Scenes.GameMain], new FontResource(Config.ResPath + "Font/lcd.ttf", 48));
+    Materials.PixilatedFont = registry.RegisterMaterial("PixilatedFont", [Config.Scenes.GameMain], new FontResource(Config.ResPath + "Font/lcd.ttf", 48));
     Materials.GameNewspaperYooo = registry.RegisterMaterial("GameNewspaperYooo", [Config.Scenes.GameNewspaper], new ImageResource(Config.ResPath + "Game/Etc/Newspaper.png"));
     Materials.GameNewspaperYooo.SetFilter(TextureFilter.Bilinear);
     Materials.GamePerspectiveShaderResource = registry.RegisterMaterial("GamePerspectiveShaderResource", [Config.Scenes.GameMain], new ShaderResource(Config.ResPath + "Shaders/perspective.vs", Config.ResPath + "Shaders/perspective.fs"));
@@ -182,7 +188,8 @@ public static class Registration
     Materials.GameCameraOutlineResource = registry.RegisterMaterial("GameCameraOutlineResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Outline.png"));
     Materials.GameCameraRecordResource = registry.RegisterMaterial("GameCameraRecordResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Record.png"));
     Materials.GameCameraMapResource = registry.RegisterMaterial("GameCameraMapResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Map.png"));
-    Materials.GameCameraCamsUnitResource = registry.RegisterMaterial("GameCameraCamsUnitResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Cam", 2)));
+    Materials.GameCameraCamsUnitResource = registry.RegisterMaterial("GameCameraCamsUnitResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/CamBoxes", 2)));
+    Materials.GameMusicBoxWindUpButtonResource = registry.RegisterMaterial("GameMusicBoxWindUpButtonResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/CamBoxes", 2, 2)));
     Materials.GameOfficeTableResource = registry.RegisterMaterial("GameOfficeTableResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/Table", 4)));
     Materials.GameLeftLightResource = registry.RegisterMaterial("GameLeftLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2)));
     Materials.GameRightLightResource = registry.RegisterMaterial("GameRightLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2, 2)));
@@ -231,12 +238,12 @@ public static class Registration
 
   public static void ObjectsInitialisation(Registry registry)
   {
-    Objects.WhiteBlinko = registry.RegisterObject("GlobalWhiteBlinko", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading, Config.Scenes.GameMain], [9], new SelectableImage(Vector2.Zero, Materials.MenuWhiteBlinkoStackResource!, Color.White));
+    Objects.WhiteBlinko = registry.RegisterObject("GlobalWhiteBlinko", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameLoading, Config.Scenes.GameMain], [12], new SelectableImage(Vector2.Zero, Materials.MenuWhiteBlinkoStackResource!, Color.White));
     Objects.WhiteBlinko.AssignScript(new WhiteBlinkoScript(Objects.WhiteBlinko));
     
     Objects.MenuBackground = registry.RegisterObject("MenuBackground", [Config.Scenes.MenuMain], [0], new SelectableImage(Vector2.Zero, Materials.MenuBackgroundStackResource!, Color.White));
-    Objects.Static = registry.RegisterObject("MenuStatic", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameMain], [0, 0, 0, 0, 0, 8], new SimpleAnimation(Vector2.Zero, 24, new Color(255, 255, 255, 100), AnimationPlayMode.Replacement, Materials.StaticStackResource!));
-    Objects.MenuGameName = registry.RegisterObject("MenuGameName", [Config.Scenes.MenuMain], [1], new SimpleText(new Vector2(92, 16), Vector2.Zero, 62, "Five\n\n\n\nNights\n\n\n\nAt\n\n\n\nFreddy's\n\n\n\n2", Color.White, Materials.GlobalFont!));
+    Objects.Static = registry.RegisterObject("MenuStatic", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameMain, Config.Scenes.GameLose], [0, 0, 0, 0, 0, 8, 0], new SimpleAnimation(Vector2.Zero, 24, new Color(255, 255, 255, 100), AnimationPlayMode.Replacement, Materials.StaticStackResource!));
+    Objects.MenuGameName = registry.RegisterObject("MenuGameName", [Config.Scenes.MenuMain], [1], new SimpleText(new Vector2(92, 16), Vector2.Zero, 62, "Five\nNights\nAt\nFreddy's\n2", Color.White, Materials.GlobalFont!));
     
     // each new line = 65px
     Objects.MenuSet = registry.RegisterObject("MenuSet", [Config.Scenes.MenuMain, Config.Scenes.MenuExtras], [1], new SimpleText(new Vector2(20, 428), Vector2.Zero, 48, ">>", Color.White, Materials.GlobalFont!));
@@ -274,11 +281,11 @@ public static class Registration
     
     Objects.CreditsTitle = registry.RegisterObject("CreditsTitle", [Config.Scenes.MenuCredits], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Credits", Color.White, Materials.GlobalFont!, true, true));
     Objects.CreditsRaylibLogo = registry.RegisterObject("CreditsRaylibLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 - 275, 352), Materials.CreditsRaylibResource!, Color.White, new Vector2(150, 150)));
-    Objects.CreditsRaylibText = registry.RegisterObject("CreditsRaylibText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsRaylibLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Powered\n\nwith:", Color.White, Materials.GlobalFont!, false, true));
+    Objects.CreditsRaylibText = registry.RegisterObject("CreditsRaylibText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsRaylibLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Powered\nwith:", Color.White, Materials.GlobalFont!, false, true));
     Objects.CreditsScottLogo = registry.RegisterObject("CreditsScottLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 - 70, 352), Materials.CreditsScottResource!, Color.White, new Vector2(150, 150)));
-    Objects.CreditsScottText = registry.RegisterObject("CreditsScottText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsScottLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Original\n\nDev:", Color.White, Materials.GlobalFont!, false, true));
+    Objects.CreditsScottText = registry.RegisterObject("CreditsScottText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsScottLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Original\nDev:", Color.White, Materials.GlobalFont!, false, true));
     Objects.CreditsMyLogo = registry.RegisterObject("CreditsMyLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 + 125, 352), Materials.CreditsMyResource!, Color.White, new Vector2(150, 150)));
-    Objects.CreditsMyText = registry.RegisterObject("CreditsMyText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsMyLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Remake\n\nDev:", Color.White, Materials.GlobalFont!, false, true));
+    Objects.CreditsMyText = registry.RegisterObject("CreditsMyText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsMyLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Remake\nDev:", Color.White, Materials.GlobalFont!, false, true));
     
     Objects.CustomNightTitle = registry.RegisterObject("CustomNightTitle", [Config.Scenes.MenuCustomNight], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Custom Night", Color.White, Materials.GlobalFont!, true, true));
     
@@ -304,7 +311,7 @@ public static class Registration
     Objects.GameOfficeToyChica = registry.RegisterObject("GameOfficeToyChica", [Config.Scenes.GameMain], [4], new SimpleImage(Vector2.Zero, Materials.GameOfficeToyChicaResource!));
     Objects.GameOfficeMangle = registry.RegisterObject("GameOfficeMangle", [Config.Scenes.GameMain], [5], new SimpleImage(Vector2.Zero, Materials.GameOfficeMangleResource!));
     Objects.GameOfficeBalloonBoy = registry.RegisterObject("GameOfficeBalloonBoy", [Config.Scenes.GameMain], [6], new SimpleImage(Vector2.Zero, Materials.GameOfficeBalloonBoyResource!));
-    Objects.GameUiMapWithCams = registry.RegisterObject("GameUiMapWithCams", [Config.Scenes.GameMain], [8], new CamMap(new SimpleImage(new Vector2(560, 385), Materials.GameCameraMapResource!), Materials.GameCameraCamsUnitResource!, Materials.GameCameraCamsFontResource!, [
+    Objects.GameUiMapWithCams = registry.RegisterObject("GameUiMapWithCams", [Config.Scenes.GameMain], [8], new CamMap(new SimpleImage(new Vector2(560, 385), Materials.GameCameraMapResource!), Materials.GameCameraCamsUnitResource!, Materials.PixilatedFont!, [
       new Vector2(587, 575),
       new Vector2(720, 576),
       new Vector2(586, 508),
@@ -317,7 +324,7 @@ public static class Registration
       new Vector2(833, 528),
       new Vector2(934, 484),
       new Vector2(921, 577)
-    ]));
+    ], 10));
     Objects.GameUiMapCamsTexts = registry.RegisterObject("GameUiMapCamsTexts", [Config.Scenes.GameMain], [8], new SelectableText(new Vector2(563, 330), Vector2.Zero, 40, [
       "Party Room 1",
       "Party Room 2",
@@ -331,7 +338,11 @@ public static class Registration
       "Game Area",
       "Prize Corner",
       "Kid's Cove"
-    ], Color.White, Materials.GlobalFont!));
+    ], Color.White, Materials.PixilatedFont!));
+    Objects.GameMusicBoxCircular = registry.RegisterObject("GameMusicBoxCircular", [Config.Scenes.GameMain], [10], new SimpleCircular(new Vector2(328, 658), 27, 0.0167f, 0.0256f, Color.White));
+    Objects.GameMusicBoxBox = registry.RegisterObject("GameMusicBoxBox", [Config.Scenes.GameMain], [9], new SelectableHitboxImage(new Vector2(365, 608), Materials.GameMusicBoxWindUpButtonResource!));
+    Objects.GameMusicBoxText = registry.RegisterObject("GameMusicBoxText", [Config.Scenes.GameMain], [9], new SimpleText(Objects.GameMusicBoxBox.GetPosition(), Materials.GameMusicBoxWindUpButtonResource!.GetSize(), 23, "Wind Up\nMusic Box", Color.White, Materials.PixilatedFont!));
+    Objects.GameMusicBoxBottomText = registry.RegisterObject("GameMusicBoxBottomText", [Config.Scenes.GameMain], [9], new SimpleText(Objects.GameMusicBoxBox.GetPosition() + new Vector2(0, 60), new Vector2(Materials.GameMusicBoxWindUpButtonResource.GetSize().X, 30), 19, "click & hold", Color.White, Materials.PixilatedFont!, false, true));
     Objects.GameUiBattery = registry.RegisterObject("GameUiBattery", [Config.Scenes.GameMain], [7], new SelectableImage(new Vector2(18), Materials.GameUiBatteryResource!));
     Objects.GameUiMaskButton = registry.RegisterObject("GameUiMaskButton", [Config.Scenes.GameMain], [20], new HitboxImage(new Vector2(6, Config.WindowHeight - 50), Materials.GameUiMaskButtonResource!));
     Objects.GameUiCameraButton = registry.RegisterObject("GameUiCameraButton", [Config.Scenes.GameMain], [21], new HitboxImage(new Vector2(518, Config.WindowHeight - 50), Materials.GameUiCameraButtonResource!));

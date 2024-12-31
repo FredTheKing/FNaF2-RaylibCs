@@ -72,11 +72,13 @@ public class Animatronic : ScriptTemplate
   public List<ExcludeOpportunity>? Excludes;
   public List<GrantOpportunity>? Grants;
   public AnimatronicType Type;
-  public int Difficulty = Config.MaxAnimatronicsDifficulty;
+  public int Difficulty;
   public (Animatronic, Location)? NextQueue;
   public Location? PlanningLocation;
   public Location CurrentLocation;
   public bool waitingToGoIntoOffice { get; private set; }
+  
+  public void SetDifficulty(int difficulty) => Difficulty = difficulty;
 
   public override void CallDebuggerInfo(Registry registry)
   {

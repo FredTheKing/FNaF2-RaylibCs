@@ -82,8 +82,8 @@ public class Scene(string name) : CallDebuggerInfoTemplate
       item.Deactivation(registry, nextSceneName);
     foreach (SoundObject sound in _sceneListSounds)
       sound.Deactivation(registry, nextSceneName);
-    _scriptInstance!.Deactivation(registry, nextSceneName);
-    _globalScriptInstance!.Deactivation(registry, nextSceneName);
+    _scriptInstance?.Deactivation(registry, nextSceneName);
+    _globalScriptInstance?.Deactivation(registry, nextSceneName);
   }
   
   public void Activation(Registry registry)
@@ -92,8 +92,8 @@ public class Scene(string name) : CallDebuggerInfoTemplate
       item.Activation(registry);
     foreach (SoundObject sound in _sceneListSounds)
       sound.Activation(registry);
-    _scriptInstance!.Activation(registry);
-    _globalScriptInstance!.Activation(registry);
+    _scriptInstance?.Activation(registry);
+    _globalScriptInstance?.Activation(registry);
   }
   
   public void Update(Registry registry)
@@ -102,15 +102,15 @@ public class Scene(string name) : CallDebuggerInfoTemplate
       item.Update(registry);
     foreach (SoundObject sound in _sceneListSounds)
       sound.Update(registry);
-    _scriptInstance!.Update(registry);
-    _globalScriptInstance!.Update(registry);
+    _scriptInstance?.Update(registry);
+    _globalScriptInstance?.Update(registry);
   }
   
   public void Draw(Registry registry)
   {
     foreach (dynamic item in _sortedListObjects)
       item.Draw(registry);
-    _scriptInstance!.Draw(registry);
-    _globalScriptInstance!.Draw(registry);
+    _scriptInstance?.Draw(registry);
+    _globalScriptInstance?.Draw(registry);
   }
 }

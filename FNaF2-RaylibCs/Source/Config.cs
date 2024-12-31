@@ -13,13 +13,14 @@ public struct Config
     public const string MenuCredits = "Menu/Credits";
     public const string MenuCustomNight = "Menu/CustomNight";
     public const string GameMain = "Game/Main";
+    public const string GameLose = "Game/Lose";
+    public const string GameWin = "Game/Win";
     public const string GameLoading = "Game/Loading";
     public const string GameNewspaper = "Game/Newspaper";
   }
   
   public struct AnimatronicsNames
   {
-    public const string NoOne = "UNKNOWN_ANIMATRONIC";
     public const string ToyBonnie = "T Bonnie";
     public const string ToyFreddy = "T Freddy";
     public const string ToyChica = "T Chica";

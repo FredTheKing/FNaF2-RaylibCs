@@ -16,7 +16,7 @@ public class SimpleText : ObjectTemplate
     _text = text;
     FontSize = fontSize;
     Color = color;
-    RememberColor = color;
+    ActualColor = color;
     Font = new FontResource(Raylib.GetFontDefault());
     AlignCenterH = alignCenterH;
     AlignCenterV = alignCenterV;
@@ -29,7 +29,7 @@ public class SimpleText : ObjectTemplate
     _text = text;
     FontSize = fontSize;
     Color = color;
-    RememberColor = color;
+    ActualColor = color;
     Font = font;
     AlignCenterH = alignCenterH;
     AlignCenterV = alignCenterV;
@@ -42,7 +42,7 @@ public class SimpleText : ObjectTemplate
     _text = "";
     FontSize = fontSize;
     Color = color;
-    RememberColor = color;
+    ActualColor = color;
     Font = new FontResource(Raylib.GetFontDefault());
     AlignCenterH = alignCenterH;
     AlignCenterV = alignCenterV;
@@ -55,7 +55,7 @@ public class SimpleText : ObjectTemplate
     _text = "";
     FontSize = fontSize;
     Color = color;
-    RememberColor = color;
+    ActualColor = color;
     Font = font;
     AlignCenterH = alignCenterH;
     AlignCenterV = alignCenterV;
@@ -65,7 +65,7 @@ public class SimpleText : ObjectTemplate
   protected int FontSize;
   protected float FontSpacing = 1.0f;
   protected Color Color; 
-  protected Color RememberColor;
+  protected Color ActualColor;
   protected FontResource Font;
   protected Vector2 Offset = new(0, 0);
   protected bool AlignCenterH;
@@ -83,7 +83,8 @@ public class SimpleText : ObjectTemplate
       ImGui.Text($" > Offset: {Offset.X}, {Offset.Y}");
       ImGui.Text($" > Size: {Size.X}, {Size.Y}");
       ImGui.Text($" > Text: {GetText()}");
-      ImGui.Text($" > Color: {Color.R}, {Color.G}, {Color.B}, {Color.A}");
+      ImGui.Text($" > Actual Color: {ActualColor.R}, {ActualColor.G}, {ActualColor.B}, {ActualColor.A}");
+      ImGui.Text($" > Current Color: {Color.R}, {Color.G}, {Color.B}, {Color.A}");
       ImGui.Text($" > Font Size: {FontSize}");
       ImGui.Text($" > Font Spacing: {FontSpacing}");
       ImGui.TreePop();
@@ -104,6 +105,10 @@ public class SimpleText : ObjectTemplate
   protected virtual void PostDraw(Vector2 newPosition) => Raylib.DrawTextEx(Font.GetMaterial(), _text, newPosition + Offset, FontSize, FontSpacing, Color);
   
   public void SetCurrentFrameColor(Color color) => Color = color;
+  public Color GetCurrentFrameColor() => Color;
+
+  public void SetColor(Color color) => ActualColor = color;
+  public Color GetColor() => ActualColor;
   
   public string GetText() => _text;
   
@@ -111,8 +116,8 @@ public class SimpleText : ObjectTemplate
 
   private void UndoColorChanges()
   {
-    if (Raylib.ColorToInt(Color) == Raylib.ColorToInt(RememberColor)) return;
-    Color = RememberColor;
+    if (Raylib.ColorToInt(Color) == Raylib.ColorToInt(ActualColor)) return;
+    Color = ActualColor;
   }
   
   public override void Draw(Registry registry)

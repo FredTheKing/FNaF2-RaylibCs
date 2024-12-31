@@ -257,6 +257,24 @@ public class GameMain : ScriptTemplate
     }
   }
 
+  private void UpdateMusicBox(Registry registry)
+  {
+    if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 11)
+    {
+      Registration.Objects.GameMusicBoxCircular!.SetColor(Color.White);
+      registry.GetSceneManager().GetCurrentScene().ShowLayer(9);
+    }
+    else
+    {
+      Registration.Objects.GameMusicBoxCircular!.SetColor(Color.Blank);
+      registry.GetSceneManager().GetCurrentScene().HideLayer(9);
+    }
+    
+    bool holdin = Registration.Objects.GameMusicBoxBox!.GetHitbox().GetMouseDrag(MouseButton.Left);
+    Registration.Objects.GameMusicBoxBox.SetFrame(holdin ? 1 : 0);
+    Registration.Objects.GameMusicBoxCircular.Recovering = holdin;
+  }
+
   private void UpdateCamera(Registry registry)
   {
     _cameraPack = Registration.Objects.GameUiMapWithCams!.GetSelectedCam()+1;
@@ -470,6 +488,7 @@ public class GameMain : ScriptTemplate
     UiMaskAndCameraReaction(registry);
 
     ApplyingPack();
+    UpdateMusicBox(registry);
     
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
