@@ -6,7 +6,7 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Cams;
 
-public class CamMap(SimpleImage map, ImageStackResource camBg, FontResource font, List<Vector2> camsPositions, int defaultCam) : ObjectTemplate(map.GetPosition(), map.GetSize())
+public class CamMap(SimpleImage map, ImageStackResource camBg, FontResource font, List<Vector2> camsPositions, int defaultCamIndex) : ObjectTemplate(map.GetPosition(), map.GetSize())
 {
   private readonly List<CamUnit> _camsUnits = camsPositions.Select((pos, i) => new CamUnit(pos, camBg, font, i+1)).ToList();
   
@@ -26,7 +26,7 @@ public class CamMap(SimpleImage map, ImageStackResource camBg, FontResource font
 
   public override void Activation(Registry registry)
   {
-    _camsUnits[defaultCam].Selected = true;
+    _camsUnits[defaultCamIndex].Selected = true;
   }
 
   public override void Update(Registry registry)

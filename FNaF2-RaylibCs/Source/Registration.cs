@@ -324,7 +324,7 @@ public static class Registration
       new Vector2(833, 528),
       new Vector2(934, 484),
       new Vector2(921, 577)
-    ], 10));
+    ], 8));
     Objects.GameUiMapCamsTexts = registry.RegisterObject("GameUiMapCamsTexts", [Config.Scenes.GameMain], [8], new SelectableText(new Vector2(563, 330), Vector2.Zero, 40, [
       "Party Room 1",
       "Party Room 2",
