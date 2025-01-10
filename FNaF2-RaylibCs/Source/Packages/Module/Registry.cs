@@ -36,19 +36,26 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
     ImGui.Text($" > Total Materials: {resources.GetStorage().SelectMany(x => x.Value).Count()}");
   }
 
-  public dynamic RegisterObject(string name, string[] scenesNames, int[] zLayers, dynamic obj)
+  private List<string> InitTargetScenes(Config.Scenes[] scenesNames)
   {
-    List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == Config.AllShortcut;
+    List<string> targetScenes = [];
+    bool haveStar = scenesNames[0] == Config.Scenes.All;
     
     if (haveStar) targetScenes.AddRange(scene.All.Keys);
-    foreach (string sceneName in scenesNames)
+    foreach (Config.Scenes sceneName in scenesNames)
     {
-      if (sceneName == Config.AllShortcut) continue;
+      if (sceneName == Config.Scenes.All) continue;
       
-      if (haveStar) targetScenes.Remove(sceneName);
-      else targetScenes.Add(sceneName);
+      if (haveStar) targetScenes.Remove(sceneName.ToString());
+      else targetScenes.Add(sceneName.ToString());
     }
+
+    return targetScenes;
+  }
+
+  public dynamic RegisterObject(string name, Config.Scenes[] scenesNames, int[] zLayers, dynamic obj)
+  {
+    List<string> targetScenes = InitTargetScenes(scenesNames);
     
     foreach (string sceneName in targetScenes)
     {
@@ -67,19 +74,9 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
     return obj;
   }
   
-  public dynamic RegisterMaterial(string name, string[] scenesNames, dynamic mat)
+  public dynamic RegisterMaterial(string name, Config.Scenes[] scenesNames, dynamic mat)
   {
-    List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == Config.AllShortcut;
-    
-    if (haveStar) targetScenes.AddRange(scene.All.Keys);
-    foreach (string sceneName in scenesNames)
-    {
-      if (sceneName == Config.AllShortcut) continue;
-      
-      if (haveStar) targetScenes.Remove(sceneName);
-      else targetScenes.Add(sceneName);
-    }
+    List<string> targetScenes = InitTargetScenes(scenesNames);
     
     foreach (string sceneName in targetScenes)
     {
@@ -90,19 +87,9 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
     return mat;
   }
   
-  public dynamic RegisterSound(String name, string[] scenesNames, SoundObject snd)
+  public dynamic RegisterSound(String name, Config.Scenes[] scenesNames, SoundObject snd)
   {
-    List<string> targetScenes = new();
-    bool haveStar = scenesNames[0] == Config.AllShortcut;
-    
-    if (haveStar) targetScenes.AddRange(scene.All.Keys);
-    foreach (string sceneName in scenesNames)
-    {
-      if (sceneName == Config.AllShortcut) continue;
-      
-      if (haveStar) targetScenes.Remove(sceneName);
-      else targetScenes.Add(sceneName);
-    }
+    List<string> targetScenes = InitTargetScenes(scenesNames);
     
     foreach (string sceneName in targetScenes)
     {

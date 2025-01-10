@@ -8,7 +8,6 @@ public static class MainLooper
   {
     if (!registry.scene.Changed) return;
     registry.scene.Changed = false;
-    registry.scene.Current?.Activation(registry);
     registry.fnaf.Activation(registry);
   }
   

@@ -270,9 +270,10 @@ public class GameMain : ScriptTemplate
       registry.scene.Current!.HideLayer(9);
     }
     
-    bool holdin = Registration.Objects.GameMusicBoxBox!.GetHitbox().GetMouseDrag(MouseButton.Left);
-    Registration.Objects.GameMusicBoxBox.SetFrame(holdin ? 1 : 0);
-    Registration.Objects.GameMusicBoxCircular.Recovering = holdin;
+    if (Registration.Objects.GameOfficeCamera.GetPackIndex() != 11) Registration.Objects.GameMusicBoxBox!.GetHitbox().Update(registry);
+    bool holding = Registration.Objects.GameMusicBoxBox!.GetHitbox().GetMouseDrag(MouseButton.Left) && Registration.Objects.GameOfficeCamera.GetPackIndex() == 11;
+    Registration.Objects.GameMusicBoxBox.SetFrame(holding ? 1 : 0);
+    Registration.Objects.GameMusicBoxCircular.Recovering = holding;
   }
 
   private void UpdateCamera(Registry registry)

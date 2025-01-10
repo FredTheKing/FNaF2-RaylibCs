@@ -5,7 +5,7 @@ namespace FNaF2_RaylibCs.Source.Packages.Module.Custom;
 public class NightManager : CallDebuggerInfoTemplate
 {
   private int _latestNight = 1;
-  private int _upcomingNight = 1;
+  private int _upcomingNight;
 
   public void NewGameNight()
   {

@@ -21,7 +21,7 @@ public class GameNewspaper : ScriptTemplate
   {
     _timer.Update(registry);
 
-    Registration.Objects.GameNewspapers!.SetSize(new Vector2(customSizeW, (float)(customSizeW * Config.WindowRatioWH)));
+    Registration.Objects.GameNewspapers!.SetSize(new Vector2(customSizeW, (float)(customSizeW * Config.WindowRatioWh)));
 
     Vector2 screenSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
     Vector2 debugOffset = registry.DebugMode ? new Vector2(-200, 0) : Vector2.Zero;

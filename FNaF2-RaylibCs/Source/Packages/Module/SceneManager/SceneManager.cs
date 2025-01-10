@@ -56,6 +56,7 @@ public class SceneManager(List<string> names) : CallDebuggerInfoTemplate
     Current = newScene;
     Changed = true;
     Current.Load();
+    Current.Activation(registry);
     Console.WriteLine("INFO: SCENE: Scene changed successfully");
   }
   

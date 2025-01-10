@@ -6,6 +6,7 @@ public struct Config
 {
   public enum Scenes
   {
+    All,
     DebuggerTesting,
     MenuMain,
     MenuSettings,
@@ -36,7 +37,8 @@ public struct Config
   }
   
   public const int WindowWidth = 1024, WindowHeight = 768;
-  public const double WindowRatioWH = (double)WindowHeight / WindowWidth;
+  public const double WindowRatioWh = (double)WindowHeight / WindowWidth;
+  public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign
   public const string WindowTitle = "Five Nights at Freddy's 2 - Raylib Edition";
   public const string ResPath = "Resources/";
   public const string WindowIconPath = ResPath + "icon.png";
@@ -50,7 +52,5 @@ public struct Config
   #else
   public const Scenes StartSceneName = Scenes.MenuMain;
   #endif
-  public const string AllShortcut = "*";
-  public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign
-  public static readonly string SeparatorLine = new('-', 100);
+  public static readonly string SeparatorLine = new('=', 100);
 }

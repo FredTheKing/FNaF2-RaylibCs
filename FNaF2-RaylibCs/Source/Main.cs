@@ -11,7 +11,7 @@ Registry registry = new Registry(
   typeof(Config.Scenes)
   .GetFields()
   .Select(x => x.Name)
-  .ToList()[1..]
+  .ToList()[2..]
 );
 Registration.RegistryInitialisation(registry);
 Console.WriteLine(Config.SeparatorLine);

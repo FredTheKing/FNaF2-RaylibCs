@@ -7,6 +7,14 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 
+public record struct DifficultyBehavior(int night, int hour, int changeTo)
+{
+  // struct for animatronics to change difficulty as night goes
+    // night = on what night
+    // hour = on what hour
+    // changeTo = on what difficulty change to
+}
+
 public record struct MovementOpportunity(Location from, Location to, float chance)
 {
   // struct for animatronics to know where to go from where and with what chance
