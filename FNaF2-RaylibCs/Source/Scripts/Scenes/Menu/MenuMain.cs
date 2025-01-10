@@ -37,15 +37,15 @@ public class MenuMain : ScriptTemplate
       switch (hitbox.GetText())
       {
         case "New Game":
-          registry.GetFNaF().GetNightManager().NewGameNight();
-          registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameNewspaper);
+          registry.fnaf.GetNightManager().NewGameNight();
+          registry.scene.Change(registry, Config.Scenes.GameNewspaper);
           break;
         case "Continue":
-          registry.GetFNaF().GetNightManager().ContinueNight();
-          registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameLoading);
+          registry.fnaf.GetNightManager().ContinueNight();
+          registry.scene.Change(registry, Config.Scenes.GameLoading);
           break;
         case "Extras":
-          registry.GetSceneManager().ChangeScene(registry, Config.Scenes.MenuExtras);
+          registry.scene.Change(registry, Config.Scenes.MenuExtras);
           break;
       }
   }
@@ -64,7 +64,7 @@ public class MenuMain : ScriptTemplate
     Registration.Objects.MenuSet!.SetY(initialY);
     _prevSetY = initialY;
     
-    int latestNight = registry.GetFNaF().GetNightManager().GetLatestNight();
+    int latestNight = registry.fnaf.GetNightManager().GetLatestNight();
     Registration.Objects.MenuContinueNightText!.SetText("Night " + (latestNight <= 5 ? latestNight : 5));
   }
     

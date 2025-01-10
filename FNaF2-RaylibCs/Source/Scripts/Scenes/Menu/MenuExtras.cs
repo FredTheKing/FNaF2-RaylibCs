@@ -32,10 +32,10 @@ public class MenuExtras : ScriptTemplate
           System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://github.com/FredTheKing") { UseShellExecute = true });
           break;
         case "Back":
-          registry.GetSceneManager().ChangeScene(registry, "Menu/Main");
+          registry.scene.Change(registry, Config.Scenes.MenuMain);
           break;
         default:
-          registry.GetSceneManager().ChangeScene(registry, "Menu/" + hitbox.GetText().Replace(" ", ""));
+          registry.scene.Change(registry, "Menu" + hitbox.GetText().Replace(" ", ""));
           break;
       }
   }

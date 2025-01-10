@@ -17,15 +17,15 @@ public class GlobalOverlay : ScriptTemplate
   public override void Update(Registry registry)
   {
     #if DEBUG
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F3)) registry.SwitchDebugMode();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F1)) registry.GetSceneManager().PreviousScene(registry);
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F2)) registry.GetSceneManager().NextScene(registry);
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.F3)) registry.DebugMode = !registry.DebugMode;
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.F1)) registry.scene.Previous(registry);
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.F2)) registry.scene.Next(registry);
     #endif
     
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.F10)) Center();
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.F10)) Center();
     
-    if (registry.GetDebugMode() & Raylib.GetScreenWidth() != 1424) ResizeAndCenter(1424, 768);
-    else if (!registry.GetDebugMode() & Raylib.GetScreenWidth() != 1024) ResizeAndCenter(1024, 768);
+    if (registry.DebugMode & Raylib.GetScreenWidth() != 1424) ResizeAndCenter(1424, 768);
+    else if (!registry.DebugMode & Raylib.GetScreenWidth() != 1024) ResizeAndCenter(1024, 768);
   }
 
   public override void Draw(Registry registry)

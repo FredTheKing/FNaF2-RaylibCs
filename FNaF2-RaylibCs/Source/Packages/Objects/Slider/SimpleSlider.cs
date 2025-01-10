@@ -26,9 +26,9 @@ public class SimpleSlider : ObjectTemplate
     Percentage = new SimpleText(position + new Vector2(_percentSpace, 0), size with { X = 60 }, 20, "0%", Color, true);
   }
   
-  protected float Value;
+  public float Value;
   protected float Radius;
-  protected readonly RectangleHitbox Hitbox;
+  public readonly RectangleHitbox Hitbox;
   protected readonly SimpleText Percentage;
   protected Color Color;
   protected readonly int LineSize;
@@ -37,9 +37,6 @@ public class SimpleSlider : ObjectTemplate
   private float _leftSide;
   private float _rightSide;
   private readonly float _percentSpace;
-  
-  public void SetValue(float value) => Value = value;
-  public float GetValue() => Value;
   
   public override void SetPosition(Vector2 position)
   {

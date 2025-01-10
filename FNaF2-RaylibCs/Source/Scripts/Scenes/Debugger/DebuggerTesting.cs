@@ -8,14 +8,14 @@ public class DebuggerTesting : ScriptTemplate
 {
   public override void Activation(Registry registry)
   {
-    //Raylib.PlaySound(Raylib.LoadSound(Config.ResPath + "Sound/test.mp3"));
+    
   }
 
   public override void Update(Registry registry)
   {
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.G)) Registration.Sounds.MenuMusic!.Play();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.S)) Registration.Sounds.MenuMusic!.Stop();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.P)) Registration.Sounds.MenuMusic!.Pause();
-    if (registry.GetShortcutManager().IsKeyPressed(KeyboardKey.R)) Registration.Sounds.MenuMusic!.Resume();
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.G)) Registration.Sounds.MenuMusic!.Play();
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.S)) Registration.Sounds.MenuMusic!.Stop();
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.P)) Registration.Sounds.MenuMusic!.Pause();
+    if (registry.keybinds.IsKeyPressed(KeyboardKey.R)) Registration.Sounds.MenuMusic!.Resume();
   }
 }

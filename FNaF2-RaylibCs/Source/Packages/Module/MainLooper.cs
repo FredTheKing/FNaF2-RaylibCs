@@ -6,16 +6,16 @@ public static class MainLooper
 {
   public static void GlobalActivation(Registry registry)
   {
-    if (!registry.GetSceneManager().IsChanged()) return;
-    registry.GetSceneManager().ResetChanged();
-    registry.GetSceneManager().GetCurrentScene().Activation(registry);
-    registry.GetFNaF().Activation(registry);
+    if (!registry.scene.Changed) return;
+    registry.scene.Changed = false;
+    registry.scene.Current?.Activation(registry);
+    registry.fnaf.Activation(registry);
   }
   
   public static void GlobalUpdate(Registry registry)
   {
-    registry.GetSceneManager().GetCurrentScene().Update(registry);
-    registry.GetFNaF().Update(registry);
+    registry.scene.Current?.Update(registry);
+    registry.fnaf.Update(registry);
   }
   
   public static void GlobalDraw(Registry registry)
@@ -23,10 +23,10 @@ public static class MainLooper
     Raylib.BeginDrawing();
     Raylib.ClearBackground(Color.Black);
     
-    registry.GetSceneManager().GetCurrentScene().Draw(registry);
-    if (registry.GetDebugMode()) registry.GetGuiManager().Process(registry);
-    if (!registry.GetDebugMode()) registry.GetGuiManager().Draw(registry);
-    registry.GetFNaF().Draw(registry);
+    registry.scene.Current?.Draw(registry);
+    if (registry.DebugMode) registry.gui.Process(registry);
+    if (!registry.DebugMode) registry.gui.Draw(registry);
+    registry.fnaf.Draw(registry);
     
     Raylib.EndDrawing();
   }

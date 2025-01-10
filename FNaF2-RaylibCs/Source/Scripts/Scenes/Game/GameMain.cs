@@ -69,8 +69,8 @@ public class GameMain : ScriptTemplate
 
   private void OfficeAssetReaction(Registry registry)
   {
-    List<string> nameInside = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).Select(a => a.Name).ToList();
-    Animatronic? actualInside = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
+    List<string> nameInside = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).Select(a => a.Name).ToList();
+    Animatronic? actualInside = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
     
     var separatedAssetsAnimatronics = new Dictionary<string, int>
     {
@@ -83,8 +83,8 @@ public class GameMain : ScriptTemplate
 
     foreach (KeyValuePair<string,int> pair in separatedAssetsAnimatronics)
     {
-      if (nameInside.Contains(pair.Key)) registry.GetSceneManager().GetCurrentScene().ShowLayer(pair.Value);
-      else registry.GetSceneManager().GetCurrentScene().HideLayer(pair.Value);
+      if (nameInside.Contains(pair.Key)) registry.scene.Current!.ShowLayer(pair.Value);
+      else registry.scene.Current!.HideLayer(pair.Value);
     }
 
     if (actualInside is not null)
@@ -101,9 +101,9 @@ public class GameMain : ScriptTemplate
       return;
     }
     
-    if (registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl) && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
+    if (registry.keybinds.IsKeyDown(KeyboardKey.LeftControl) && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
-      List<string> nameFront = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeFront).Select(a => a.Name).ToList();
+      List<string> nameFront = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeFront).Select(a => a.Name).ToList();
 
       if (_battery != 0)
       {
@@ -134,7 +134,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
-      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeLeft).Select(a => a.Name).ToList();
+      List<string> name = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeLeft).Select(a => a.Name).ToList();
       _assetFrame = name switch
       {
         [] => 1,
@@ -145,7 +145,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
-      List<string> name = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeRight).Select(a => a.Name).ToList();
+      List<string> name = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeRight).Select(a => a.Name).ToList();
       _assetFrame = name switch
       {
         [] => 3,
@@ -162,7 +162,7 @@ public class GameMain : ScriptTemplate
     OfficeAssetReaction(registry);
     LightButtonsReaction();
     
-    _brokenLight = _blackout || !registry.GetSceneManager().GetCurrentScene().IsLayerHidden(5) || _currentTool == Tool.Mask;
+    _brokenLight = _blackout || !registry.scene.Current!.IsLayerHidden(5) || _currentTool == Tool.Mask;
   }
 
   private void UpdateBlackout(Registry registry)
@@ -176,7 +176,7 @@ public class GameMain : ScriptTemplate
       _blackoutFlickeringTimer.StopAndResetTimer();
       _blackoutDurationTimer.StopAndResetTimer();
       _blackoutCustomAlpha = 255;
-      registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy)!.Move(registry);
+      registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy)!.Move(registry);
     }
 
     if (_blackout)
@@ -228,15 +228,15 @@ public class GameMain : ScriptTemplate
     switch (_currentTool)
     {
       case Tool.Nothing:
-        registry.GetSceneManager().GetCurrentScene().ShowLayer(20, 21);
+        registry.scene.Current!.ShowLayer(20, 21);
         break;
       case Tool.Mask:
-        registry.GetSceneManager().GetCurrentScene().ShowLayer(20);
-        registry.GetSceneManager().GetCurrentScene().HideLayer(21);
+        registry.scene.Current!.ShowLayer(20);
+        registry.scene.Current!.HideLayer(21);
         break;
       case Tool.Camera:
-        registry.GetSceneManager().GetCurrentScene().HideLayer(20);
-        registry.GetSceneManager().GetCurrentScene().ShowLayer(21);
+        registry.scene.Current!.HideLayer(20);
+        registry.scene.Current!.ShowLayer(21);
         break;
       default:
         throw new ArgumentOutOfRangeException();
@@ -248,7 +248,7 @@ public class GameMain : ScriptTemplate
     if (Registration.Objects.GameUiMaskButton!.GetHitbox().GetMouseHoverFrame()) Registration.Objects.GameUiMask!.GetScript()!.TriggerPullAction();
     if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame() && !_blackout) Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
     
-    Animatronic? anima = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
+    Animatronic? anima = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
     if (anima is not null && anima.CameraHatering == 0)
     {
       anima.CameraHatering = -1;
@@ -262,12 +262,12 @@ public class GameMain : ScriptTemplate
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 11)
     {
       Registration.Objects.GameMusicBoxCircular!.SetColor(Color.White);
-      registry.GetSceneManager().GetCurrentScene().ShowLayer(9);
+      registry.scene.Current!.ShowLayer(9);
     }
     else
     {
       Registration.Objects.GameMusicBoxCircular!.SetColor(Color.Blank);
-      registry.GetSceneManager().GetCurrentScene().HideLayer(9);
+      registry.scene.Current!.HideLayer(9);
     }
     
     bool holdin = Registration.Objects.GameMusicBoxBox!.GetHitbox().GetMouseDrag(MouseButton.Left);
@@ -278,10 +278,10 @@ public class GameMain : ScriptTemplate
   private void UpdateCamera(Registry registry)
   {
     _cameraPack = Registration.Objects.GameUiMapWithCams!.GetSelectedCam()+1;
-    bool lightning = registry.GetShortcutManager().IsKeyDown(KeyboardKey.LeftControl);
+    bool lightning = registry.keybinds.IsKeyDown(KeyboardKey.LeftControl);
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 1)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam01).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam01).Select(a => a.Name).ToList() switch
       {
         [] or [ToyChica] or [WitheredBonnie] when !lightning => 0,
         [] when lightning => 1,
@@ -292,7 +292,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 2)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam02).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam02).Select(a => a.Name).ToList() switch
       {
         [] or [ToyBonnie] when !lightning => 0,
         [WitheredChica] when !lightning => 1,
@@ -304,7 +304,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 3)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam03).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam03).Select(a => a.Name).ToList() switch
       {
         [] or [ToyBonnie] when !lightning => 0,
         [WitheredFreddy] when !lightning => 1,
@@ -316,7 +316,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 4)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam04).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam04).Select(a => a.Name).ToList() switch
       {
         [] or [ToyChica] or [WitheredChica] when !lightning => 0,
         [ToyBonnie] when !lightning => 1,
@@ -330,7 +330,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 5)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam05).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam05).Select(a => a.Name).ToList() switch
       {
         [] or [ToyChica] or [WitheredBonnie] or [BalloonBoy] or [Endo] when !lightning => 0,
         [] when lightning => 1,
@@ -343,7 +343,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 6)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam06).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam06).Select(a => a.Name).ToList() switch
       {
         [] or [ToyBonnie] or [WitheredChica] or [Mangle] when !lightning => 0,
         [] when lightning => 1,
@@ -355,7 +355,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 7)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam07).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam07).Select(a => a.Name).ToList() switch
       {
         [] or [WitheredBonnie] or [WitheredFreddy] when !lightning => 0,
         [ToyChica] when !lightning => 1,
@@ -368,7 +368,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 8)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam08).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam08).Select(a => a.Name).ToList() switch
       {
         [] or [WitheredFoxy] or [WitheredFreddy, WitheredFoxy] or [WitheredFoxy, WitheredFreddy] or [WitheredFreddy, WitheredChica, WitheredFoxy] or [WitheredChica, WitheredFreddy, WitheredFoxy] or [WitheredFreddy, WitheredFoxy, WitheredChica] or [WitheredChica, WitheredFoxy, WitheredFreddy] or [WitheredFoxy, WitheredChica, WitheredFreddy] or [WitheredFreddy, WitheredBonnie, WitheredChica, WitheredFoxy] or [WitheredBonnie, WitheredFreddy, WitheredChica, WitheredFoxy] or [WitheredFreddy, WitheredBonnie, WitheredFoxy, WitheredChica] or [WitheredBonnie, WitheredChica, WitheredFreddy, WitheredFoxy] or [WitheredChica, WitheredBonnie, WitheredFreddy, WitheredFoxy] or [WitheredBonnie, WitheredFoxy, WitheredChica, WitheredFreddy] or [WitheredFoxy, WitheredBonnie, WitheredChica, WitheredFreddy] or [WitheredChica, WitheredFoxy, WitheredBonnie, WitheredFreddy] or [WitheredFoxy, WitheredChica, WitheredBonnie, WitheredFreddy] when !lightning => 0,
         [WitheredFreddy, WitheredBonnie, WitheredChica, WitheredFoxy] or [WitheredBonnie, WitheredFreddy, WitheredChica, WitheredFoxy] or [WitheredFreddy, WitheredBonnie, WitheredFoxy, WitheredChica] or [WitheredBonnie, WitheredChica, WitheredFreddy, WitheredFoxy] or [WitheredChica, WitheredBonnie, WitheredFreddy, WitheredFoxy] or [WitheredBonnie, WitheredFoxy, WitheredChica, WitheredFreddy] or [WitheredFoxy, WitheredBonnie, WitheredChica, WitheredFreddy] or [WitheredChica, WitheredFoxy, WitheredBonnie, WitheredFreddy] or [WitheredFoxy, WitheredChica, WitheredBonnie, WitheredFreddy] when lightning => 1,
@@ -382,7 +382,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 9)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam09).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam09).Select(a => a.Name).ToList() switch
       {
         [ToyFreddy, ToyBonnie, ToyChica] or [ToyFreddy, ToyChica, ToyBonnie] or [ToyBonnie, ToyFreddy, ToyChica] or [ToyBonnie, ToyChica, ToyFreddy] or [ToyChica, ToyFreddy, ToyBonnie] or [ToyChica, ToyBonnie, ToyFreddy] when !lightning => 0,
         [ToyFreddy, ToyChica] or [ToyChica, ToyFreddy] when !lightning => 1,
@@ -397,7 +397,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 10)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam10).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam10).Select(a => a.Name).ToList() switch
       {
         [BalloonBoy] or [BalloonBoy, ToyFreddy] or [ToyFreddy, BalloonBoy] when !lightning => 0,
         [] or [ToyFreddy] when !lightning => 1,
@@ -410,7 +410,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 11)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam11).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam11).Select(a => a.Name).ToList() switch
       {
         [] or [Marionette] or [Endo] when !lightning => 0,
         [Marionette] when lightning => 1,
@@ -421,7 +421,7 @@ public class GameMain : ScriptTemplate
     }
     else if (Registration.Objects.GameOfficeCamera.GetPackIndex() == 12)
     {
-      _assetFrame = registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam12).Select(a => a.Name).ToList() switch
+      _assetFrame = registry.fnaf.GetAnimatronicManager().GetAnimatronics().Where(a => a.CurrentLocation == Location.Cam12).Select(a => a.Name).ToList() switch
       {
         [] or [Mangle] when !lightning => 0,
         [Mangle] when lightning => 1,
@@ -473,10 +473,10 @@ public class GameMain : ScriptTemplate
     Registration.Objects.GameOfficeCamera!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
     Registration.Objects.GameOfficeCamera.SetPack(0);
     
-    registry.GetSceneManager().GetCurrentScene().HideLayer(1, 3, 4, 5, 6);
+    registry.scene.Current!.HideLayer(1, 3, 4, 5, 6);
     
-    registry.GetFNaF().GetAnimatronicManager().Activation(registry);
-    registry.GetFNaF().GetAnimatronicManager().Update(registry);
+    registry.fnaf.GetAnimatronicManager().Activation(registry);
+    registry.fnaf.GetAnimatronicManager().Update(registry);
     _brokenLight = false;
     _blackout = false;
   }
@@ -492,16 +492,16 @@ public class GameMain : ScriptTemplate
     
     if (Registration.Objects.GameOfficeCamera!.GetPackIndex() == 0)
     {
-      registry.GetSceneManager().GetCurrentScene().ShowLayer(7, 2);
-      registry.GetSceneManager().GetCurrentScene().HideLayer(8);
+      registry.scene.Current!.ShowLayer(7, 2);
+      registry.scene.Current!.HideLayer(8);
       if (Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3) UpdateOfficeScroller();
       UpdateOffice(registry);
       UpdateBlackout(registry);
     }
     else
     {
-      registry.GetSceneManager().GetCurrentScene().HideLayer(7, 2);
-      registry.GetSceneManager().GetCurrentScene().ShowLayer(8);
+      registry.scene.Current!.HideLayer(7, 2);
+      registry.scene.Current!.ShowLayer(8);
       _blackoutCustomAlpha = 0;
       ReddoDotto(registry);
       UpdateCamera(registry);

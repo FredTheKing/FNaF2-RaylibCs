@@ -14,13 +14,13 @@ public class GameLoading : ScriptTemplate
     _timer.Activation(registry);
     gotoGame = false;
     Registration.Objects.WhiteBlinko!.GetScript()!.Play();
-    Registration.Objects.LoadingNightText!.SetText("Night " + registry.GetFNaF().GetNightManager().GetUpcomingNight());
+    Registration.Objects.LoadingNightText!.SetText("Night " + registry.fnaf.GetNightManager().GetUpcomingNight());
     Registration.Objects.LoadingClockThingo!.SetTint(Color.Blank);
   }
 
   public override void Update(Registry registry)
   {
-    if (gotoGame) registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameMain);
+    if (gotoGame) registry.scene.Change(registry, Config.Scenes.GameMain);
     _timer.Update(registry);
 
     if (!_timer.TargetTrigger()) return;

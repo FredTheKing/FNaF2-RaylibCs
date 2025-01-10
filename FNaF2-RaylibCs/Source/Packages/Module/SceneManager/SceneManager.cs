@@ -3,90 +3,69 @@ using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 
-public class SceneManager(List<string> scenesNames) : CallDebuggerInfoTemplate
+public class SceneManager(List<string> names) : CallDebuggerInfoTemplate
 { 
-  private Dictionary<String, Scene> _scenes = InitScenes(scenesNames);
-  private List<string> _scenesNames = scenesNames;
-  private Scene? _currentScene;
-  private bool _changed = true;
-  private float _masterVolume = Config.DefaultMasterVolume;
-  private bool _fullscreen = Config.FullscreenMode;
-  private bool _vsync = Config.VsyncMode;
+  public Dictionary<String, Scene> All = names.ToDictionary(sceneName => sceneName, sceneName => new Scene(sceneName));
+  public List<string> Names = names;
+  public Scene? Current;
+  public bool Changed = true;
+  public float MasterVolume = Config.DefaultMasterVolume;
+  public bool Fullscreen = Config.FullscreenMode;
+  public bool Vsync = Config.VsyncMode;
 
   public override void CallDebuggerInfo(Registry registry)
   {
-    if (ImGui.TreeNode($"Current Scene: {_currentScene!.GetName()}"))
+    if (ImGui.TreeNode($"Current Scene: {Current!.GetName()}"))
     {
-      _currentScene.CallDebuggerInfo(registry);
+      Current.CallDebuggerInfo(registry);
       ImGui.TreePop();
     }
-    ImGui.Text($" > Changed Scene: {(_changed ? 1 : 0)}");
-    ImGui.Text($" > Scenes Count: {_scenes.Count}");
+    ImGui.Text($" > Changed Scene: {(Changed ? 1 : 0)}");
+    ImGui.Text($" > Scenes Count: {All.Count}");
     ImGui.Separator();
-    ImGui.Text($" > Fullscreen: {_fullscreen}");
-    ImGui.Text($" > Vsync: {_vsync}");
-    ImGui.Text($" > Master Volume: {_masterVolume}");
+    ImGui.Text($" > Fullscreen: {Fullscreen}");
+    ImGui.Text($" > Vsync: {Vsync}");
+    ImGui.Text($" > Master Volume: {MasterVolume}");
   }
-  
-  private static Dictionary<String, Scene> InitScenes(List<string> scenesNames) =>
-    scenesNames.ToDictionary(sceneName => sceneName, sceneName => new Scene(sceneName));
 
   public void SortObjectsLayers()
   {
-    foreach (Scene scene in _scenes.Values) 
+    foreach (Scene scene in All.Values) 
       scene.SortLayers();
   }
 
-  public void AssignScriptInstance(string name, dynamic scriptInstance) => _scenes[name].AssignScriptInstance(scriptInstance);
+  public void AssignScriptInstance(string name, dynamic scriptInstance) => All[name].AssignScriptInstance(scriptInstance);
 
   public void AssignGlobalScriptInstance(dynamic scriptInstance)
   {
-    foreach (Scene scene in _scenes.Values) 
+    foreach (Scene scene in All.Values) 
       scene.AssignGlobalScriptInstance(scriptInstance);
   }
 
-  public void LinkObject(dynamic obj, string sceneName, int zLayer) => _scenes[sceneName].AddObject(obj, zLayer);
+  public void LinkObject(dynamic obj, string sceneName, int zLayer) => All[sceneName].AddObject(obj, zLayer);
   
-  public void LinkSound(SoundObject snd, string sceneName) => _scenes[sceneName].AddSound(snd);
+  public void LinkSound(SoundObject snd, string sceneName) => All[sceneName].AddSound(snd);
 
-  public Dictionary<String, Scene> GetScenes() => _scenes;
-
-  public List<string> GetScenesNamesList() => _scenesNames;
-  
-  public Scene GetCurrentScene() => _currentScene!;
-
-  public void SetMasterVolume(float newVolume) => _masterVolume = newVolume;
-  
-  public float GetMasterVolume() => _masterVolume;
-  
-  public void SetFullscreen(bool newValue) => _fullscreen = newValue;
-  
-  public bool GetFullscreen() => _fullscreen;
-  
-  public void SetVsync(bool newValue) => _vsync = newValue;
-  
-  public bool GetVsync() => _vsync;
-  
-  public bool IsChanged() => _changed;
-
-  public void ResetChanged() => _changed = false;
-  
-  public void ChangeScene(Registry registry, String sceneName)
+  private void ActualChange(Registry registry, string sceneName)
   {
-    _currentScene?.Deactivation(registry, sceneName);
-    Console.WriteLine("INFO: SCENE: Changing scene to '" + sceneName + "'...");
+    Current?.Deactivation(registry, sceneName);
+    Console.WriteLine("INFO: SCENE: Changing scene from '" + Current?.GetName() + "' to '" + sceneName + "'...");
     Console.WriteLine(Config.SeparatorLine);
-    Scene newScene = _scenes[sceneName];
-    _currentScene?.Unload(newScene);
-    _currentScene = newScene;
-    _changed = true;
-    _currentScene.Load();
+    Scene newScene = All[sceneName];
+    Current?.Unload(newScene);
+    Current = newScene;
+    Changed = true;
+    Current.Load();
     Console.WriteLine("INFO: SCENE: Scene changed successfully");
   }
-
-  public void NextScene(Registry registry) =>
-    ChangeScene(registry, _scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + 1) % _scenesNames.Count]);
   
-  public void PreviousScene(Registry registry) =>
-    ChangeScene(registry, _scenesNames[(_scenesNames.ToList().IndexOf(_currentScene!.GetName()) + _scenesNames.Count - 1) % _scenesNames.Count]);
+  public void Change(Registry registry, Config.Scenes sceneEnum) => ActualChange(registry, sceneEnum.ToString());
+  public void Change(Registry registry, int sceneId) => ActualChange(registry, ((Config.Scenes)sceneId).ToString());
+  public void Change(Registry registry, string sceneName) => ActualChange(registry, sceneName);
+
+  public void Next(Registry registry) =>
+    Change(registry, Names[(Names.ToList().IndexOf(Current!.GetName()) + 1) % Names.Count]);
+  
+  public void Previous(Registry registry) =>
+    Change(registry, Names[(Names.ToList().IndexOf(Current!.GetName()) + Names.Count - 1) % Names.Count]);
 }

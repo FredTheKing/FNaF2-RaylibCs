@@ -9,8 +9,8 @@ namespace FNaF2_RaylibCs.Source.Packages.Objects.Checkbox;
 
 public class SimpleCheckbox(Vector2 position, int size, Color color, bool checkedByDefault = false) : ObjectTemplate(position, new Vector2(size))
 {
-  protected bool Checked = checkedByDefault;
-  protected RectangleHitbox Hitbox = new(position, new Vector2(size, size));
+  public bool Checked { get; set; } = checkedByDefault;
+  public RectangleHitbox Hitbox { get; } = new(position, new Vector2(size, size));
 
   public override void CallDebuggerInfo(Registry registry)
   {
@@ -27,7 +27,7 @@ public class SimpleCheckbox(Vector2 position, int size, Color color, bool checke
   public override void Update(Registry registry)
   {
     Hitbox.Update(registry);
-    if (Hitbox.GetMousePress(MouseButton.Left)) SwitchChecked();
+    if (Hitbox.GetMousePress(MouseButton.Left)) Checked = !Checked;
     base.Update(registry);
   }
 
@@ -40,12 +40,4 @@ public class SimpleCheckbox(Vector2 position, int size, Color color, bool checke
     Hitbox.Draw(registry);
     base.Draw(registry);
   }
-
-  public RectangleHitbox GetHitbox() => Hitbox;
-  
-  public bool GetChecked() => Checked;
-  
-  public void SetChecked(bool newChecked) => Checked = newChecked;
-  
-  public void SwitchChecked() => Checked = !Checked;
 }

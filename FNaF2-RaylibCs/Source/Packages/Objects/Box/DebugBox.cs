@@ -8,6 +8,6 @@ public class DebugBox(Vector2 position, Vector2 size, Color color) : SimpleBox(p
 {
   public override void Draw(Registry registry)
   {
-    if (registry.GetDebugMode()) base.Draw(registry);
+    if (registry.DebugMode) base.Draw(registry);
   }
 }

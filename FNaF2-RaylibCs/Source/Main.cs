@@ -10,9 +10,8 @@ Raylib.SetWindowMinSize(Config.WindowWidth, Config.WindowHeight);
 Registry registry = new Registry(
   typeof(Config.Scenes)
   .GetFields()
-  .Where(x => x.FieldType == typeof(string))
-  .Select(x => (string)x.GetValue(null)!)
-  .ToList()
+  .Select(x => x.Name)
+  .ToList()[1..]
 );
 Registration.RegistryInitialisation(registry);
 Console.WriteLine(Config.SeparatorLine);
@@ -33,7 +32,7 @@ Console.WriteLine(Config.SeparatorLine);
 Registration.ObjectsInitialisation(registry);
 registry.EndObjectsRegistration(registry, Config.StartSceneName);
 Raylib.SetWindowIcon(Raylib.LoadImage(Config.WindowIconPath));
-Raylib.SetTargetFPS(registry.GetSceneManager().GetVsync() ? Raylib.GetMonitorRefreshRate(Raylib.GetCurrentMonitor()) : Config.WindowTargetFramerate);
+Raylib.SetTargetFPS(registry.scene.Vsync ? Raylib.GetMonitorRefreshRate(Raylib.GetCurrentMonitor()) : Config.WindowTargetFramerate);
 while (!Raylib.WindowShouldClose())
 {
   MainLooper.GlobalActivation(registry);
@@ -42,7 +41,7 @@ while (!Raylib.WindowShouldClose())
 }
 Console.WriteLine(Config.SeparatorLine);
 Console.WriteLine("INFO: REGISTRY: Closing game. Have a nice day!");
-registry.GetSceneManager().GetCurrentScene().Unload();
+registry.scene.Current?.Unload();
 Raylib.CloseWindow();
 Raylib.CloseAudioDevice();
 rlImGui.Shutdown();

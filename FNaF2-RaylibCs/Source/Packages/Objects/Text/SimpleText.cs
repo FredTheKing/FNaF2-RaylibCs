@@ -130,6 +130,6 @@ public class SimpleText : ObjectTemplate
 
   protected void DrawDebug(Registry registry)
   {
-    if (registry.GetShowBounds() & registry.GetDebugMode()) Raylib.DrawRectangleLinesEx(new Rectangle(Position, Size), 1, Color.Lime);
+    if (registry.ShowBounds & registry.DebugMode) Raylib.DrawRectangleLinesEx(new Rectangle(Position, Size), 1, Color.Lime);
   }
 }

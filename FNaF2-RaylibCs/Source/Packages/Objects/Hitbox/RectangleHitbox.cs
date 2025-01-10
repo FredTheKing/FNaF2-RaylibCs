@@ -60,7 +60,7 @@ public class RectangleHitbox(Vector2 position, Vector2 size, Color? color = null
 
   public override void Draw(Registry registry)
   {
-    if(registry.GetDebugMode() & registry.GetShowHitboxes()) Raylib.DrawRectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y, Color);
+    if(registry.DebugMode & registry.ShowHitboxes) Raylib.DrawRectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y, Color);
     base.Draw(registry);
   }
 }

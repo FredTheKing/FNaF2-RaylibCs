@@ -4,19 +4,19 @@ namespace FNaF2_RaylibCs.Source;
 
 public struct Config
 {
-  public struct Scenes
+  public enum Scenes
   {
-    public const string DebuggerTesting = "Debugger/Testing";
-    public const string MenuMain = "Menu/Main";
-    public const string MenuSettings = "Menu/Settings";
-    public const string MenuExtras = "Menu/Extras";
-    public const string MenuCredits = "Menu/Credits";
-    public const string MenuCustomNight = "Menu/CustomNight";
-    public const string GameMain = "Game/Main";
-    public const string GameLose = "Game/Lose";
-    public const string GameWin = "Game/Win";
-    public const string GameLoading = "Game/Loading";
-    public const string GameNewspaper = "Game/Newspaper";
+    DebuggerTesting,
+    MenuMain,
+    MenuSettings,
+    MenuExtras,
+    MenuCredits,
+    MenuCustomNight,
+    GameMain,
+    GameLose,
+    GameWin,
+    GameLoading,
+    GameNewspaper
   }
   
   public struct AnimatronicsNames
@@ -46,9 +46,9 @@ public struct Config
 
   public const int MaxAnimatronicsDifficulty = 20;
   #if DEBUG
-  public const string StartSceneName = Scenes.GameMain;
+  public const Scenes StartSceneName = Scenes.GameMain;
   #else
-  public const string StartSceneName = Scenes.MenuMain;
+  public const Scenes StartSceneName = Scenes.MenuMain;
   #endif
   public const string AllShortcut = "*";
   public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign

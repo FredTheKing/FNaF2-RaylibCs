@@ -24,13 +24,13 @@ public class GameNewspaper : ScriptTemplate
     Registration.Objects.GameNewspapers!.SetSize(new Vector2(customSizeW, (float)(customSizeW * Config.WindowRatioWH)));
 
     Vector2 screenSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-    Vector2 debugOffset = registry.GetDebugMode() ? new Vector2(-200, 0) : Vector2.Zero;
+    Vector2 debugOffset = registry.DebugMode ? new Vector2(-200, 0) : Vector2.Zero;
     Vector2 centeredPosition = (screenSize - Registration.Objects.GameNewspapers.GetSize()) / 2;
     Registration.Objects.GameNewspapers.SetPosition(centeredPosition + debugOffset);
 
     customSizeW += 15f * Raylib.GetFrameTime();
 
     if (_timer.TargetTrigger())
-      registry.GetSceneManager().ChangeScene(registry, Config.Scenes.GameLoading);
+      registry.scene.Change(registry, Config.Scenes.GameLoading);
   }
 }

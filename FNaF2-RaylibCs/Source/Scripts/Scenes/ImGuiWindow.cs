@@ -16,9 +16,9 @@ public class ImGuiWindow
     rlImGui.Begin();
     ImGui.PushStyleVar(ImGuiStyleVar.ScrollbarSize, 0);
     
-    if (registry.GetMovableDebugger() ? ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse) : ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize))
+    if (registry.MovableDebugger ? ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse) : ImGui.Begin("Debugger", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize))
     {
-      if (!registry.GetMovableDebugger())
+      if (!registry.MovableDebugger)
       {
         ImGui.SetWindowSize(new Vector2(DebuggerWidth, 768));
         ImGui.SetWindowPos(new Vector2(Raylib.GetScreenWidth() - DebuggerWidth, 0)); 
@@ -27,60 +27,52 @@ public class ImGuiWindow
       ImGui.Text("Window size: " + Raylib.GetRenderWidth() + "/" + Raylib.GetRenderHeight());
       ImGui.Text("FPS: " + Raylib.GetFPS());
       ImGui.Text("MS: " + Raylib.GetFrameTime());
-      ImGui.Text("Vsync: " + registry.GetSceneManager().GetVsync());
-      ImGui.Text("Volume: " + Math.Round(registry.GetSceneManager().GetMasterVolume() * 100) + "%%");
+      ImGui.Text("Vsync: " + registry.scene.Vsync);
+      ImGui.Text("Volume: " + Math.Round(registry.scene.MasterVolume * 100) + "%%");
       ImGui.Text("Scene: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 182);
-      List<string> array = registry.GetSceneManager().GetScenesNamesList();
-      int index = array.IndexOf(registry.GetSceneManager().GetCurrentScene().GetName());
+      List<string> array = registry.scene.Names;
+      int index = array.IndexOf(registry.scene.Current!.GetName());
       ImGui.SetNextItemWidth(174);
-      if (ImGui.Combo("##Scene Selector", ref index, array.ToArray(), array.Count)) registry.GetSceneManager().ChangeScene(registry, array[index]);
+      if (ImGui.Combo("##Scene Selector", ref index, array.ToArray(), array.Count)) registry.scene.Change(registry, array[index]);
       
       ImGui.Text("Show Hitboxes: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
-      bool hitboxes = registry.GetShowHitboxes();
-      ImGui.Checkbox("##Show Hitboxes", ref hitboxes);
-      registry.SetShowHitboxes(hitboxes);
+      ImGui.Checkbox("##Show Hitboxes", ref registry.ShowHitboxes);
       
       ImGui.Text("Show Bounds: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
-      bool bounds = registry.GetShowBounds();
-      ImGui.Checkbox("##Show Bounds", ref bounds);
-      registry.SetShowBounds(bounds);
+      ImGui.Checkbox("##Show Bounds", ref registry.ShowBounds);
       
       ImGui.Text("Show Fps Non Debug: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
-      bool fps = registry.GetShowFpsNonDebug();
-      ImGui.Checkbox("##Show Fps Non Debug", ref fps);
-      registry.SetShowFpsNonDebug(fps);
+      ImGui.Checkbox("##Show Fps Non Debug", ref registry.ShowFpsNonDebug);
       
       ImGui.Text("Movable Debugger: ");
       ImGui.SameLine(ImGui.GetWindowWidth() - 27);
-      bool movdebugger = registry.GetMovableDebugger();
-      ImGui.Checkbox("##Movable Debugger", ref movdebugger);
-      registry.SetMovableDebugger(movdebugger);
+      ImGui.Checkbox("##Movable Debugger", ref registry.MovableDebugger);
       
       var halfButtonSize = new Vector2(ImGui.GetWindowWidth() / 2 - 12, 19);
       if (ImGui.Button("Enable all", halfButtonSize))
       {
-        registry.SetShowHitboxes(true);
-        registry.SetShowBounds(true);
-        registry.SetShowFpsNonDebug(true);
-        registry.SetMovableDebugger(true);
+        registry.ShowHitboxes = true;
+        registry.ShowBounds = true;
+        registry.ShowFpsNonDebug = true;
+        registry.MovableDebugger = true;
       }
       ImGui.SameLine();
       if (ImGui.Button("Disable all", halfButtonSize))
       {
-        registry.SetShowHitboxes(false);
-        registry.SetShowBounds(false);
-        registry.SetShowFpsNonDebug(false);
-        registry.SetMovableDebugger(false);
+        registry.ShowHitboxes = false;
+        registry.ShowBounds = false;
+        registry.ShowFpsNonDebug = false;
+        registry.MovableDebugger = false;
       }
       
-      String currentSceneName = registry.GetSceneManager().GetCurrentScene().GetName();
-      Dictionary<String, Dictionary<String, Object>> objects = registry.GetObjects();
-      Dictionary<String, Dictionary<String, SoundObject>> sounds = registry.GetSounds();
-      Dictionary<String, Dictionary<String, Dictionary<String, Object>>> materials = registry.GetResourcesManager().GetStorage();
+      String currentSceneName = registry.scene.Current.GetName();
+      Dictionary<String, Dictionary<String, Object>> objects = registry.objects;
+      Dictionary<String, Dictionary<String, SoundObject>> sounds = registry.sounds;
+      Dictionary<String, Dictionary<String, Dictionary<String, Object>>> materials = registry.resources.GetStorage();
       
       // Current scene
       ImGui.SeparatorText("Resources");
@@ -216,27 +208,27 @@ public class ImGuiWindow
       }
       if (ImGui.TreeNode("SceneManager"))
       {
-        registry.GetSceneManager().CallDebuggerInfo(registry);
+        registry.scene.CallDebuggerInfo(registry);
         ImGui.TreePop();
       }
       if (ImGui.TreeNode("ShortcutManager"))
       {
-        registry.GetShortcutManager().CallDebuggerInfo(registry);
+        registry.keybinds.CallDebuggerInfo(registry);
         ImGui.TreePop();
       }
       if (ImGui.TreeNode("ResourcesManager"))
       {
-        registry.GetResourcesManager().CallDebuggerInfo(registry);
+        registry.resources.CallDebuggerInfo(registry);
         ImGui.TreePop();
       }
       if (ImGui.TreeNode("GuiManager"))
       {
-        registry.GetGuiManager().CallDebuggerInfo(registry);
+        registry.gui.CallDebuggerInfo(registry);
         ImGui.TreePop();
       }
       if (ImGui.TreeNode("FNaF"))
       {
-        registry.GetFNaF().CallDebuggerInfo(registry);
+        registry.fnaf.CallDebuggerInfo(registry);
         ImGui.TreePop();
       }
     }
@@ -247,6 +239,6 @@ public class ImGuiWindow
 
   public void Draw(Registry registry)
   {
-    if (registry.GetShowFpsNonDebug()) Raylib.DrawFPS(10, 10);
+    if (registry.ShowFpsNonDebug) Raylib.DrawFPS(10, 10);
   }
 }

@@ -10,6 +10,6 @@ public class BackToExtrasScript(HitboxText obj) : ScriptTemplate
   public override void Update(Registry registry)
   {
     if (obj.GetHitbox().GetMousePress(MouseButton.Left)) 
-      registry.GetSceneManager().ChangeScene(registry, Config.Scenes.MenuExtras);
+      registry.scene.Change(registry, Config.Scenes.MenuExtras);
   }
 }

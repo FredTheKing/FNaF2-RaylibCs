@@ -86,6 +86,6 @@ public class SimpleAnimation : ObjectTemplate
   
   protected void DrawDebug(Registry registry)
   {
-    if (registry.GetShowBounds() & registry.GetDebugMode()) Raylib.DrawRectangleLinesEx(new Rectangle(Position, Size), 1, Color.Blue);
+    if (registry.ShowBounds & registry.DebugMode) Raylib.DrawRectangleLinesEx(new Rectangle(Position, Size), 1, Color.Blue);
   }
 }

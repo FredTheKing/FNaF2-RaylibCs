@@ -5,7 +5,7 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.SceneManager;
 
-internal enum Sequence
+public enum Sequence
 {
   Stopped,
   Playing,
@@ -15,20 +15,20 @@ internal enum Sequence
 
 public class SoundObject(SoundResource sndRes, bool activationStart = false, bool isLooped = false, bool multiScenable = false, bool allowedStacking = false, float defaultVolume = 1f) : ScriptTemplate
 {
-  private Sequence _state = Sequence.Stopped;
-  private bool _paused;
-  private float _volume = defaultVolume;
+  public Sequence State { get; private set; } = Sequence.Stopped;
+  public bool Paused { get; private set; }
+  public float Volume { get; private set; } = defaultVolume;
 
   private bool _volumeUpdateToDo = true;
   
   public void Play()
   {
-    _state = isLooped ? Sequence.Looped : Sequence.Playing;
+    State = isLooped ? Sequence.Looped : Sequence.Playing;
     RestartNewAudio();
   }
-  public void Resume() => _paused = false;
-  public void Pause() => _paused = true;
-  public void Stop() => _state = Sequence.Stopped;
+  public void Resume() => Paused = false;
+  public void Pause() => Paused = true;
+  public void Stop() => State = Sequence.Stopped;
   public bool IsPlaying() => Raylib.IsSoundPlaying(sndRes.GetMaterial()) ?? false;
   
   private void RestartNewAudio()
@@ -41,25 +41,24 @@ public class SoundObject(SoundResource sndRes, bool activationStart = false, boo
 
   private void SetVolume(float newValue)
   {
-    _volume = Math.Clamp(newValue, 0f, 1f);
+    Volume = Math.Clamp(newValue, 0f, 1f);
     _volumeUpdateToDo = true;
   }
-  public float GetVolume() => _volume;
   
-  private void UpdateVolume(Registry registry) => Raylib.SetSoundVolume(sndRes.GetMaterial(), _volume * registry.GetSceneManager().GetMasterVolume());
+  private void UpdateVolume(Registry registry) => Raylib.SetSoundVolume(sndRes.GetMaterial(), Volume * registry.scene.MasterVolume);
   
   public override void CallDebuggerInfo(Registry registry)
   {
-    ImGui.Text($" > State: {_state.ToString()}");
-    if (_state is Sequence.Playing or Sequence.Looped) ImGui.Text($" > Actually Playing: {(IsPlaying() ? 1 : 0)}");
-    if (_state == Sequence.Stopped) ImGui.Text($" > Is Looped: {(isLooped ? 1 : 0)}");
-    ImGui.Text($" > Paused: {(_paused ? 1 : 0)}");
-    ImGui.Text($" > Volume: {_volume}");
+    ImGui.Text($" > State: {State.ToString()}");
+    if (State is Sequence.Playing or Sequence.Looped) ImGui.Text($" > Actually Playing: {(IsPlaying() ? 1 : 0)}");
+    if (State == Sequence.Stopped) ImGui.Text($" > Is Looped: {(isLooped ? 1 : 0)}");
+    ImGui.Text($" > Paused: {(Paused ? 1 : 0)}");
+    ImGui.Text($" > Volume: {Volume}");
   }
 
   public override void Deactivation(Registry registry, string nextSceneName)
   {
-    if (multiScenable && registry.GetSceneManager().GetScenes()[nextSceneName].GetSoundsList().Contains(this)) return;
+    if (multiScenable && registry.scene.All[nextSceneName].GetSoundsList().Contains(this)) return;
     Stop();
     StopCurrentAudio();
   }
@@ -73,24 +72,24 @@ public class SoundObject(SoundResource sndRes, bool activationStart = false, boo
   {
     if (_volumeUpdateToDo) UpdateVolume(registry);
     
-    if (_state is Sequence.Playing or Sequence.Looped)
+    if (State is Sequence.Playing or Sequence.Looped)
     {
-      if (_paused && IsPlaying()) Raylib.PauseSound(sndRes.GetMaterial());
-      if (!_paused && !IsPlaying()) Raylib.ResumeSound(sndRes.GetMaterial());
+      if (Paused && IsPlaying()) Raylib.PauseSound(sndRes.GetMaterial());
+      if (!Paused && !IsPlaying()) Raylib.ResumeSound(sndRes.GetMaterial());
     }
     
-    switch (_state)
+    switch (State)
     {
       case Sequence.Stopped:
         StopCurrentAudio();
         break;
-      case Sequence.Playing or Sequence.Looped when !IsPlaying() && !_paused:
-        _state = Sequence.WhatsNext;
+      case Sequence.Playing or Sequence.Looped when !IsPlaying() && !Paused:
+        State = Sequence.WhatsNext;
         break;
     }
 
-    if (_state != Sequence.WhatsNext) return;
-    _state = isLooped ? Sequence.Looped : Sequence.Stopped;
+    if (State != Sequence.WhatsNext) return;
+    State = isLooped ? Sequence.Looped : Sequence.Stopped;
     if (isLooped) RestartNewAudio();
   }
 }

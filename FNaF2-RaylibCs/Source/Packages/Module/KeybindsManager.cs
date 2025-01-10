@@ -3,7 +3,7 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module;
 
-public class ShortcutManager : CallDebuggerInfoTemplate
+public class KeybindsManager : CallDebuggerInfoTemplate
 {
   public char GetCharPressed() => Convert.ToChar(Raylib.GetCharPressed());
   

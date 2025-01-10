@@ -72,7 +72,7 @@ public class Animatronic : ScriptTemplate
   public List<ExcludeOpportunity>? Excludes;
   public List<GrantOpportunity>? Grants;
   public AnimatronicType Type;
-  public int Difficulty;
+  public int Difficulty = 20;
   public (Animatronic, Location)? NextQueue;
   public Location? PlanningLocation;
   public Location CurrentLocation;
@@ -164,7 +164,7 @@ public class Animatronic : ScriptTemplate
   
   private void OnlyGameScene(Action action, Registry registry)
   {
-    if (_gameScenePointer == registry.GetSceneManager().GetCurrentScene()) action();
+    if (_gameScenePointer == registry.scene.Current) action();
   }
 
   private bool SuccessfulMovement() => new Random().Next(1, Config.MaxAnimatronicsDifficulty) <= Difficulty;
@@ -198,9 +198,9 @@ public class Animatronic : ScriptTemplate
       }
     }
     
-    if (Excludes is not null && Excludes.Any(x => x.planningTo == PlanningLocation && registry.GetFNaF().GetAnimatronicManager().GetAnimatronics().FirstOrDefault(a => a.Name == x.who && a.CurrentLocation == x.where) is not null)) return;
+    if (Excludes is not null && Excludes.Any(x => x.planningTo == PlanningLocation && registry.fnaf.GetAnimatronicManager().GetAnimatronics().FirstOrDefault(a => a.Name == x.who && a.CurrentLocation == x.where) is not null)) return;
     
-    foreach (Animatronic animatronic in registry.GetFNaF().GetAnimatronicManager().GetAnimatronics())
+    foreach (Animatronic animatronic in registry.fnaf.GetAnimatronicManager().GetAnimatronics())
     {
       if (animatronic.CurrentLocation != PlanningLocation || animatronic == this) continue;
       if (animatronic.Grants != null && (bool)Grants?.Any(a => a.who == animatronic.Name && a.where == PlanningLocation)) continue;
