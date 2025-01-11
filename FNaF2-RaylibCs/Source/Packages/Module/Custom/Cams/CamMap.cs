@@ -26,6 +26,7 @@ public class CamMap(SimpleImage map, ImageStackResource camBg, FontResource font
 
   public override void Activation(Registry registry)
   {
+    _camsUnits.ForEach(u => u.Selected = false);
     _camsUnits[defaultCamIndex].Selected = true;
   }
 

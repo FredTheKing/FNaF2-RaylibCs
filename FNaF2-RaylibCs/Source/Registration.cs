@@ -339,7 +339,7 @@ public static class Registration
       "Prize Corner",
       "Kid's Cove"
     ], Color.White, Materials.PixilatedFont!));
-    Objects.GameMusicBoxCircular = registry.RegisterObject("GameMusicBoxCircular", [Config.Scenes.GameMain], [10], new SimpleCircular(new Vector2(328, 658), 27, 0.027f, 0.036f, Color.White));
+    Objects.GameMusicBoxCircular = registry.RegisterObject("GameMusicBoxCircular", [Config.Scenes.GameMain], [10], new SimpleCircular(new Vector2(328, 658), 27, 0.025f, 0.059f, Color.White));
     Objects.GameMusicBoxBox = registry.RegisterObject("GameMusicBoxBox", [Config.Scenes.GameMain], [9], new SelectableHitboxImage(new Vector2(365, 608), Materials.GameMusicBoxWindUpButtonResource!));
     Objects.GameMusicBoxText = registry.RegisterObject("GameMusicBoxText", [Config.Scenes.GameMain], [9], new SimpleText(Objects.GameMusicBoxBox.GetPosition(), Materials.GameMusicBoxWindUpButtonResource!.GetSize(), 23, "Wind Up\nMusic Box", Color.White, Materials.PixilatedFont!));
     Objects.GameMusicBoxBottomText = registry.RegisterObject("GameMusicBoxBottomText", [Config.Scenes.GameMain], [9], new SimpleText(Objects.GameMusicBoxBox.GetPosition() + new Vector2(0, 60), new Vector2(Materials.GameMusicBoxWindUpButtonResource.GetSize().X, 30), 19, "click & hold", Color.White, Materials.PixilatedFont!, false, true));
@@ -357,8 +357,6 @@ public static class Registration
 
   public static void CustomInitialisation(Registry registry)
   {
-    Scene gameScene = registry.scene.All[Config.Scenes.GameMain.ToString()];
-    
     //registry.GetFNaF().GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.Mangle, 3f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
     //  new MovementOpportunity(Location.Cam09, Location.OfficeFront, 1f),
     //  new MovementOpportunity(Location.OfficeFront, Location.OfficeFront, .5f),
@@ -368,7 +366,8 @@ public static class Registration
     //  new GrantOpportunity(Config.AnimatronicsNames.WitheredFoxy, Location.OfficeFront)
     //]));
     
-    registry.fnaf.GetAnimatronicManager().Add(new Animatronic(gameScene, Config.AnimatronicsNames.ToyFreddy, 3.1f, AnimatronicType.AutoBlackouter, Location.OfficeInside, [
+    registry.fnaf.animatronicManager.Add(new Animatronic(Config.AnimatronicsNames.ToyFreddy, 3.1f, AnimatronicType.AutoBlackouter, Location.OfficeInside, 
+    [], [
       new MovementOpportunity(Location.Cam09, Location.OfficeFront, .6f),
       new MovementOpportunity(Location.Cam09, Location.Cam09, .4f),
       
@@ -401,17 +400,19 @@ public static class Registration
   
   public static void RegistryInitialisation(Registry registry)
   {
-    registry.AssignSceneScript("DebuggerTesting", new DebuggerTesting());
+    registry.AssignSceneScript(Config.Scenes.DebuggerTesting, new DebuggerTesting());
     
-    registry.AssignSceneScript("MenuMain", new MenuMain());
-    registry.AssignSceneScript("MenuSettings", new MenuSettings());
-    registry.AssignSceneScript("MenuExtras", new MenuExtras());
-    registry.AssignSceneScript("MenuCredits", new MenuCredits());
-    registry.AssignSceneScript("MenuCustomNight", new MenuCustomNight());
+    registry.AssignSceneScript(Config.Scenes.MenuMain, new MenuMain());
+    registry.AssignSceneScript(Config.Scenes.MenuSettings, new MenuSettings());
+    registry.AssignSceneScript(Config.Scenes.MenuExtras, new MenuExtras());
+    registry.AssignSceneScript(Config.Scenes.MenuCredits, new MenuCredits());
+    registry.AssignSceneScript(Config.Scenes.MenuCustomNight, new MenuCustomNight());
     
-    registry.AssignSceneScript("GameMain", new GameMain());
-    registry.AssignSceneScript("GameLoading", new GameLoading());
-    registry.AssignSceneScript("GameNewspaper", new GameNewspaper());
+    registry.AssignSceneScript(Config.Scenes.GameLose, new GameLose());
+    registry.AssignSceneScript(Config.Scenes.GameWin, new GameWin());
+    registry.AssignSceneScript(Config.Scenes.GameMain, new GameMain());
+    registry.AssignSceneScript(Config.Scenes.GameLoading, new GameLoading());
+    registry.AssignSceneScript(Config.Scenes.GameNewspaper, new GameNewspaper());
     
     registry.AssignGlobalScript(new GlobalOverlay());
     registry.AssignGuiScript(new ImGuiWindow());

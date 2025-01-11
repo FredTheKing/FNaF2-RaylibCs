@@ -46,9 +46,8 @@ public enum AnimatronicType
 
 public class Animatronic : ScriptTemplate
 {
-  public Animatronic(Scene gameScenePointer, string name, float targetTime, AnimatronicType type, Location afkRoom, List<MovementOpportunity> movements, List<GrantOpportunity>? grants = null, List<ExcludeOpportunity>? excludes = null)
+  public Animatronic(string name, float targetTime, AnimatronicType type, Location afkRoom, List<DifficultyBehavior> difficulties, List<MovementOpportunity> movements, List<GrantOpportunity>? grants = null, List<ExcludeOpportunity>? excludes = null)
   {
-    _gameScenePointer = gameScenePointer;
     _startLocation = movements[0].from;
     _autoerBrakeLocation = afkRoom;
     Timer = new SimpleTimer(targetTime, true);
@@ -57,6 +56,7 @@ public class Animatronic : ScriptTemplate
     if (Type is AnimatronicType.TriggerWaiter) _autoer = false;
     
     Name = name;
+    Difficulties = difficulties;
     Movements = movements;
     Excludes = excludes;
     Grants = grants;
@@ -64,7 +64,6 @@ public class Animatronic : ScriptTemplate
     CurrentLocation = _startLocation;
   }
   
-  private Scene _gameScenePointer;
   private Location _autoerBrakeLocation;
   private Location _startLocation;
   private bool _locationChanged;
@@ -76,11 +75,12 @@ public class Animatronic : ScriptTemplate
   public float CameraHatering = 3000f;
   public string Name;
   public SimpleTimer Timer;
+  public List<DifficultyBehavior> Difficulties;
   public List<MovementOpportunity> Movements;
   public List<ExcludeOpportunity>? Excludes;
   public List<GrantOpportunity>? Grants;
   public AnimatronicType Type;
-  public int Difficulty = 20;
+  public int Difficulty;
   public (Animatronic, Location)? NextQueue;
   public Location? PlanningLocation;
   public Location CurrentLocation;
@@ -107,73 +107,78 @@ public class Animatronic : ScriptTemplate
       ImGui.Text($" > Time to Try: {Timer.GetTimeLeft()}");
       ImGui.Text($" > Start Location: {_startLocation}");
       ImGui.Text($" > Planning Location: {PlanningLocation}");
-      OnlyGameScene(() => { ImGui.Text($" > Current Location: {CurrentLocation}"); }, registry);
+      ImGui.Text($" > Current Location: {CurrentLocation}");
       ImGui.Text($" > Waiting To Go Into Office: {waitingToGoIntoOffice}");
       ImGui.Text($" > Movements: {Movements.Count}");
-      OnlyGameScene(() => { ImGui.Text($" > Current Movements: {Movements.Count(x => x.from == CurrentLocation)}"); }, registry);
+      ImGui.Text($" > Current Movements: {Movements.Count(x => x.from == CurrentLocation)}");
       ImGui.TreePop();
     }
   }
 
+  private void UpdateDifficulty(Registry registry)
+  {
+    if (Difficulties is [])
+    {
+      Difficulty = Config.MaxAnimatronicsDifficulty;
+      return;
+    }
+
+    foreach (DifficultyBehavior behavior in Difficulties)
+    {
+      if (registry.fnaf.nightManager.current == behavior.night && registry.fnaf.nightManager.am == behavior.hour) Difficulty = behavior.changeTo;
+    }
+  }
+
   public override void Deactivation(Registry registry, string nextSceneName) => 
-    OnlyGameScene(() => { Timer.StopAndResetTimer(); }, registry);
-  
-  public override void Activation(Registry registry) => 
-    OnlyGameScene(() =>
+    Timer.StopAndResetTimer();
+
+  public override void Activation(Registry registry)
+  {
+    Timer.Activation(registry);
+    CurrentLocation = _startLocation;
+    CameraHatering = 3000f;
+    NextQueue = null;
+  }
+
+  public override void Update(Registry registry)
+  {
+    UpdateDifficulty(registry);
+    Timer.Update(registry);
+    _autoer = CurrentLocation != _autoerBrakeLocation;
+      
+    if (CurrentLocation == Location.OfficeInside && Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up && CameraHatering > 0) CameraHatering = Math.Clamp(CameraHatering - 300 * Raylib.GetFrameTime(), 0, 3000f);
+      
+    if (waitingToGoIntoOffice && Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up)
     {
-      Timer.Activation(registry);
-      CurrentLocation = _startLocation;
-      CameraHatering = 3000f;
-      NextQueue = null;
-    }, registry);
-  
-  public override void Update(Registry registry) => 
-    OnlyGameScene(() =>
+      waitingToGoIntoOffice = false;
+      Timer.StartTimer();
+      Move(registry);
+    }
+      
+    if (_locationChanged)
     {
-      Timer.Update(registry);
-      _autoer = CurrentLocation != _autoerBrakeLocation;
-      
-      if (CurrentLocation == Location.OfficeInside && Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up && CameraHatering > 0) CameraHatering = Math.Clamp(CameraHatering - 300 * Raylib.GetFrameTime(), 0, 3000f);
-      
-      if (waitingToGoIntoOffice && Registration.Objects.GameUiCamera!.GetScript()!.State == States.Up)
+      if (NextQueue != null)
       {
-        waitingToGoIntoOffice = false;
-        Timer.StartTimer();
-        Move(registry);
+        NextQueue!.Value.Item1.Timer.StartTimer();
+        NextQueue!.Value.Item1.PlanningLocation = NextQueue!.Value.Item2;
+        NextQueue = null;
       }
+      _locationChanged = false;
+    }
       
-      if (_locationChanged)
-      {
-        if (NextQueue != null)
-        {
-          NextQueue!.Value.Item1.Timer.StartTimer();
-          NextQueue!.Value.Item1.PlanningLocation = NextQueue!.Value.Item2;
-          NextQueue = null;
-        }
-        _locationChanged = false;
-      }
-      
-      switch (Type)
-      {
-        case AnimatronicType.AutoBlackouter:
-          if (!Timer.TargetTrigger()) return;
-          if (SuccessfulMovement() && _autoer) Move(registry);
-          break;
-        case AnimatronicType.TriggerWaiter:
-          if (_forceMove) Move(registry);
-          break;
-      }
-    }, registry);
-  
-  public override void Draw(Registry registry) => 
-    OnlyGameScene(() => { }, registry);
+    switch (Type)
+    {
+      case AnimatronicType.AutoBlackouter:
+        if (!Timer.TargetTrigger()) return;
+        if (SuccessfulMovement() && _autoer) Move(registry);
+        break;
+      case AnimatronicType.TriggerWaiter:
+        if (_forceMove) Move(registry);
+        break;
+    }
+  }
   
   public void TriggerMove() => _forceMove = true;
-  
-  private void OnlyGameScene(Action action, Registry registry)
-  {
-    if (_gameScenePointer == registry.scene.Current) action();
-  }
 
   private bool SuccessfulMovement() => new Random().Next(1, Config.MaxAnimatronicsDifficulty) <= Difficulty;
 
@@ -206,9 +211,9 @@ public class Animatronic : ScriptTemplate
       }
     }
     
-    if (Excludes is not null && Excludes.Any(x => x.planningTo == PlanningLocation && registry.fnaf.GetAnimatronicManager().GetAnimatronics().FirstOrDefault(a => a.Name == x.who && a.CurrentLocation == x.where) is not null)) return;
+    if (Excludes is not null && Excludes.Any(x => x.planningTo == PlanningLocation && registry.fnaf.animatronicManager.all.FirstOrDefault(a => a.Name == x.who && a.CurrentLocation == x.where) is not null)) return;
     
-    foreach (Animatronic animatronic in registry.fnaf.GetAnimatronicManager().GetAnimatronics())
+    foreach (Animatronic animatronic in registry.fnaf.animatronicManager.all)
     {
       if (animatronic.CurrentLocation != PlanningLocation || animatronic == this) continue;
       if (animatronic.Grants != null && (bool)Grants?.Any(a => a.who == animatronic.Name && a.where == PlanningLocation)) continue;

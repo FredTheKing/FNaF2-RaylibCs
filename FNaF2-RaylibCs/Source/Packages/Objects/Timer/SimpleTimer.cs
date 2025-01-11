@@ -5,7 +5,7 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 
-public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart = false, bool deleteOrLoopOnEnd = true, bool resetTargetWhenEnded = true) : ObjectTemplate
+public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart = false, bool killOrLoopOnEnd = true, bool resetTargetWhenEnded = true) : ObjectTemplate
 {
   protected double Time;
   protected double CurrentTime;
@@ -16,7 +16,7 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart =
   protected bool TargetActivate;
   
   protected bool ActivationStart = activationStart;
-  protected bool DeleteOrLoopOnEnd = deleteOrLoopOnEnd;
+  protected bool KillOrLoopOnEnd = killOrLoopOnEnd;
   protected bool ResetTargetWhenEnded = resetTargetWhenEnded;
   
   protected string DebuggerName = "Timer-" + new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 4)
@@ -37,8 +37,8 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart =
       ImGui.Text($" > Triggered: {(TargetActivate ? 1 : 0)}");
       ImGui.Separator();
       ImGui.Text($" > Start on Activation: {(ActivationStart ? 1 : 0)}");
-      ImGui.Text($" > Todo on end: {(DeleteOrLoopOnEnd ? "Loop" : "Delete")}");
-      if (DeleteOrLoopOnEnd) ImGui.Text($" > Auto reset on end: {(ResetTargetWhenEnded ? 1 : 0)}");
+      ImGui.Text($" > Todo on end: {(KillOrLoopOnEnd ? "Loop" : "Delete")}");
+      if (KillOrLoopOnEnd) ImGui.Text($" > Auto reset on end: {(ResetTargetWhenEnded ? 1 : 0)}");
 
       ImGui.TreePop();
     }
@@ -58,6 +58,7 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart =
   {
     Time = 0f;
     StartTime = Raylib.GetTime();
+    Dead = false;
     Go = true;
   }
 
@@ -88,7 +89,11 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart =
 
   public new void Activation(Registry registry)
   {
-    if (ActivationStart) StartTimer();
+    if (ActivationStart)
+    {
+      StopAndResetTimer();
+      StartTimer();
+    }
     base.Activation(registry);
   }
 
@@ -104,7 +109,7 @@ public class SimpleTimer(double targetTimeInSeconds = 1f, bool activationStart =
     {
       TargetActivate = true;
       SetNewTargetTime(registry);
-      if (DeleteOrLoopOnEnd)
+      if (KillOrLoopOnEnd)
       {
         if (ResetTargetWhenEnded)
         {

@@ -46,7 +46,9 @@ public struct Config
   public const bool FullscreenMode = false, VsyncMode = false;
   public const float DefaultMasterVolume = 1f;
 
+  public const int NightSecondsLength = 270;
   public const int MaxAnimatronicsDifficulty = 20;
+  public const Scenes FnafSceneName = Scenes.GameMain;
   #if DEBUG
   public const Scenes StartSceneName = Scenes.GameMain;
   #else

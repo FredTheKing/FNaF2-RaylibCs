@@ -6,8 +6,8 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Animation;
 
-public class SelectableAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, ImageDoubleStackResource resource, bool restartOnSceneChange = true, SimpleTimer? customUpdateTimer = null) : 
-  SimpleAnimation(position, fps, color, playMode, resource.GetSize(0), restartOnSceneChange, customUpdateTimer)
+public class SelectableAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, ImageDoubleStackResource resource, bool restartOnSceneChange = true) : 
+  SimpleAnimation(position, fps, color, playMode, resource.GetSize(0), restartOnSceneChange)
 {
   private int _currentPack;
   protected new ImageDoubleStackResource? Resource = resource;
@@ -18,11 +18,21 @@ public class SelectableAnimation(Vector2 position, float fps, Color color, Anima
   public void NextPack() => ChangedPack(() => _currentPack = (_currentPack + 1) % Resource!.GetMaterial().Count);
   public void SetPack(int pack) => ChangedPack(() => _currentPack = pack % Resource!.GetMaterial().Count);
   public int GetPackIndex() => _currentPack;
-  
+
+  public override void Activation(Registry registry)
+  {
+    IgnoreParent = true;
+    base.Activation(registry);
+  }
+
   public override void Update(Registry registry)
   {
-    UpdateTimer.Update(registry);
-    if (UpdateTimer.TargetTrigger()) CurrentFrame = (CurrentFrame + 1) % Resource!.GetMaterial()[_currentPack].Count;
+    CurrentTime += Raylib.GetFrameTime();
+    if (CurrentTime >= FrameTime)
+    {
+      CurrentFrame = (CurrentFrame + 1) % (Resource!.GetMaterial()[_currentPack].Count);
+      CurrentTime -= FrameTime;
+    }
     base.Update(registry);
   }
 
@@ -37,5 +47,5 @@ public class SelectableAnimation(Vector2 position, float fps, Color color, Anima
     DrawDebug(registry);
   }
 
-  public override bool IsFinished() => CurrentFrame == Resource!.GetMaterial()[_currentPack].Count - 1;
+  public override bool IsFinished() => CurrentFrame >= Resource!.GetMaterial()[_currentPack].Count - 1;
 }

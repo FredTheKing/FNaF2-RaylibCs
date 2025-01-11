@@ -37,11 +37,11 @@ public class MenuMain : ScriptTemplate
       switch (hitbox.GetText())
       {
         case "New Game":
-          registry.fnaf.GetNightManager().NewGameNight();
+          registry.fnaf.nightManager.NewGameNight();
           registry.scene.Change(registry, Config.Scenes.GameNewspaper);
           break;
         case "Continue":
-          registry.fnaf.GetNightManager().ContinueNight();
+          registry.fnaf.nightManager.ContinueNight();
           registry.scene.Change(registry, Config.Scenes.GameLoading);
           break;
         case "Extras":
@@ -64,7 +64,7 @@ public class MenuMain : ScriptTemplate
     Registration.Objects.MenuSet!.SetY(initialY);
     _prevSetY = initialY;
     
-    int latestNight = registry.fnaf.GetNightManager().GetLatestNight();
+    int latestNight = registry.fnaf.nightManager.latest;
     Registration.Objects.MenuContinueNightText!.SetText("Night " + (latestNight <= 5 ? latestNight : 5));
   }
     

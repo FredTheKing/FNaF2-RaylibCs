@@ -60,6 +60,5 @@ public class PullAnimationScript(SelectableAnimation obj) : ScriptTemplate
           break;
       }
     }
-    base.Update(registry);
   }
 }

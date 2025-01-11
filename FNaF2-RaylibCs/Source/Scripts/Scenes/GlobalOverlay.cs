@@ -24,8 +24,8 @@ public class GlobalOverlay : ScriptTemplate
     
     if (registry.keybinds.IsKeyPressed(KeyboardKey.F10)) Center();
     
-    if (registry.DebugMode & Raylib.GetScreenWidth() != 1424) ResizeAndCenter(1424, 768);
-    else if (!registry.DebugMode & Raylib.GetScreenWidth() != 1024) ResizeAndCenter(1024, 768);
+    if (registry.DebugMode & Raylib.GetScreenWidth() != Config.WindowWidth + 400) ResizeAndCenter(Config.WindowWidth + 400, Config.WindowHeight);
+    else if (!registry.DebugMode & Raylib.GetScreenWidth() != Config.WindowWidth) ResizeAndCenter(Config.WindowWidth, Config.WindowHeight);
   }
 
   public override void Draw(Registry registry)

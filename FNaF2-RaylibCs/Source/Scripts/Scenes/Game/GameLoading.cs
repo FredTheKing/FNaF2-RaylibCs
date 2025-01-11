@@ -14,7 +14,7 @@ public class GameLoading : ScriptTemplate
     _timer.Activation(registry);
     gotoGame = false;
     Registration.Objects.WhiteBlinko!.GetScript()!.Play();
-    Registration.Objects.LoadingNightText!.SetText("Night " + registry.fnaf.GetNightManager().GetUpcomingNight());
+    Registration.Objects.LoadingNightText!.SetText("Night " + registry.fnaf.nightManager.current);
     Registration.Objects.LoadingClockThingo!.SetTint(Color.Blank);
   }
 

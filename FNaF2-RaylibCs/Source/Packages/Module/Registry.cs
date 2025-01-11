@@ -131,8 +131,8 @@ public class Registry(List<string> scenesNames) : CallDebuggerInfoTemplate
     rlImGui.Setup(true, true);
   }
   
-  public void AssignSceneScript(string sceneName, dynamic scriptInstance) => 
-    scene.AssignScriptInstance(sceneName, scriptInstance);
+  public void AssignSceneScript(Config.Scenes sceneName, dynamic scriptInstance) => 
+    scene.AssignScriptInstance(sceneName.ToString(), scriptInstance);
   
   public void AssignGlobalScript(dynamic scriptInstance) =>
     scene.AssignGlobalScriptInstance(scriptInstance);

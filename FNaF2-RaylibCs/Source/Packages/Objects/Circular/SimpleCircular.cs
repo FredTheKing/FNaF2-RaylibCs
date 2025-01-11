@@ -12,6 +12,7 @@ public class SimpleCircular(Vector2 position, float radius, float decreaseSpeed,
   public bool Activated = true;
   public bool Recovering = false;
   private Color _color = color;
+  private bool _ignoring;
 
   public override void CallDebuggerInfo(Registry registry)
   {
@@ -23,21 +24,22 @@ public class SimpleCircular(Vector2 position, float radius, float decreaseSpeed,
   public void SetColor(Color color) => _color = color;
   public Color GetColor() => _color;
 
-  private void UpdateValue()
-  {
-    if (!Activated) return;
-    Value = !Recovering ? Math.Clamp(Value - decreaseSpeed * Raylib.GetFrameTime(), 0, 1) : Math.Clamp(Value + recoverySpeed * Raylib.GetFrameTime(), 0, 1);
-  }
-
   public override void Activation(Registry registry)
   {
     Value = defaultValue ?? 1f;
     Activated = defaultActivated ?? true;
+    _ignoring = true;
   }
 
   public override void Update(Registry registry)
   {
-    UpdateValue();
+    if (_ignoring)
+    {
+      _ignoring = false;
+      return;
+    }
+    if (!Activated) return;
+    Value = !Recovering ? Math.Clamp(Value - decreaseSpeed * Raylib.GetFrameTime(), 0, 1) : Math.Clamp(Value + recoverySpeed * Raylib.GetFrameTime(), 0, 1);
   }
 
   public override void Draw(Registry registry)

@@ -2,7 +2,6 @@ using System.Numerics;
 using FNaF2_RaylibCs.Source.Packages.Module;
 using FNaF2_RaylibCs.Source.Packages.Module.ResourcesManager;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
-using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
 using ImGuiNET;
 using Raylib_cs;
 
@@ -12,20 +11,22 @@ public enum AnimationPlayMode { Replacement, Addition };
 
 public class SimpleAnimation : ObjectTemplate
 {
-  public SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, ImageStackResource resource, bool restartOnSceneChange = true, SimpleTimer? customUpdateTimer = null) : base(position, resource.GetSize()) { InitAnimation(fps, color, playMode, customUpdateTimer, restartOnSceneChange); Resource = resource; }
-  public SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, Vector2 originalSize, bool restartOnSceneChange = true, SimpleTimer? customUpdateTimer = null) : base(position, originalSize) { InitAnimation(fps, color, playMode, customUpdateTimer, restartOnSceneChange); }
+  public SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, ImageStackResource resource, bool restartOnSceneChange = true) : base(position, resource.GetSize()) { InitAnimation(fps, color, playMode, restartOnSceneChange); Resource = resource; }
+  public SimpleAnimation(Vector2 position, float fps, Color color, AnimationPlayMode playMode, Vector2 originalSize, bool restartOnSceneChange = true) : base(position, originalSize) { InitAnimation(fps, color, playMode, restartOnSceneChange); }
 
-  private void InitAnimation(float fps, Color color, AnimationPlayMode playMode, SimpleTimer? customUpdateTimer, bool restartOnSceneChange)
+  private void InitAnimation(float fps, Color color, AnimationPlayMode playMode, bool restartOnSceneChange)
   {
-    UpdateTimer = customUpdateTimer ?? new SimpleTimer(1 / fps, restartOnSceneChange);
     Tint = color;
     RestartOnSceneChange = restartOnSceneChange;
     PlayMode = playMode;
+    FrameTime = 1 / fps;
   }
   
+  protected float CurrentTime;
+  protected float FrameTime;
   protected int CurrentFrame;
-  protected SimpleTimer UpdateTimer = null!;
   protected Color Tint;
+  protected bool IgnoreParent = false;
   protected bool RestartOnSceneChange;
   protected AnimationPlayMode PlayMode;
   protected ImageStackResource? Resource;
@@ -38,7 +39,6 @@ public class SimpleAnimation : ObjectTemplate
     ImGui.Separator();
     ImGui.Text($" > Play Mode: {PlayMode.ToString()}");
     ImGui.Text($" > Current Frame: {CurrentFrame + 1} / {(Resource is null ? "???" : Resource.GetMaterial().Count)}");
-    UpdateTimer.CallDebuggerInfo(registry);
 
     if (ImGui.TreeNode("Animation Resource"))
     {
@@ -47,20 +47,25 @@ public class SimpleAnimation : ObjectTemplate
     }
   }
 
-  public SimpleTimer GetUpdateTimer() => UpdateTimer;
-
   public override void Activation(Registry registry)
   {
     if (RestartOnSceneChange) CurrentFrame = 0;
-    UpdateTimer.Activation(registry);
+    CurrentTime = 0;
     base.Activation(registry);
   }
 
   public override void Update(Registry registry)
   {
-    UpdateTimer.Update(registry);
-    if (Resource is not null) 
-      if (UpdateTimer.TargetTrigger()) CurrentFrame = (CurrentFrame + 1) % (Resource.GetMaterial().Count);
+    if (!IgnoreParent)
+    {
+      CurrentTime += Raylib.GetFrameTime();
+      if (Resource is not null)
+        if (CurrentTime >= FrameTime)
+        {
+          CurrentFrame = (CurrentFrame + 1) % (Resource.GetMaterial().Count);
+          CurrentTime -= FrameTime;
+        }
+    }
     base.Update(registry);
   }
 
@@ -82,7 +87,10 @@ public class SimpleAnimation : ObjectTemplate
     DrawDebug(registry);
   }
 
-  public virtual bool IsFinished() => Resource != null && CurrentFrame == Resource.GetMaterial().Count - 1;
+  public virtual bool IsFinished() => Resource != null && CurrentFrame >= Resource.GetMaterial().Count - 1;
+
+  public void SetTint(Color color) => Tint = color;
+  public Color GetTint() => Tint;
   
   protected void DrawDebug(Registry registry)
   {
