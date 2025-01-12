@@ -50,7 +50,7 @@ public struct Config
   public const int MaxAnimatronicsDifficulty = 20;
   public const Scenes FnafSceneName = Scenes.GameMain;
   #if DEBUG
-  public const Scenes StartSceneName = Scenes.GameMain;
+  public const Scenes StartSceneName = Scenes.MenuCustomNight;
   #else
   public const Scenes StartSceneName = Scenes.MenuMain;
   #endif

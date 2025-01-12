@@ -37,6 +37,17 @@ public static class Registration
     public static ImageResource? CreditsRaylibResource;
     public static ImageResource? CreditsMyResource;
     public static ImageResource? CreditsScottResource;
+    
+    public static ImageResource? CustomNightWitheredFreddyResource;
+    public static ImageResource? CustomNightWitheredBonnieResource;
+    public static ImageResource? CustomNightWitheredChicaResource;
+    public static ImageResource? CustomNightWitheredFoxyResource;
+    public static ImageResource? CustomNightBalloonBoyResource;
+    public static ImageResource? CustomNightToyFreddyResource;
+    public static ImageResource? CustomNightToyBonnieResource;
+    public static ImageResource? CustomNightToyChicaResource;
+    public static ImageResource? CustomNightMangleResource;
+    public static ImageResource? CustomNightGoldenFreddyResource;
 
     public static ImageResource? LoadingClockResource;
 
@@ -115,6 +126,16 @@ public static class Registration
     public static SimpleText? CreditsScottText;
     
     public static SimpleText? CustomNightTitle;
+    public static HitboxTextBorderImage? CustomNightWitheredFreddy;
+    public static HitboxTextBorderImage? CustomNightWitheredBonnie;
+    public static HitboxTextBorderImage? CustomNightWitheredChica;
+    public static HitboxTextBorderImage? CustomNightWitheredFoxy;
+    public static HitboxTextBorderImage? CustomNightBalloonBoy;
+    public static HitboxTextBorderImage? CustomNightToyFreddy;
+    public static HitboxTextBorderImage? CustomNightToyBonnie;
+    public static HitboxTextBorderImage? CustomNightToyChica;
+    public static HitboxTextBorderImage? CustomNightMangle;
+    public static HitboxTextBorderImage? CustomNightGoldenFreddy;
 
     public static SimpleText? LoadingNightText;
     public static SimpleText? LoadingAmText;
@@ -163,6 +184,17 @@ public static class Registration
     Materials.CreditsRaylibResource = registry.RegisterMaterial("CreditsRaylibResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Raylib.png"));
     Materials.CreditsMyResource = registry.RegisterMaterial("CreditsMyResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Me.png"));
     Materials.CreditsScottResource = registry.RegisterMaterial("CreditsScottResource", [Config.Scenes.MenuCredits], new ImageResource(Config.ResPath + "Credits/Scott.png"));
+    
+    Materials.CustomNightWitheredFreddyResource = registry.RegisterMaterial("CustomNightWitheredFreddyResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/WithFreddy.png"));
+    Materials.CustomNightWitheredBonnieResource = registry.RegisterMaterial("CustomNightWitheredBonnieResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/WithBonnie.png"));
+    Materials.CustomNightWitheredChicaResource = registry.RegisterMaterial("CustomNightWitheredChicaResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/WithChica.png"));
+    Materials.CustomNightWitheredFoxyResource = registry.RegisterMaterial("CustomNightWitheredFoxyResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/WithFoxy.png"));
+    Materials.CustomNightBalloonBoyResource = registry.RegisterMaterial("CustomNightBalloonBoyResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/BalloonBoy.png"));
+    Materials.CustomNightToyFreddyResource = registry.RegisterMaterial("CustomNightToyFreddyResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/ToyFreddy.png"));
+    Materials.CustomNightToyBonnieResource = registry.RegisterMaterial("CustomNightToyBonnieResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/ToyBonnie.png"));
+    Materials.CustomNightToyChicaResource = registry.RegisterMaterial("CustomNightToyChicaResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/ToyChica.png"));
+    Materials.CustomNightMangleResource = registry.RegisterMaterial("CustomNightMangleResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/Mangle.png"));
+    Materials.CustomNightGoldenFreddyResource = registry.RegisterMaterial("CustomNightGoldenFreddyResource", [Config.Scenes.MenuCustomNight], new ImageResource(Config.ResPath + "Menu/Avatars/GoldenFreddy.png"));
     
     Materials.LoadingClockResource = registry.RegisterMaterial("LoadingClockResource", [Config.Scenes.GameLoading], new ImageResource(Config.ResPath + "Game/Etc/Clock.png"));
     
@@ -288,6 +320,26 @@ public static class Registration
     Objects.CreditsMyText = registry.RegisterObject("CreditsMyText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsMyLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Remake\nDev:", Color.White, Materials.GlobalFont!, false, true));
     
     Objects.CustomNightTitle = registry.RegisterObject("CustomNightTitle", [Config.Scenes.MenuCustomNight], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Custom Night", Color.White, Materials.GlobalFont!, true, true));
+    Objects.CustomNightWitheredFreddy = registry.RegisterObject("CustomNightWitheredFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(100, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredFreddyResource!, 2, Color.White));
+    Objects.CustomNightWitheredFreddy.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredFreddy));
+    Objects.CustomNightWitheredBonnie = registry.RegisterObject("CustomNightWitheredBonnie", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(270, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredBonnieResource!, 2, Color.White));
+    Objects.CustomNightWitheredBonnie.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredBonnie));
+    Objects.CustomNightWitheredChica = registry.RegisterObject("CustomNightWitheredChica", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(440, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredChicaResource!, 2, Color.White));
+    Objects.CustomNightWitheredChica.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredChica));
+    Objects.CustomNightWitheredFoxy = registry.RegisterObject("CustomNightWitheredFoxy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(610, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredFoxyResource!, 2, Color.White));
+    Objects.CustomNightWitheredFoxy.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredFoxy));
+    Objects.CustomNightBalloonBoy = registry.RegisterObject("CustomNightBalloonBoy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(780, 100), "0", Materials.GlobalFont!, Materials.CustomNightBalloonBoyResource!, 2, Color.White));
+    Objects.CustomNightBalloonBoy.AssignScript(new CustomNightButtonScript(Objects.CustomNightBalloonBoy));
+    Objects.CustomNightToyFreddy = registry.RegisterObject("CustomNightToyFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(100, 300), "0", Materials.GlobalFont!, Materials.CustomNightToyFreddyResource!, 2, Color.White));
+    Objects.CustomNightToyFreddy.AssignScript(new CustomNightButtonScript(Objects.CustomNightToyFreddy));
+    Objects.CustomNightToyBonnie = registry.RegisterObject("CustomNightToyBonnie", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(270, 300), "0", Materials.GlobalFont!, Materials.CustomNightToyBonnieResource!, 2, Color.White));
+    Objects.CustomNightToyBonnie.AssignScript(new CustomNightButtonScript(Objects.CustomNightToyBonnie));
+    Objects.CustomNightToyChica = registry.RegisterObject("CustomNightToyChica", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(440, 300), "0", Materials.GlobalFont!, Materials.CustomNightToyChicaResource!, 2, Color.White));
+    Objects.CustomNightToyChica.AssignScript(new CustomNightButtonScript(Objects.CustomNightToyChica));
+    Objects.CustomNightMangle = registry.RegisterObject("CustomNightMangle", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(610, 300), "0", Materials.GlobalFont!, Materials.CustomNightMangleResource!, 2, Color.White));
+    Objects.CustomNightMangle.AssignScript(new CustomNightButtonScript(Objects.CustomNightMangle));
+    Objects.CustomNightGoldenFreddy = registry.RegisterObject("CustomNightGoldenFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(780, 300), "0", Materials.GlobalFont!, Materials.CustomNightGoldenFreddyResource!, 2, Color.White));
+    Objects.CustomNightGoldenFreddy.AssignScript(new CustomNightButtonScript(Objects.CustomNightGoldenFreddy));
     
     Objects.LoadingNightText = registry.RegisterObject("LoadingNightText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, -40), new Vector2(1024, 768), 48, "Night #", Color.White, Materials.GlobalFont!, true, true));
     Objects.LoadingAmText = registry.RegisterObject("LoadingAmText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, 40), new Vector2(1024, 768), 48, "12 AM", Color.White, Materials.GlobalFont!, true, true));
@@ -350,7 +402,7 @@ public static class Registration
     Objects.GameUiCamera.AssignScript(new PullAnimationScript(Objects.GameUiCamera));
     Objects.GameUiMask = registry.RegisterObject("GameUiMask", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameUiMaskResource!));
     Objects.GameUiMask.AssignScript(new PullAnimationScript(Objects.GameUiMask));
-    Objects.GameJumpscares = registry.RegisterObject("GameJumpscares", [Config.Scenes.GameMain], [30], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameJumpscaresResource!));
+    Objects.GameJumpscares = registry.RegisterObject("GameJumpscares", [Config.Scenes.GameMain], [7], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameJumpscaresResource!));
   }
   
   

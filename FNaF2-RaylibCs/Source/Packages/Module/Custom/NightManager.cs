@@ -1,6 +1,7 @@
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates.Raw;
 using FNaF2_RaylibCs.Source.Packages.Objects.Timer;
+using ImGuiNET;
 
 namespace FNaF2_RaylibCs.Source.Packages.Module.Custom;
 
@@ -11,6 +12,14 @@ public class NightManager : ScriptTemplate
   public int am { get; set; }
 
   public SimpleTimer timer { get; } = new(Config.NightSecondsLength, true, false);
+
+  public override void CallDebuggerInfo(Registry registry)
+  {
+    ImGui.Text(" > Latest Night: " + latest);
+    ImGui.Text(" > Current Night: " + current);
+    ImGui.Text(" > AM: " + am);
+    ImGui.Text(" > Time: " + timer.GetTime());
+  }
 
   public void NewGameNight()
   {
