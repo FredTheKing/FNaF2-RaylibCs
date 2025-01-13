@@ -126,6 +126,10 @@ public static class Registration
     public static SimpleText? CreditsScottText;
     
     public static SimpleText? CustomNightTitle;
+    public static SelectableHitboxImage? CustomNightStartBox;
+    public static SelectableText? CustomNightStartText;
+    public static SelectableHitboxImage? CustomNightPresetBox;
+    public static SimpleText? CustomNightPresetText;
     public static HitboxTextBorderImage? CustomNightWitheredFreddy;
     public static HitboxTextBorderImage? CustomNightWitheredBonnie;
     public static HitboxTextBorderImage? CustomNightWitheredChica;
@@ -221,7 +225,7 @@ public static class Registration
     Materials.GameCameraRecordResource = registry.RegisterMaterial("GameCameraRecordResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Record.png"));
     Materials.GameCameraMapResource = registry.RegisterMaterial("GameCameraMapResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Map.png"));
     Materials.GameCameraCamsUnitResource = registry.RegisterMaterial("GameCameraCamsUnitResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/CamBoxes", 2)));
-    Materials.GameMusicBoxWindUpButtonResource = registry.RegisterMaterial("GameMusicBoxWindUpButtonResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/CamBoxes", 2, 2)));
+    Materials.GameMusicBoxWindUpButtonResource = registry.RegisterMaterial("GameMusicBoxWindUpButtonResource", [Config.Scenes.GameMain, Config.Scenes.MenuCustomNight], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/CamBoxes", 2, 2)));
     Materials.GameOfficeTableResource = registry.RegisterMaterial("GameOfficeTableResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/Table", 4)));
     Materials.GameLeftLightResource = registry.RegisterMaterial("GameLeftLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2)));
     Materials.GameRightLightResource = registry.RegisterMaterial("GameRightLightResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/Office/LightButtons", 2, 2)));
@@ -320,25 +324,29 @@ public static class Registration
     Objects.CreditsMyText = registry.RegisterObject("CreditsMyText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsMyLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Remake\nDev:", Color.White, Materials.GlobalFont!, false, true));
     
     Objects.CustomNightTitle = registry.RegisterObject("CustomNightTitle", [Config.Scenes.MenuCustomNight], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Custom Night", Color.White, Materials.GlobalFont!, true, true));
-    Objects.CustomNightWitheredFreddy = registry.RegisterObject("CustomNightWitheredFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(100, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredFreddyResource!, 2, Color.White));
+    Objects.CustomNightStartBox = registry.RegisterObject("CustomNightStartBox", [Config.Scenes.MenuCustomNight], [1], new SelectableHitboxImage(new Vector2(140, 550), Materials.GameMusicBoxWindUpButtonResource!, Color.White, new Vector2(300, 100)));
+    Objects.CustomNightStartText = registry.RegisterObject("CustomNightStartText", [Config.Scenes.MenuCustomNight], [1], new SelectableText(Objects.CustomNightStartBox.GetPosition(), Objects.CustomNightStartBox.GetSize(), 26, ["No preset used", "20/20/20/20", "New & Shiny", "Double Trouble", "Night of Misfits", "Foxy Foxy", "Ladies' Night", "Freddy's Circus", "Cupcake Challenge", "Fazbear Fever", "Golden Freddy"], Color.White, Materials.GlobalFont!, true, true));
+    Objects.CustomNightPresetBox = registry.RegisterObject("CustomNightPresetBox", [Config.Scenes.MenuCustomNight], [1], new SelectableHitboxImage(new Vector2(565, 550), Materials.GameMusicBoxWindUpButtonResource!, Color.White, new Vector2(300, 100)));
+    Objects.CustomNightPresetText = registry.RegisterObject("CustomNightPresetText", [Config.Scenes.MenuCustomNight], [1], new SimpleText(Objects.CustomNightPresetBox.GetPosition(), Objects.CustomNightPresetBox.GetSize(), 30, "Start night!", Color.White, Materials.GlobalFont!, true, true));
+    Objects.CustomNightWitheredFreddy = registry.RegisterObject("CustomNightWitheredFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(100, 150), "0", Materials.GlobalFont!, Materials.CustomNightWitheredFreddyResource!, 2, Color.White));
     Objects.CustomNightWitheredFreddy.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredFreddy));
-    Objects.CustomNightWitheredBonnie = registry.RegisterObject("CustomNightWitheredBonnie", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(270, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredBonnieResource!, 2, Color.White));
+    Objects.CustomNightWitheredBonnie = registry.RegisterObject("CustomNightWitheredBonnie", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(270, 150), "0", Materials.GlobalFont!, Materials.CustomNightWitheredBonnieResource!, 2, Color.White));
     Objects.CustomNightWitheredBonnie.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredBonnie));
-    Objects.CustomNightWitheredChica = registry.RegisterObject("CustomNightWitheredChica", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(440, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredChicaResource!, 2, Color.White));
+    Objects.CustomNightWitheredChica = registry.RegisterObject("CustomNightWitheredChica", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(440, 150), "0", Materials.GlobalFont!, Materials.CustomNightWitheredChicaResource!, 2, Color.White));
     Objects.CustomNightWitheredChica.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredChica));
-    Objects.CustomNightWitheredFoxy = registry.RegisterObject("CustomNightWitheredFoxy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(610, 100), "0", Materials.GlobalFont!, Materials.CustomNightWitheredFoxyResource!, 2, Color.White));
+    Objects.CustomNightWitheredFoxy = registry.RegisterObject("CustomNightWitheredFoxy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(610, 150), "0", Materials.GlobalFont!, Materials.CustomNightWitheredFoxyResource!, 2, Color.White));
     Objects.CustomNightWitheredFoxy.AssignScript(new CustomNightButtonScript(Objects.CustomNightWitheredFoxy));
-    Objects.CustomNightBalloonBoy = registry.RegisterObject("CustomNightBalloonBoy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(780, 100), "0", Materials.GlobalFont!, Materials.CustomNightBalloonBoyResource!, 2, Color.White));
+    Objects.CustomNightBalloonBoy = registry.RegisterObject("CustomNightBalloonBoy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(780, 150), "0", Materials.GlobalFont!, Materials.CustomNightBalloonBoyResource!, 2, Color.White));
     Objects.CustomNightBalloonBoy.AssignScript(new CustomNightButtonScript(Objects.CustomNightBalloonBoy));
-    Objects.CustomNightToyFreddy = registry.RegisterObject("CustomNightToyFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(100, 300), "0", Materials.GlobalFont!, Materials.CustomNightToyFreddyResource!, 2, Color.White));
+    Objects.CustomNightToyFreddy = registry.RegisterObject("CustomNightToyFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(100, 350), "0", Materials.GlobalFont!, Materials.CustomNightToyFreddyResource!, 2, Color.White));
     Objects.CustomNightToyFreddy.AssignScript(new CustomNightButtonScript(Objects.CustomNightToyFreddy));
-    Objects.CustomNightToyBonnie = registry.RegisterObject("CustomNightToyBonnie", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(270, 300), "0", Materials.GlobalFont!, Materials.CustomNightToyBonnieResource!, 2, Color.White));
+    Objects.CustomNightToyBonnie = registry.RegisterObject("CustomNightToyBonnie", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(270, 350), "0", Materials.GlobalFont!, Materials.CustomNightToyBonnieResource!, 2, Color.White));
     Objects.CustomNightToyBonnie.AssignScript(new CustomNightButtonScript(Objects.CustomNightToyBonnie));
-    Objects.CustomNightToyChica = registry.RegisterObject("CustomNightToyChica", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(440, 300), "0", Materials.GlobalFont!, Materials.CustomNightToyChicaResource!, 2, Color.White));
+    Objects.CustomNightToyChica = registry.RegisterObject("CustomNightToyChica", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(440, 350), "0", Materials.GlobalFont!, Materials.CustomNightToyChicaResource!, 2, Color.White));
     Objects.CustomNightToyChica.AssignScript(new CustomNightButtonScript(Objects.CustomNightToyChica));
-    Objects.CustomNightMangle = registry.RegisterObject("CustomNightMangle", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(610, 300), "0", Materials.GlobalFont!, Materials.CustomNightMangleResource!, 2, Color.White));
+    Objects.CustomNightMangle = registry.RegisterObject("CustomNightMangle", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(610, 350), "0", Materials.GlobalFont!, Materials.CustomNightMangleResource!, 2, Color.White));
     Objects.CustomNightMangle.AssignScript(new CustomNightButtonScript(Objects.CustomNightMangle));
-    Objects.CustomNightGoldenFreddy = registry.RegisterObject("CustomNightGoldenFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(780, 300), "0", Materials.GlobalFont!, Materials.CustomNightGoldenFreddyResource!, 2, Color.White));
+    Objects.CustomNightGoldenFreddy = registry.RegisterObject("CustomNightGoldenFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(780, 350), "0", Materials.GlobalFont!, Materials.CustomNightGoldenFreddyResource!, 2, Color.White));
     Objects.CustomNightGoldenFreddy.AssignScript(new CustomNightButtonScript(Objects.CustomNightGoldenFreddy));
     
     Objects.LoadingNightText = registry.RegisterObject("LoadingNightText", [Config.Scenes.GameLoading], [1], new SimpleText(new Vector2(0, -40), new Vector2(1024, 768), 48, "Night #", Color.White, Materials.GlobalFont!, true, true));

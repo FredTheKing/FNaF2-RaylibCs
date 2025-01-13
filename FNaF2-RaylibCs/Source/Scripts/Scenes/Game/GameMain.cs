@@ -132,7 +132,7 @@ public class GameMain : ScriptTemplate
         _ => throw new Exception("No asset for this type of list")
       };
     }
-    else if (Registration.Objects.GameLeftLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
+    else if (Registration.Objects.GameLeftLightSwitch!.Hitbox.GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
       List<string> name = registry.fnaf.animatronicManager.all.Where(a => a.CurrentLocation == Location.OfficeLeft).Select(a => a.Name).ToList();
       _assetFrame = name switch
@@ -143,7 +143,7 @@ public class GameMain : ScriptTemplate
         _ => throw new Exception("No asset this type of list")
       };
     }
-    else if (Registration.Objects.GameRightLightSwitch!.GetHitbox().GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
+    else if (Registration.Objects.GameRightLightSwitch!.Hitbox.GetMouseDrag(MouseButton.Left) && !_brokenLight && Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3)
     {
       List<string> name = registry.fnaf.animatronicManager.all.Where(a => a.CurrentLocation == Location.OfficeRight).Select(a => a.Name).ToList();
       _assetFrame = name switch
@@ -270,8 +270,8 @@ public class GameMain : ScriptTemplate
       registry.scene.Current!.HideLayer(9);
     }
     
-    if (Registration.Objects.GameOfficeCamera.GetPackIndex() != 11) Registration.Objects.GameMusicBoxBox!.GetHitbox().Update(registry);
-    bool holding = Registration.Objects.GameMusicBoxBox!.GetHitbox().GetMouseDrag(MouseButton.Left) && Registration.Objects.GameOfficeCamera.GetPackIndex() == 11;
+    if (Registration.Objects.GameOfficeCamera.GetPackIndex() != 11) Registration.Objects.GameMusicBoxBox!.Hitbox.Update(registry);
+    bool holding = Registration.Objects.GameMusicBoxBox!.Hitbox.GetMouseDrag(MouseButton.Left) && Registration.Objects.GameOfficeCamera.GetPackIndex() == 11;
     Registration.Objects.GameMusicBoxBox.SetFrame(holding ? 1 : 0);
     Registration.Objects.GameMusicBoxCircular.Recovering = holding;
   }
@@ -519,7 +519,7 @@ public class GameMain : ScriptTemplate
       ReddoDotto(registry);
       UpdateCamera(registry);
       UpdateCameraScrolling();
-      Registration.Objects.GameUiMapCamsTexts!.SetTextIndex(Registration.Objects.GameUiMapWithCams!.GetSelectedCam());
+      Registration.Objects.GameUiMapCamsTexts!.TextIndex = Registration.Objects.GameUiMapWithCams!.GetSelectedCam();
     }
     
     if (registry.keybinds.IsKeyPressed(KeyboardKey.One)) Registration.Objects.GameJumpscares!.SetPack(2);

@@ -6,11 +6,14 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
-public class SelectableHitboxImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null) : SelectableImage(position, resource, tint, newSize)
+public class SelectableHitboxImage : SelectableImage
 {
-  protected RectangleHitbox Hitbox = new(position, resource.GetSize());
+  public RectangleHitbox Hitbox;
 
-  public RectangleHitbox GetHitbox() => Hitbox;
+  public SelectableHitboxImage(Vector2 position, ImageStackResource resource, Color? tint = null, Vector2? newSize = null) : base(position, resource, tint, newSize)
+  {
+    Hitbox = new(Position, Size);
+  }
 
   public override void CallDebuggerInfo(Registry registry)
   {

@@ -110,7 +110,7 @@ public class SimpleText : ObjectTemplate
   public void SetColor(Color color) => ActualColor = color;
   public Color GetColor() => ActualColor;
   
-  public string GetText() => _text;
+  public virtual string GetText() => _text;
   
   public void SetText(string text) => _text = text;
 
