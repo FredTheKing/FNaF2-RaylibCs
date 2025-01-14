@@ -325,7 +325,7 @@ public static class Registration
     
     Objects.CustomNightTitle = registry.RegisterObject("CustomNightTitle", [Config.Scenes.MenuCustomNight], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Custom Night", Color.White, Materials.GlobalFont!, true, true));
     Objects.CustomNightStartBox = registry.RegisterObject("CustomNightStartBox", [Config.Scenes.MenuCustomNight], [1], new SelectableHitboxImage(new Vector2(140, 550), Materials.GameMusicBoxWindUpButtonResource!, Color.White, new Vector2(300, 100)));
-    Objects.CustomNightStartText = registry.RegisterObject("CustomNightStartText", [Config.Scenes.MenuCustomNight], [1], new SelectableText(Objects.CustomNightStartBox.GetPosition(), Objects.CustomNightStartBox.GetSize(), 26, ["No preset used", "20/20/20/20", "New & Shiny", "Double Trouble", "Night of Misfits", "Foxy Foxy", "Ladies' Night", "Freddy's Circus", "Cupcake Challenge", "Fazbear Fever", "Golden Freddy"], Color.White, Materials.GlobalFont!, true, true));
+    Objects.CustomNightStartText = registry.RegisterObject("CustomNightStartText", [Config.Scenes.MenuCustomNight], [1], new SelectableText(Objects.CustomNightStartBox.GetPosition(), Objects.CustomNightStartBox.GetSize(), 26, ["{ GOING_BACK_FROM_NONE }", "Custom preset", "{ GOING_FORWARD_FROM_NONE }", "{ GOING_BACK_FROM_PRESET }", "20/20/20/20", "New & Shiny", "Double Trouble", "Night of Misfits", "Foxy Foxy", "Ladies' Night", "Freddy's Circus", "Cupcake Challenge", "Fazbear Fever", "Golden Freddy"], Color.White, Materials.GlobalFont!, true, true));
     Objects.CustomNightPresetBox = registry.RegisterObject("CustomNightPresetBox", [Config.Scenes.MenuCustomNight], [1], new SelectableHitboxImage(new Vector2(565, 550), Materials.GameMusicBoxWindUpButtonResource!, Color.White, new Vector2(300, 100)));
     Objects.CustomNightPresetText = registry.RegisterObject("CustomNightPresetText", [Config.Scenes.MenuCustomNight], [1], new SimpleText(Objects.CustomNightPresetBox.GetPosition(), Objects.CustomNightPresetBox.GetSize(), 30, "Start night!", Color.White, Materials.GlobalFont!, true, true));
     Objects.CustomNightWitheredFreddy = registry.RegisterObject("CustomNightWitheredFreddy", [Config.Scenes.MenuCustomNight], [1], new HitboxTextBorderImage(new Vector2(100, 150), "0", Materials.GlobalFont!, Materials.CustomNightWitheredFreddyResource!, 2, Color.White));
@@ -429,7 +429,7 @@ public static class Registration
     registry.fnaf.animatronicManager.Add(new Animatronic(Config.AnimatronicsNames.ToyFreddy, 3.1f, AnimatronicType.AutoBlackouter, Location.OfficeInside, 
     [], [
       new MovementOpportunity(Location.Cam09, Location.OfficeFront, .6f),
-      new MovementOpportunity(Location.Cam09, Location.Cam09, .4f),
+      new MovementOpportunity(Location.Cam09, Location.Cam09, .4f),       
       
       new MovementOpportunity(Location.OfficeFront, Location.OfficeInside, .3f),
       new MovementOpportunity(Location.OfficeFront, Location.OfficeFront, .7f),

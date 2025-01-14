@@ -29,7 +29,20 @@ public class SelectableImage : SimpleImage
 
   public virtual void NextFrame() => OnlyIfNotNull(() => { CurrentFrame = (CurrentFrame + 1) % Resource!.GetMaterial().Count; });
 
-  public virtual void SetFrame(int frame) => OnlyIfNotNull(() => { CurrentFrame = frame % Resource!.GetMaterial().Count; });
+  public virtual void SetFrame(int frame) => OnlyIfNotNull(() =>
+  {
+    int newFrame;
+    try
+    {
+      newFrame = frame % Resource!.GetMaterial().Count;
+    }
+    catch (DivideByZeroException)
+    {
+      CurrentFrame = frame;
+      return;
+    } 
+    CurrentFrame = newFrame;
+  });
   
   public int GetFrameIndex() => CurrentFrame;
   

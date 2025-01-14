@@ -71,8 +71,9 @@ public class Animatronic : ScriptTemplate
   private float _droppedChance = -1f;
   private List<float> _chances = [];
   private bool _forceMove;
-
-  public float CameraHatering = 3000f;
+  private static float _cameraHateringDefault = 3000f;
+  
+  public float CameraHatering = _cameraHateringDefault;
   public string Name;
   public SimpleTimer Timer;
   public List<DifficultyBehavior> Difficulties;
@@ -136,7 +137,7 @@ public class Animatronic : ScriptTemplate
   {
     Timer.Activation(registry);
     CurrentLocation = _startLocation;
-    CameraHatering = 3000f;
+    CameraHatering = _cameraHateringDefault;
     NextQueue = null;
   }
 
@@ -185,7 +186,7 @@ public class Animatronic : ScriptTemplate
   public void Move(Registry registry)
   {
     _forceMove = false;
-    CameraHatering = 3000f;
+    CameraHatering = _cameraHateringDefault;
     if (PlanningLocation is null)
     {
       List<MovementOpportunity> targetMovements = Movements.Where(x => x.from == CurrentLocation).ToList();

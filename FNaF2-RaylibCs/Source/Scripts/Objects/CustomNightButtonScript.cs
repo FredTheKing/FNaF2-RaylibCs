@@ -19,8 +19,16 @@ public class CustomNightButtonScript(HitboxTextBorderImage obj) : ScriptTemplate
   {
     int difficulty = int.Parse(obj.Text.GetText());
 
-    if (obj.Hitbox.GetMousePress(MouseButton.Left)) difficulty++;
-    if (obj.Hitbox.GetMousePress(MouseButton.Right)) difficulty--;
+    if (obj.Hitbox.GetMousePress(MouseButton.Left))
+    {
+      Registration.Sounds.SetSound!.Play();
+      difficulty++;
+    }
+    if (obj.Hitbox.GetMousePress(MouseButton.Right))
+    {
+      Registration.Sounds.SetSound!.Play();
+      difficulty--;
+    }
 
     if (difficulty == 0)
     {
