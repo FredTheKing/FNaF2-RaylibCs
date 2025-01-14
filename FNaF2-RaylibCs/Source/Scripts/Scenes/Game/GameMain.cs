@@ -209,7 +209,7 @@ public class GameMain : ScriptTemplate
 
   private void UiButtonsReaction(Registry registry)
   {
-    if (Registration.Objects.GameUiMaskButton!.GetHitbox().GetMouseHoverFrame())
+    if (Registration.Objects.GameUiMaskButton!.Hitbox.GetMouseHoverFrame())
       _currentTool = _currentTool switch
       {
         Tool.Nothing => Tool.Mask,
@@ -217,7 +217,7 @@ public class GameMain : ScriptTemplate
         _ => _currentTool
       };
     
-    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame() && !_blackout)
+    if (Registration.Objects.GameUiCameraButton!.Hitbox.GetMouseHoverFrame() && !_blackout)
       _currentTool = _currentTool switch
       {
         Tool.Nothing => Tool.Camera,
@@ -245,8 +245,8 @@ public class GameMain : ScriptTemplate
 
   private void UiMaskAndCameraReaction(Registry registry)
   {
-    if (Registration.Objects.GameUiMaskButton!.GetHitbox().GetMouseHoverFrame()) Registration.Objects.GameUiMask!.GetScript()!.TriggerPullAction();
-    if (Registration.Objects.GameUiCameraButton!.GetHitbox().GetMouseHoverFrame() && !_blackout) Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
+    if (Registration.Objects.GameUiMaskButton!.Hitbox.GetMouseHoverFrame()) Registration.Objects.GameUiMask!.GetScript()!.TriggerPullAction();
+    if (Registration.Objects.GameUiCameraButton!.Hitbox.GetMouseHoverFrame() && !_blackout) Registration.Objects.GameUiCamera!.GetScript()!.TriggerPullAction();
     
     Animatronic? anima = registry.fnaf.animatronicManager.all.Where(a => a.CurrentLocation == Location.OfficeInside).FirstOrDefault(a => a.Name is not Mangle and not BalloonBoy);
     if (anima is not null && anima.CameraHatering == 0)
@@ -467,14 +467,15 @@ public class GameMain : ScriptTemplate
     Registration.Objects.GameCameraScroller!.GetScript()!.SetBorder(-ScrollBorder, 0);
     foreach (HitboxImage button in (List<HitboxImage>)[Registration.Objects.GameUiMaskButton!, Registration.Objects.GameUiCameraButton!])
     {
-      button.GetHitbox().SetSize(button.GetHitbox().GetSize() + new Vector2(12, 20));
-      button.GetHitbox().AddPosition(new Vector2(-6, 0));
+      button.Hitbox.SetSize(button.Hitbox.GetSize() + new Vector2(12, 20));
+      button.Hitbox.AddPosition(new Vector2(-6, 0));
     }
     
     Registration.Objects.GameOfficeCamera!.SetPosition(new Vector2(-(ScrollBorder / 2), 0));
     Registration.Objects.GameOfficeCamera.SetPack(0);
     Registration.Objects.GameMusicBoxCircular!.Value = 1;
     Registration.Objects.GameJumpscares!.SetPack(0);
+    Registration.Objects.GameUiNight!.SetText("Night " + registry.fnaf.nightManager.current);
     
     registry.scene.Current!.HideLayer(1, 3, 4, 5, 6);
     
@@ -525,6 +526,7 @@ public class GameMain : ScriptTemplate
     if (registry.keybinds.IsKeyPressed(KeyboardKey.One)) Registration.Objects.GameJumpscares!.SetPack(2);
     
     Registration.Objects.GameOfficeCamera.SetFrame(_assetFrame);
+    Registration.Objects.GameUiHour!.SetText(registry.fnaf.nightManager.am == 0 ? "12 AM" : registry.fnaf.nightManager.am + " AM");
     
     NightProcess(registry);
   }

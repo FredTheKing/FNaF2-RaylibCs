@@ -38,7 +38,7 @@ public struct Config
   
   public const int WindowWidth = 1024, WindowHeight = 768;
   public const double WindowRatioWh = (double)WindowHeight / WindowWidth;
-  public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow; // concat with '|' sign
+  public const ConfigFlags WindowConfigFlags = ConfigFlags.AlwaysRunWindow | ConfigFlags.ResizableWindow; // concat with '|' sign
   public const string WindowTitle = "Five Nights at Freddy's 2 - Raylib Edition";
   public const string ResPath = "Resources/";
   public const string WindowIconPath = ResPath + "icon.png";
@@ -48,9 +48,9 @@ public struct Config
 
   public const int NightSecondsLength = 270;
   public const int MaxAnimatronicsDifficulty = 20;
-  public const Scenes FnafSceneName = Scenes.GameMain;
+  public const Scenes FnafGameSceneName = Scenes.GameMain;
   #if DEBUG
-  public const Scenes StartSceneName = Scenes.MenuCustomNight;
+  public const Scenes StartSceneName = Scenes.GameMain;
   #else
   public const Scenes StartSceneName = Scenes.MenuMain;
   #endif

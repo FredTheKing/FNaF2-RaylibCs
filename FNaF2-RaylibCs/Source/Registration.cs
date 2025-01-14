@@ -118,11 +118,11 @@ public static class Registration
     public static SimpleCheckbox? SettingsDebugModeCheckbox;
     
     public static SimpleText? CreditsTitle;
-    public static SimpleImage? CreditsRaylibLogo;
+    public static HitboxImage? CreditsRaylibLogo;
     public static SimpleText? CreditsRaylibText;
-    public static SimpleImage? CreditsMyLogo;
+    public static HitboxImage? CreditsMyLogo;
     public static SimpleText? CreditsMyText;
-    public static SimpleImage? CreditsScottLogo;
+    public static HitboxImage? CreditsScottLogo;
     public static SimpleText? CreditsScottText;
     
     public static SimpleText? CustomNightTitle;
@@ -164,6 +164,8 @@ public static class Registration
     public static CamMap? GameUiMapWithCams;
     public static SelectableText? GameUiMapCamsTexts;
     public static SelectableImage? GameUiBattery;
+    public static SimpleText? GameUiNight;
+    public static SimpleText? GameUiHour;
     public static HitboxImage? GameUiMaskButton;
     public static HitboxImage? GameUiCameraButton;
     public static SelectableAnimation? GameUiMask;
@@ -291,12 +293,11 @@ public static class Registration
     Objects.ExtrasTitle = registry.RegisterObject("ExtrasTitle", [Config.Scenes.MenuExtras], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Extras", Color.White, Materials.GlobalFont!, true, true));
     Objects.ExtrasBackToPage = registry.RegisterObject("ExtrasBackToPage", [Config.Scenes.MenuSettings, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight], [1], new HitboxText(new Vector2(50, 30), new Vector2(80, 60), 48, "<<", Color.White, Materials.GlobalFont!, true));
     Objects.ExtrasBackToPage.AssignScript(new BackToExtrasScript(Objects.ExtrasBackToPage));
-    Objects.ExtrasProjectLinkGithub = registry.RegisterObject("ExtrasProjectLinkGithub", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 120), new Vector2(500, 65), 48, "Project's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.GlobalFont!, true));
-    Objects.ExtrasAuthorLinkGithub = registry.RegisterObject("ExtrasAuthorLinkGithub", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 185), new Vector2(500, 65), 48, "Author's Github", new Color { R = 210, G = 210, B = 255, A = 255 }, Materials.GlobalFont!, true));
-    Objects.ExtrasCustomNight = registry.RegisterObject("ExtrasCustomNight", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 250), new Vector2(500, 65), 48, "Custom Night", Color.White, Materials.GlobalFont!, true));
-    Objects.ExtrasSettings = registry.RegisterObject("ExtrasSettings", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 315), new Vector2(500, 65), 48, "Settings", Color.White, Materials.GlobalFont!, true));
-    Objects.ExtrasCredits = registry.RegisterObject("ExtrasCredits", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 380), new Vector2(500, 65), 48, "Credits", Color.White, Materials.GlobalFont!, true));
-    Objects.ExtrasBack = registry.RegisterObject("ExtrasBack", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 445), new Vector2(500, 65), 48, "Back", Color.White, Materials.GlobalFont!, true));
+    Objects.ExtrasProjectLinkGithub = registry.RegisterObject("ExtrasProjectLinkGithub", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 120), new Vector2(500, 65), 48, "Project's Github", new Color(210, 210, 255, 255), Materials.GlobalFont!, true));
+    Objects.ExtrasCustomNight = registry.RegisterObject("ExtrasCustomNight", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 185), new Vector2(500, 65), 48, "Custom Night", Color.White, Materials.GlobalFont!, true));
+    Objects.ExtrasSettings = registry.RegisterObject("ExtrasSettings", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 250), new Vector2(500, 65), 48, "Settings", Color.White, Materials.GlobalFont!, true));
+    Objects.ExtrasCredits = registry.RegisterObject("ExtrasCredits", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 315), new Vector2(500, 65), 48, "Credits", Color.White, Materials.GlobalFont!, true));
+    Objects.ExtrasBack = registry.RegisterObject("ExtrasBack", [Config.Scenes.MenuExtras], [1], new HitboxText(new Vector2(92, 380), new Vector2(500, 65), 48, "Back", Color.White, Materials.GlobalFont!, true));
     
     Objects.SettingsTitle = registry.RegisterObject("SettingsTitle", [Config.Scenes.MenuSettings], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Settings", Color.White, Materials.GlobalFont!, true, true));
     Objects.SettingsFullscreenText = registry.RegisterObject("SettingsFullscreenText", [Config.Scenes.MenuSettings], [1], new SimpleText(new Vector2(112, 175), new Vector2(500, 65), 48, "Fullscreen", Color.White, Materials.GlobalFont!, true));
@@ -316,11 +317,11 @@ public static class Registration
     Objects.SettingsDebugModeCheckbox = registry.RegisterObject("SettingsDebugModeCheckbox", [Config.Scenes.MenuSettings], [1], new SimpleCheckbox(new Vector2(832, 582), 50, Color.White));
     
     Objects.CreditsTitle = registry.RegisterObject("CreditsTitle", [Config.Scenes.MenuCredits], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Credits", Color.White, Materials.GlobalFont!, true, true));
-    Objects.CreditsRaylibLogo = registry.RegisterObject("CreditsRaylibLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 - 275, 352), Materials.CreditsRaylibResource!, Color.White, new Vector2(150, 150)));
+    Objects.CreditsRaylibLogo = registry.RegisterObject("CreditsRaylibLogo", [Config.Scenes.MenuCredits], [1], new HitboxImage(new Vector2(Config.WindowWidth/2 - 275, 352), Materials.CreditsRaylibResource!, newSize: new Vector2(150, 150)));
     Objects.CreditsRaylibText = registry.RegisterObject("CreditsRaylibText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsRaylibLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Powered\nwith:", Color.White, Materials.GlobalFont!, false, true));
-    Objects.CreditsScottLogo = registry.RegisterObject("CreditsScottLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 - 70, 352), Materials.CreditsScottResource!, Color.White, new Vector2(150, 150)));
+    Objects.CreditsScottLogo = registry.RegisterObject("CreditsScottLogo", [Config.Scenes.MenuCredits], [1], new HitboxImage(new Vector2(Config.WindowWidth/2 - 70, 352), Materials.CreditsScottResource!, newSize: new Vector2(150, 150)));
     Objects.CreditsScottText = registry.RegisterObject("CreditsScottText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsScottLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Original\nDev:", Color.White, Materials.GlobalFont!, false, true));
-    Objects.CreditsMyLogo = registry.RegisterObject("CreditsMyLogo", [Config.Scenes.MenuCredits], [1], new SimpleImage(new Vector2(Config.WindowWidth/2 + 125, 352), Materials.CreditsMyResource!, Color.White, new Vector2(150, 150)));
+    Objects.CreditsMyLogo = registry.RegisterObject("CreditsMyLogo", [Config.Scenes.MenuCredits], [1], new HitboxImage(new Vector2(Config.WindowWidth/2 + 125, 352), Materials.CreditsMyResource!, newSize: new Vector2(150, 150)));
     Objects.CreditsMyText = registry.RegisterObject("CreditsMyText", [Config.Scenes.MenuCredits], [1], new SimpleText(Objects.CreditsMyLogo.GetPosition() + new Vector2(0, -90), new Vector2(150, 90), 28, "Remake\nDev:", Color.White, Materials.GlobalFont!, false, true));
     
     Objects.CustomNightTitle = registry.RegisterObject("CustomNightTitle", [Config.Scenes.MenuCustomNight], [1], new SimpleText(new Vector2(0, 30), new Vector2(Config.WindowWidth, 60), 48, "Custom Night", Color.White, Materials.GlobalFont!, true, true));
@@ -404,6 +405,8 @@ public static class Registration
     Objects.GameMusicBoxText = registry.RegisterObject("GameMusicBoxText", [Config.Scenes.GameMain], [9], new SimpleText(Objects.GameMusicBoxBox.GetPosition(), Materials.GameMusicBoxWindUpButtonResource!.GetSize(), 23, "Wind Up\nMusic Box", Color.White, Materials.PixilatedFont!));
     Objects.GameMusicBoxBottomText = registry.RegisterObject("GameMusicBoxBottomText", [Config.Scenes.GameMain], [9], new SimpleText(Objects.GameMusicBoxBox.GetPosition() + new Vector2(0, 60), new Vector2(Materials.GameMusicBoxWindUpButtonResource.GetSize().X, 30), 19, "click & hold", Color.White, Materials.PixilatedFont!, false, true));
     Objects.GameUiBattery = registry.RegisterObject("GameUiBattery", [Config.Scenes.GameMain], [7], new SelectableImage(new Vector2(18), Materials.GameUiBatteryResource!));
+    Objects.GameUiNight = registry.RegisterObject("GameUiNight", [Config.Scenes.GameMain], [99], new SimpleText(new Vector2(863, 14), Vector2.Zero, 28, "Night #", Color.White, Materials.GlobalFont!));
+    Objects.GameUiHour = registry.RegisterObject("GameUiHour", [Config.Scenes.GameMain], [99], new SimpleText(new Vector2(883, 50), Vector2.Zero, 28, "## AM", Color.White, Materials.GlobalFont!));
     Objects.GameUiMaskButton = registry.RegisterObject("GameUiMaskButton", [Config.Scenes.GameMain], [20], new HitboxImage(new Vector2(6, Config.WindowHeight - 50), Materials.GameUiMaskButtonResource!));
     Objects.GameUiCameraButton = registry.RegisterObject("GameUiCameraButton", [Config.Scenes.GameMain], [21], new HitboxImage(new Vector2(518, Config.WindowHeight - 50), Materials.GameUiCameraButtonResource!));
     Objects.GameUiCamera = registry.RegisterObject("GameUiCamera", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameUiCameraResource!));

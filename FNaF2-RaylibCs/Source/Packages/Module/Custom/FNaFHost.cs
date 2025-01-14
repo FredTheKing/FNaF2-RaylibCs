@@ -13,7 +13,7 @@ public class FNaFHost : ScriptTemplate
   
   private void OnlyGameScene(Action action, Registry registry)
   {
-    if (registry.scene.All[Config.FnafSceneName.ToString()] == registry.scene.Current) action();
+    if (registry.scene.All[Config.FnafGameSceneName.ToString()] == registry.scene.Current) action();
   }
 
   public override void CallDebuggerInfo(Registry registry)

@@ -1,4 +1,5 @@
 using FNaF2_RaylibCs.Source.Packages.Module;
+using FNaF2_RaylibCs.Source.Packages.Module.Custom.Animatronics;
 using FNaF2_RaylibCs.Source.Packages.Module.Templates;
 using FNaF2_RaylibCs.Source.Packages.Objects.Image;
 using Raylib_cs;
@@ -51,17 +52,13 @@ public class MenuCustomNight : ScriptTemplate
       if (Registration.Objects.CustomNightStartText!.TextIndex is <=0 or 3) Registration.Objects.CustomNightStartText.TextIndex = 13;
       else if (Registration.Objects.CustomNightStartText.TextIndex is 2 or >=14) Registration.Objects.CustomNightStartText.TextIndex = 4;
       
-      int index = Registration.Objects.CustomNightStartText!.TextIndex;
+      int index = Registration.Objects.CustomNightStartText.TextIndex;
       int[] selected = _difficultyList[index - 4];
       
       if (index == 1) return;
 
       for (int i = 0; i < _animatronics.Length; i++) 
         _animatronics[i].Text.SetText(selected[i].ToString());
-
-      foreach (int sel in _difficultyList[index - 4])
-        Console.Write(sel + " ");
-      Console.WriteLine(index);
     }
     
     if (Registration.Objects.CustomNightStartBox!.Hitbox.GetMousePress(MouseButton.Left) || Registration.Objects.CustomNightStartBox!.Hitbox.GetMousePress(MouseButton.Right)) Registration.Sounds.SetSound!.Play();
@@ -95,6 +92,10 @@ public class MenuCustomNight : ScriptTemplate
     {
       registry.fnaf.nightManager.current = 7;
       registry.scene.Change(registry, Config.Scenes.GameLoading);
+      
+      int index = Registration.Objects.CustomNightStartText!.TextIndex;
+      for (int i = 0; i < _animatronics.Length; i++) 
+        registry.fnaf.animatronicManager.all[i].Difficulty = _difficultyList[index][i];
     }
   }
 }

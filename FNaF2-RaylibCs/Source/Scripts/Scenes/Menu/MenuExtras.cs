@@ -26,10 +26,7 @@ public class MenuExtras : ScriptTemplate
       switch (hitbox.GetText())
       {
         case "Project's Github":
-          System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://github.com/FredTheKing/FNaF2-RaylibCs") { UseShellExecute = true });
-          break;
-        case "Author's Github":
-          System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://github.com/FredTheKing") { UseShellExecute = true });
+          Raylib.OpenURL("https://github.com/FredTheKing/FNaF2-RaylibCs");
           break;
         case "Back":
           registry.scene.Change(registry, Config.Scenes.MenuMain);
@@ -52,7 +49,6 @@ public class MenuExtras : ScriptTemplate
   {
     List<HitboxText> hitboxes = [
       Registration.Objects.ExtrasProjectLinkGithub!, 
-      Registration.Objects.ExtrasAuthorLinkGithub!, 
       Registration.Objects.ExtrasCustomNight!,
       Registration.Objects.ExtrasSettings!, 
       Registration.Objects.ExtrasCredits!, 

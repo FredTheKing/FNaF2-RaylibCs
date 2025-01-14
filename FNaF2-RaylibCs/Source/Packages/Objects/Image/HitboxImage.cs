@@ -6,17 +6,15 @@ using Raylib_cs;
 
 namespace FNaF2_RaylibCs.Source.Packages.Objects.Image;
 
-public class HitboxImage(Vector2 position, ImageResource resource, Color? color = null): SimpleImage(position, resource)
+public class HitboxImage(Vector2 position, ImageResource resource, Color? color = null, Vector2? newSize = null): SimpleImage(position, resource, Color.White, newSize)
 {
-  protected RectangleHitbox Hitbox = new(position, new Vector2(0, 0), color);
+  public RectangleHitbox Hitbox = new(position, new Vector2(0, 0), color);
   
   public override void CallDebuggerInfo(Registry registry)
   {
     base.CallDebuggerInfo(registry);
     Hitbox.CallDebuggerInfo(registry);
   }
-  
-  public RectangleHitbox GetHitbox() => Hitbox;
   
   public override void Deactivation(Registry registry, string nextSceneName)
   {
@@ -26,7 +24,7 @@ public class HitboxImage(Vector2 position, ImageResource resource, Color? color 
 
   public override void Activation(Registry registry)
   {
-    Hitbox.SetBoundaries(Resource!.GetSize());
+    Hitbox.SetBoundaries(newSize ?? Resource!.GetSize());
     base.Activation(registry);
   }
 
