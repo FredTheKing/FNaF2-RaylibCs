@@ -15,7 +15,13 @@ public class HitboxImage(Vector2 position, ImageResource resource, Color? color 
     base.CallDebuggerInfo(registry);
     Hitbox.CallDebuggerInfo(registry);
   }
-  
+
+  public override void SetPosition(Vector2 position)
+  {
+    Hitbox.SetPosition(position);
+    base.SetPosition(position);
+  }
+
   public override void Deactivation(Registry registry, string nextSceneName)
   {
     Hitbox.Deactivation(registry, nextSceneName);
@@ -24,7 +30,7 @@ public class HitboxImage(Vector2 position, ImageResource resource, Color? color 
 
   public override void Activation(Registry registry)
   {
-    Hitbox.SetBoundaries(newSize ?? Resource!.GetSize());
+    Hitbox.SetBoundaries(Size);
     base.Activation(registry);
   }
 

@@ -28,6 +28,13 @@ public static class Registration
     public static SoundResource? MenuMusicResource;
     public static SoundResource? SetSoundResource;
     
+    public static SoundResource? GamePhoneGuy1Resource;
+    public static SoundResource? GamePhoneGuy2Resource;
+    public static SoundResource? GamePhoneGuy3Resource;
+    public static SoundResource? GamePhoneGuy4Resource;
+    public static SoundResource? GamePhoneGuy5Resource;
+    public static SoundResource? GamePhoneGuy6Resource;
+    
     public static FontResource? GlobalFont;
 
     public static ImageStackResource? MenuBackgroundStackResource;
@@ -72,6 +79,7 @@ public static class Registration
     public static ImageDoubleStackResource? GameUiMaskResource;
     public static ImageDoubleStackResource? GameUiCameraResource;
     public static ImageDoubleStackResource? GameJumpscaresResource;
+    public static ImageResource? GameUiMuteResource;
     public static ImageResource? GameUiMaskButtonResource;
     public static ImageResource? GameUiCameraButtonResource;
   }
@@ -80,8 +88,15 @@ public static class Registration
   {
     public static SoundObject? MenuMusic;
     public static SoundObject? SetSound;
+
+    public static SoundObject? GamePhoneGuy1;
+    public static SoundObject? GamePhoneGuy2;
+    public static SoundObject? GamePhoneGuy3;
+    public static SoundObject? GamePhoneGuy4;
+    public static SoundObject? GamePhoneGuy5;
+    public static SoundObject? GamePhoneGuy6;
   }
-  
+
   public struct Objects
   {
     public static SelectableImage? WhiteBlinko;
@@ -170,6 +185,7 @@ public static class Registration
     public static HitboxImage? GameUiCameraButton;
     public static SelectableAnimation? GameUiMask;
     public static SelectableAnimation? GameUiCamera;
+    public static HitboxImage? GameUiMute;
     public static SelectableAnimation? GameJumpscares;
     public static SimpleCircular? GameMusicBoxCircular;
     public static SelectableHitboxImage? GameMusicBoxBox;
@@ -181,6 +197,13 @@ public static class Registration
   {
     Materials.MenuMusicResource = registry.RegisterMaterial("MenuMusicResource", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameNewspaper], new SoundResource(Config.ResPath + "Sound/MenuMusic.wav"));
     Materials.SetSoundResource = registry.RegisterMaterial("SetSoundResource", [Config.Scenes.All], new SoundResource(Config.ResPath + "Sound/Set.wav"));
+    
+    Materials.GamePhoneGuy1Resource = registry.RegisterMaterial("GamePhoneGuy1Resource", [Config.Scenes.GameMain], new SoundResource(Config.ResPath + "Sound/PhoneGuy1.wav"));
+    Materials.GamePhoneGuy2Resource = registry.RegisterMaterial("GamePhoneGuy2Resource", [Config.Scenes.GameMain], new SoundResource(Config.ResPath + "Sound/PhoneGuy2.wav"));
+    Materials.GamePhoneGuy3Resource = registry.RegisterMaterial("GamePhoneGuy3Resource", [Config.Scenes.GameMain], new SoundResource(Config.ResPath + "Sound/PhoneGuy3.wav"));
+    Materials.GamePhoneGuy4Resource = registry.RegisterMaterial("GamePhoneGuy4Resource", [Config.Scenes.GameMain], new SoundResource(Config.ResPath + "Sound/PhoneGuy4.wav"));
+    Materials.GamePhoneGuy5Resource = registry.RegisterMaterial("GamePhoneGuy5Resource", [Config.Scenes.GameMain], new SoundResource(Config.ResPath + "Sound/PhoneGuy5.wav"));
+    Materials.GamePhoneGuy6Resource = registry.RegisterMaterial("GamePhoneGuy6Resource", [Config.Scenes.GameMain], new SoundResource(Config.ResPath + "Sound/PhoneGuy6.wav"));
     
     Materials.GlobalFont = registry.RegisterMaterial("GlobalFont", [Config.Scenes.All], new FontResource(Config.ResPath + "Font/regular.ttf", 128));
     
@@ -237,6 +260,7 @@ public static class Registration
     Materials.GameOfficeMangleResource = registry.RegisterMaterial("GameOfficeMangleResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/Mango.png"));
     Materials.GameOfficeBalloonBoyResource = registry.RegisterMaterial("GameOfficeBalloonBoyResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/Office/Insiders/BB.png"));
     Materials.GameUiBatteryResource = registry.RegisterMaterial("GameUiBatteryResource", [Config.Scenes.GameMain], new ImageStackResource(Loaders.LoadMultipleFilenames(Config.ResPath + "Game/Main/UI/Battery", 5)));
+    Materials.GameUiMuteResource = registry.RegisterMaterial("GameUiMuteResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Mute.png"));
     Materials.GameUiMaskButtonResource = registry.RegisterMaterial("GameUiMaskButtonResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Mask.png"));
     Materials.GameUiCameraButtonResource = registry.RegisterMaterial("GameUiCameraButtonResource", [Config.Scenes.GameMain], new ImageResource(Config.ResPath + "Game/Main/UI/Camera.png"));
     Materials.GameUiMaskResource = registry.RegisterMaterial("GameUiMaskResource", [Config.Scenes.GameMain], new ImageDoubleStackResource([
@@ -272,6 +296,13 @@ public static class Registration
   {
     Sounds.MenuMusic = registry.RegisterSound("MenuMusic", [Config.Scenes.MenuMain, Config.Scenes.MenuSettings, Config.Scenes.MenuExtras, Config.Scenes.MenuCredits, Config.Scenes.MenuCustomNight, Config.Scenes.GameNewspaper], new SoundObject(Materials.MenuMusicResource!, true, true, true));
     Sounds.SetSound = registry.RegisterSound("SetSound", [Config.Scenes.All], new SoundObject(Materials.SetSoundResource!, false, false, true, true));
+    
+    Sounds.GamePhoneGuy1 = registry.RegisterSound("GamePhoneGuy1", [Config.Scenes.GameMain], new SoundObject(Materials.GamePhoneGuy1Resource!));
+    Sounds.GamePhoneGuy2 = registry.RegisterSound("GamePhoneGuy2", [Config.Scenes.GameMain], new SoundObject(Materials.GamePhoneGuy2Resource!));
+    Sounds.GamePhoneGuy3 = registry.RegisterSound("GamePhoneGuy3", [Config.Scenes.GameMain], new SoundObject(Materials.GamePhoneGuy3Resource!));
+    Sounds.GamePhoneGuy4 = registry.RegisterSound("GamePhoneGuy4", [Config.Scenes.GameMain], new SoundObject(Materials.GamePhoneGuy4Resource!));
+    Sounds.GamePhoneGuy5 = registry.RegisterSound("GamePhoneGuy5", [Config.Scenes.GameMain], new SoundObject(Materials.GamePhoneGuy5Resource!));
+    Sounds.GamePhoneGuy6 = registry.RegisterSound("GamePhoneGuy6", [Config.Scenes.GameMain], new SoundObject(Materials.GamePhoneGuy6Resource!)); 
   }
 
   public static void ObjectsInitialisation(Registry registry)
@@ -413,6 +444,7 @@ public static class Registration
     Objects.GameUiCamera.AssignScript(new PullAnimationScript(Objects.GameUiCamera));
     Objects.GameUiMask = registry.RegisterObject("GameUiMask", [Config.Scenes.GameMain], [19], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameUiMaskResource!));
     Objects.GameUiMask.AssignScript(new PullAnimationScript(Objects.GameUiMask));
+    Objects.GameUiMute = registry.RegisterObject("GameUiMute", [Config.Scenes.GameMain], [98], new HitboxImage(new Vector2(130, 26), Materials.GameUiMuteResource!));
     Objects.GameJumpscares = registry.RegisterObject("GameJumpscares", [Config.Scenes.GameMain], [7], new SelectableAnimation(Vector2.Zero, 30, Color.White, AnimationPlayMode.Replacement, Materials.GameJumpscaresResource!));
   }
   

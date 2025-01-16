@@ -456,6 +456,44 @@ public class GameMain : ScriptTemplate
     }
   }
 
+  public void StartPhoneGuy(Registry registry)
+  {
+    switch (registry.fnaf.nightManager.current)
+    {
+      case 1:
+        Registration.Sounds.GamePhoneGuy1!.Play();
+        registry.scene.Current!.ShowLayer(98);
+        break;
+      case 2:
+        Registration.Sounds.GamePhoneGuy2!.Play();
+        registry.scene.Current!.ShowLayer(98);
+        break;
+      case 3:
+        Registration.Sounds.GamePhoneGuy3!.Play();
+        registry.scene.Current!.ShowLayer(98);
+        break;
+      case 4:
+        Registration.Sounds.GamePhoneGuy4!.Play();
+        registry.scene.Current!.ShowLayer(98);
+        break;
+      case 5:
+        Registration.Sounds.GamePhoneGuy5!.Play();
+        registry.scene.Current!.ShowLayer(98);
+        break;
+      case 6:
+        Registration.Sounds.GamePhoneGuy6!.Play();
+        registry.scene.Current!.ShowLayer(98);
+        break;
+    }
+  }
+
+  public override void Deactivation(Registry registry, string nextSceneName)
+  {
+    _reddoTimer.StopAndResetTimer();
+    _blackoutFlickeringTimer.StopAndResetTimer();
+    _blackoutDurationTimer.StopAndResetTimer();
+  }
+
   public override void Activation(Registry registry)
   {
     _reddoTimer.Activation(registry);
@@ -477,7 +515,8 @@ public class GameMain : ScriptTemplate
     Registration.Objects.GameJumpscares!.SetPack(0);
     Registration.Objects.GameUiNight!.SetText("Night " + registry.fnaf.nightManager.current);
     
-    registry.scene.Current!.HideLayer(1, 3, 4, 5, 6);
+    registry.scene.Current!.HideLayer(1, 3, 4, 5, 6, 98);
+    StartPhoneGuy(registry);
     
     registry.fnaf.animatronicManager.Activation(registry);
     registry.fnaf.animatronicManager.Update(registry);
@@ -508,6 +547,7 @@ public class GameMain : ScriptTemplate
     {
       registry.scene.Current!.ShowLayer(7, 2);
       registry.scene.Current!.HideLayer(8);
+      Registration.Objects.GameUiMute!.SetPosition(new Vector2(130, 26));
       if (Registration.Objects.GameUiCamera!.GetPackIndex() is 0 or 3) UpdateOfficeScroller();
       UpdateOffice(registry);
       UpdateBlackout(registry);
@@ -516,6 +556,7 @@ public class GameMain : ScriptTemplate
     {
       registry.scene.Current!.HideLayer(7, 2);
       registry.scene.Current!.ShowLayer(8);
+      Registration.Objects.GameUiMute!.SetPosition(new Vector2(90, 36));
       _blackoutCustomAlpha = 0;
       ReddoDotto(registry);
       UpdateCamera(registry);
@@ -527,6 +568,16 @@ public class GameMain : ScriptTemplate
     
     Registration.Objects.GameOfficeCamera.SetFrame(_assetFrame);
     Registration.Objects.GameUiHour!.SetText(registry.fnaf.nightManager.am == 0 ? "12 AM" : registry.fnaf.nightManager.am + " AM");
+    if (Registration.Objects.GameUiMute!.Hitbox.GetMousePress(MouseButton.Left))
+    {
+      Registration.Sounds.GamePhoneGuy1!.Stop();
+      Registration.Sounds.GamePhoneGuy2!.Stop();
+      Registration.Sounds.GamePhoneGuy3!.Stop();
+      Registration.Sounds.GamePhoneGuy4!.Stop();
+      Registration.Sounds.GamePhoneGuy5!.Stop();
+      Registration.Sounds.GamePhoneGuy6!.Stop();
+      registry.scene.Current!.HideLayer(98);
+    }
     
     NightProcess(registry);
   }
